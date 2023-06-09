@@ -8,3 +8,4 @@ db.sqlite
 .swiftpm
 .env
 PackageApp.zip
+PackageApp
