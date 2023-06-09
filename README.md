@@ -104,8 +104,37 @@ chmod -R 777 package.sh
 
 打包，在项目根目录下执行：
 
-```sh
-package.sh
+```shell
+$ sh package.sh      
+[+] Building 297.9s (19/19) FINISHED                                                                         
+ => [internal] load build definition from Dockerfile                                                    0.0s
+ => => transferring dockerfile: 4.43kB                                                                  0.0s
+ => [internal] load .dockerignore                                                                       0.0s
+ => => transferring context: 58B                                                                        0.0s
+ => [internal] load metadata for docker.io/library/swift:5.8-jammy                                      1.0s
+ => [ 1/14] FROM docker.io/library/swift:5.8-jammy@sha256:a9e2777a93831be8f2c2994c28e49afbb7995d4d272b  0.0s
+ => [internal] load build context                                                                       0.8s
+ => => transferring context: 36.62MB                                                                    0.8s
+ => CACHED [ 2/14] RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true     && a  0.0s
+ => CACHED [ 3/14] WORKDIR /build                                                                       0.0s
+ => CACHED [ 4/14] COPY ./Package.* ./                                                                  0.0s
+ => CACHED [ 5/14] RUN swift package resolve --verbose                                                  0.0s
+ => [ 6/14] COPY . .                                                                                    1.6s
+ => [ 7/14] RUN swift build -c release --static-swift-stdlib --verbose                                281.0s
+ => [ 8/14] WORKDIR /staging                                                                            0.0s
+ => [ 9/14] RUN cp "$(swift build --package-path /build -c release --show-bin-path)/App" ./             2.4s
+ => [10/14] RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\  0.9s 
+ => [11/14] RUN [ -d /build/Public ] && { mv /build/Public ./Public && chmod -R a-w ./Public; } || tru  0.3s 
+ => [12/14] RUN [ -d /build/Resources ] && { mv /build/Resources ./Resources && chmod -R a-w ./Resourc  0.3s 
+ => [13/14] RUN tar -czf /staging.tar.gz -C /staging .                                                  5.6s 
+ => [14/14] RUN rm -rf /staging                                                                         0.7s
+ => exporting to image                                                                                  3.0s
+ => => exporting layers                                                                                 3.0s
+ => => writing image sha256:ba3be208801d996709ddda6a73e3ae7d4e22adfdb2f8b428a5156721abb3c68f            0.0s
+ => => naming to docker.io/library/package-docker-image                                                 0.0s
+749393c373b1be0f48b92d12948134b5258ed55fc2e643dd1bdaccda5ea446f3
+Successfully copied 36.6MB to /Users/laijihua/Desktop/Dev/Vapor/Code/hello/PackageApp.zip
+temporary-container
 ```
 
 文件目录树：
