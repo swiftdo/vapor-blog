@@ -160,6 +160,17 @@ temporary-container
 └── package.sh
 ```
 
+`PackageApp.zip` 解压缩后：
+
+```shell
+./
+├── App # 二进制包
+└── Public 
+```
+
+将`PackageApp.zip`部署到服务器上即可，且目标机器无需安装 Swift。
+
+
 ## 注意
 
 如果你的包中依赖了数据库，比如 postgresql，那么你的 Dockerfile 需要进行修改：
