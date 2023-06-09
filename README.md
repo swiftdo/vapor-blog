@@ -131,5 +131,24 @@ package.sh
 └── package.sh
 ```
 
-Demo: [vapor-package-demo](https://github.com/swiftdo/vapor-package-demo)
+## 注意
+
+如果你的包中依赖了数据库，比如 postgresql，那么你的 Dockerfile 需要进行修改：
+
+```shell
+# ================================
+# Build image
+# ================================
+FROM swift:5.8-jammy as build
+
+# Install OS updates and, if needed, sqlite3
+RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+    && apt-get -q update \
+    && apt-get -q dist-upgrade -y \
+    && apt-get -q install -y postgresql \
+    && rm -rf /var/lib/apt/lists/* 
+# 后面跟上面一样
+```
+需要安装数据库 `apt-get -q install -y postgresql`
+
 
