@@ -117,3 +117,8 @@ RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -
 RUN [ -d /build/Public ] && { mv /build/Public ./Public && chmod -R a-w ./Public; } || true
 RUN [ -d /build/Resources ] && { mv /build/Resources ./Resources && chmod -R a-w ./Resources; } || true
 
+RUN tar -czf /staging.tar.gz -C /staging .
+
+# 删除原始文件
+RUN rm -rf /staging
+

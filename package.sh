@@ -1,6 +1,5 @@
-docker build -t package-docker-image .
+# docker build -t package-docker-image .
 docker create --name temporary-container package-docker-image
-rm -rf ./PackageApp
-docker cp temporary-container:/staging ./PackageApp
+docker cp temporary-container:/staging.tar.gz ./PackageApp.zip
 docker rm temporary-container
-open ./PackageApp
+open ./
