@@ -8,8 +8,6 @@
 import Fluent
 import Vapor
 
-
-
 final class Category: Model {
     
     static let schema = "blog_category"
