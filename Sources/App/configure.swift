@@ -5,8 +5,6 @@ import Leaf
 import JWT
 import SMTP
 
-
-
 // configures your application
 public func configure(_ app: Application) async throws {
     app.jwt.signers.use(.hs256(key: "blog123"))
