@@ -3,6 +3,7 @@ import Fluent
 import FluentPostgresDriver
 import Leaf
 import JWT
+import SMTP
 
 
 
@@ -11,6 +12,8 @@ public func configure(_ app: Application) async throws {
     app.jwt.signers.use(.hs256(key: "blog123"))
     app.middleware = .init()
     app.middleware.use(RouteLoggingMiddleware(logLevel: .info))
+    app.middleware.use(ErrorMiddleware.custom(environment: app.environment))
+    
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
     
     app.routes.defaultMaxBodySize = "100mb"
@@ -38,6 +41,17 @@ public func configure(_ app: Application) async throws {
             database: Environment.get("DATABASE_NAME") ?? "blog"
         ),
         as: .psql
+    )
+    
+    /// 添加邮箱服务
+    app.smtp.use(
+        SMTPServerConfig(
+            hostname: "smtp.163.com",
+            port: 465,
+            username: "13576051334@163.com",
+            password: "ZNZEIMJTGRWQSHOB",  // ZNZEIMJTGRWQSHOB， 第三方生成秘钥
+            tlsConfiguration: .regularTLS
+        )
     )
     
     try migrations(app)
