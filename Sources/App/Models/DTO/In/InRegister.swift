@@ -11,6 +11,7 @@ struct InRegister: In {
     var name: String
     var email: String
     var password: String
+    var code: String
 }
 
 extension InRegister: Validatable {
@@ -19,6 +20,7 @@ extension InRegister: Validatable {
         validations.add("name", as: String.self, is: !.empty)
         validations.add("email", as: String.self, is: .email)
         validations.add("password", as: String.self, is: .count(8...))
+        validations.add("code", as: String.self, is: !.empty)
     }
 }
 

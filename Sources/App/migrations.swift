@@ -10,4 +10,5 @@ func migrations(_ app: Application) throws {
     app.migrations.add(CreatePost())
     app.migrations.add(CreatePostTag())
     app.migrations.add(CreateLink())
+    app.migrations.add(CreateEmailCode())
 }

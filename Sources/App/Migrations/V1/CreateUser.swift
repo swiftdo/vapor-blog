@@ -16,6 +16,7 @@ struct CreateUser: AsyncMigration {
             .field(User.FieldKeys.email, .string, .required)
             .field(User.FieldKeys.isEmailVerified, .bool, .required, .custom("DEFAULT FALSE"))
             .field(User.FieldKeys.status, .int)
+            .field(User.FieldKeys.isAdmin, .bool)
             .field(User.FieldKeys.createdAt, .datetime)
             .field(User.FieldKeys.updatedAt, .datetime)
             .unique(on: User.FieldKeys.email)
