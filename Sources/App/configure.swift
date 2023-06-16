@@ -29,22 +29,14 @@ public func configure(_ app: Application) async throws {
   // cores 需要放到最前面
   app.middleware.use(cors, at: .beginning)
 
-  app.databases.use(
-    .postgres(
-      hostname: Environment.get("DATABASE_HOST")!,
-      username: Environment.get("DATABASE_USERNAME")!,
-      password: Environment.get("DATABASE_PASSWORD")!,
-      database: Environment.get("DATABASE_NAME")),
-    as: .psql)
-
-  // app.databases.use(.postgres(configuration: .init(
-  //         hostname: Environment.get("DATABASE_HOST")!,
-  //         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
-  //         username: Environment.get("DATABASE_USERNAME")!,
-  //         password: Environment.get("DATABASE_PASSWORD"),
-  //         database: Environment.get("DATABASE_NAME"),
-  //         tls: .disable)
-  //     ), as: .psql)
+   app.databases.use(.postgres(configuration: .init(
+           hostname: Environment.get("DATABASE_HOST")!,
+           port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
+           username: Environment.get("DATABASE_USERNAME")!,
+           password: Environment.get("DATABASE_PASSWORD"),
+           database: Environment.get("DATABASE_NAME"),
+           tls: .prefer(try .init(configuration: .clientDefault)))
+       ), as: .psql)
 
   /// 添加邮箱服务
   app.smtp.use(
