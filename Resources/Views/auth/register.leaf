@@ -1,9 +1,40 @@
 #extend("basesimple"):
 #export("content"):
-<div class="flex flex-col items-center justify-center">
-    <div class="text-6xl py-20">注册!</div>
-    <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
-    <button class="btn text-xl my-20">Hello World!</button>
+<div class="flex flex-col items-center">
+    <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg">
+        <div class="text-4xl">注册</div>
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">用户名</span>
+            </label>
+            <input type="text" placeholder="请输入用户名" class="input input-lg input-bordered w-full " />
+        </div>
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">邮箱</span>
+            </label>
+            <input type="text" placeholder="请输入邮箱" class="input input-lg input-bordered w-full " />
+        </div>
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">密码</span>
+            </label>
+            <input type="text" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
+        </div>
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">再次输入密码</span>
+            </label>
+            <input type="text" placeholder="请再次输入密码" class="input input-lg input-bordered w-full " />
+        </div>
+        <div class="form-control w-full">
+            <label class="label">
+                <span class="label-text">注册邀请码</span>
+            </label>
+            <input type="text" placeholder="请输入注册邀请码" class="input input-lg input-bordered w-full " />
+        </div>
+        <button class="btn btn-lg mt-5 btn-outline">注册</button>
+    </form>
 </div>
 #endexport
 #endextend
