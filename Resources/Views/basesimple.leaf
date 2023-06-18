@@ -1,13 +1,13 @@
 #extend("base"):
-    #export("navbar"):
-        <!-- 导航 -->
-        <div class="navbar bg-base-300 px-20 py-5">
-            <div class="gap-2">
-                <div class="w-10 rounded-full">
-                    <img src="/images/logo.png" />
-                </div>
-                <a class="btn btn-ghost text-4xl" href="/">博客</a>
-            </div>
+#export("navbar"):
+<!-- 导航 -->
+<div class="navbar bg-base-300 px-20 py-5">
+    <div class="gap-2">
+        <div class="w-10 rounded-full">
+            <img src="/images/logo.png" />
         </div>
-    #endexport
+        <a class="btn btn-ghost text-4xl" href="/">博客</a>
+    </div>
+</div>
+#endexport
 #endextend

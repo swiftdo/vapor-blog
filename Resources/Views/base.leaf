@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
@@ -8,13 +9,15 @@
         <script src="/js/cdn.tailwindcss.com_3.3.2.js"></script>
         #import("head")
         <style>
-        html {
-            font-size: 16px;
-        }
+            html {
+                font-size: 16px;
+            }
         </style>
     </head>
+
     <body>
         #import("navbar")
         #import("content")
     </body>
+
 </html>

@@ -1,23 +1,23 @@
 #extend("base"):
-    #export("navbar"):
-        <!-- 导航 -->
-        <div class="navbar bg-base-300 px-20 py-5">
-            <div class="navbar-start">
-                <a class="btn btn-ghost text-4xl">后台</a>
-            </div>
-            <div class="navbar-center">
-                <ul class="menu menu-horizontal px-1">
-                    <li><a>分类1</a></li>
-                    <li><a>分类2</a></li>
-                    <li><a>分类3</a></li>
-                </ul>
-            </div>
-            <div class="navbar-end gap-5">
-                <div class="form-control">
-                    <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
-                </div>
-                <a class="btn" href="/web/auth/login">登录</a>
-                <!-- <div class="dropdown dropdown-end">
+#export("navbar"):
+<!-- 导航 -->
+<div class="navbar bg-base-300 px-20 py-5">
+    <div class="navbar-start">
+        <a class="btn btn-ghost text-4xl">后台</a>
+    </div>
+    <div class="navbar-center">
+        <ul class="menu menu-horizontal px-1">
+            <li><a>分类1</a></li>
+            <li><a>分类2</a></li>
+            <li><a>分类3</a></li>
+        </ul>
+    </div>
+    <div class="navbar-end gap-5">
+        <div class="form-control">
+            <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
+        </div>
+        <a class="btn" href="/web/auth/login">登录</a>
+        <!-- <div class="dropdown dropdown-end">
                     <label tabindex="0" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
                         <img src="/images/logo.png" />
@@ -35,7 +35,7 @@
                         <li><a>退出</a></li>
                     </ul>
                 </div> -->
-            </div>
-        </div>
-    #endexport
+    </div>
+</div>
+#endexport
 #endextend
