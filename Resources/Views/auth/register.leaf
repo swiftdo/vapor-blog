@@ -19,22 +19,38 @@
             <label class="label">
                 <span class="label-text">密码</span>
             </label>
-            <input type="text" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
-        </div>
-        <div class="form-control w-full">
-            <label class="label">
-                <span class="label-text">再次输入密码</span>
-            </label>
-            <input type="text" placeholder="请再次输入密码" class="input input-lg input-bordered w-full " />
+            <input type="password" show-password-on="click" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
         </div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">注册邀请码</span>
+                <span class="label-text-alt" onclick="my_modal.showModal()">如何获取邀请码？</span>
             </label>
             <input type="text" placeholder="请输入注册邀请码" class="input input-lg input-bordered w-full " />
         </div>
-        <button class="btn btn-lg mt-5 btn-outline">注册</button>
+
+        <div class="flex flex-row  gap-5 items-end">
+            <div class="form-control w-full ">
+                <label class="label">
+                    <span class="label-text">邮箱验证码</span>
+                </label>
+                <input type="text" placeholder="请输入邮箱验证码" class="input input-lg input-bordered" />
+            </div>
+            <button class="btn btn-lg" type="submit">获取邮箱验证码</button>
+        </div>
+
+        <button class="btn btn-lg mt-5 btn-outline" type="submit">注册</button>
     </form>
 </div>
+
+<dialog id="my_modal" class="modal">
+    <form method="dialog" class="modal-box">
+        <h3 class="font-bold text-lg">获取注册邀请码!</h3>
+        <p class="py-4">请联系管理员：<a href="https://github.com/swiftdo" target="_blank">https://github.com/swiftdo</a></p>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+        <button>关闭</button>
+    </form>
+</dialog>
 #endexport
 #endextend
