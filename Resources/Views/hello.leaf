@@ -1,8 +1,18 @@
 #extend("basefront"):
-    #export("content"):
-        <div class="flex flex-col items-center justify-center">
-            <div class="text-6xl py-20">首页</div>
-            <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
-        </div>
-    #endexport
+#export("content"):
+<div class="flex flex-col items-center justify-center">
+    <div class="text-6xl py-20">首页</div>
+    <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
+</div>
+
+<div x-data="{ open: false }">
+    <button @click="open = true">Open Dropdown</button>
+
+    <ul x-show="open" @click.away="open = false">
+        Dropdown Body
+    </ul>
+</div>
+
+
+#endexport
 #endextend

@@ -12,20 +12,32 @@ import Vapor
 struct WebAuthController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
     let auth = routes.grouped("auth")
-    auth.get("register", use: register)
-    auth.get("login", use: login)
+    auth.get("register", use: toRegister)
+    auth.get("login", use: toLogin)
+
+    // 接口
+    auth.post("register", use: register)
+    auth.post("register", "code", use: getRegisterCode)
   }
 }
 
 extension WebAuthController {
-
-  /// 登录
-  private func login(_ req: Request) async throws -> View {
+  /// 登录页面
+  private func toLogin(_ req: Request) async throws -> View {
     return try await req.view.render("auth/login", ["title": "博客"])
   }
 
-  /// 注册
-  private func register(_ req: Request) async throws -> View {
+  /// 注册页面
+  private func toRegister(_ req: Request) async throws -> View {
     return try await req.view.render("auth/register")
+  }
+
+  private func register(_ req: Request) async throws -> Response {
+    let _ = try await req.services.auth.register(req)
+    return req.redirect(to: "auth/login")
+  }
+
+  private func getRegisterCode(_ req: Request) async throws -> OutJson<OutOk> {
+    return try await req.services.auth.getRegisterCode(req)
   }
 }

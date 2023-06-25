@@ -1,4 +1,5 @@
 #extend("base"):
+
 #export("navbar"):
 <!-- 导航 -->
 <div class="navbar bg-base-300 px-20 py-5">
@@ -41,5 +42,7 @@
                 </div> -->
     </div>
 </div>
+
 #endexport
+
 #endextend

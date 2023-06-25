@@ -1,32 +1,32 @@
 #extend("basesimple"):
 #export("content"):
 <div class="flex flex-col items-center">
-    <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg">
+    <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg" method="post">
         <div class="text-4xl">注册</div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">用户名</span>
             </label>
-            <input type="text" placeholder="请输入用户名" class="input input-lg input-bordered w-full " />
+            <input type="text" name="name" placeholder="请输入用户名" class="input input-lg input-bordered w-full " />
         </div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">邮箱</span>
             </label>
-            <input type="text" placeholder="请输入邮箱" class="input input-lg input-bordered w-full " />
+            <input type="text" placeholder="请输入邮箱" name="email" class="input input-lg input-bordered w-full " />
         </div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">密码</span>
             </label>
-            <input type="password" show-password-on="click" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
+            <input type="password" placeholder="请输入密码" name="password" class="input input-lg input-bordered w-full " />
         </div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">注册邀请码</span>
                 <span class="label-text-alt" onclick="my_modal.showModal()">如何获取邀请码？</span>
             </label>
-            <input type="text" placeholder="请输入注册邀请码" class="input input-lg input-bordered w-full " />
+            <input type="text" name="code" placeholder="请输入注册邀请码" class="input input-lg input-bordered w-full " />
         </div>
 
         <div class="flex flex-row  gap-5 items-end">
@@ -36,9 +36,8 @@
                 </label>
                 <input type="text" placeholder="请输入邮箱验证码" class="input input-lg input-bordered" />
             </div>
-            <button class="btn btn-lg" type="submit">获取邮箱验证码</button>
+            <button class="btn btn-lg" type="button" onclick="getRegisterCode()">获取邮箱验证码</button>
         </div>
-
         <button class="btn btn-lg mt-5 btn-outline" type="submit">注册</button>
     </form>
 </div>
@@ -52,5 +51,39 @@
         <button>关闭</button>
     </form>
 </dialog>
+
+<template x-if="errorMessage">
+    <div x-text="errorMessage" class="fixed bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded"></div>
+</template>
+
+<script>
+    function showToast(message) {
+        const toast = document.querySelector('[x-data="{ errorMessage: \'\' }"]');
+        //toast.setAttribute('x-data', "{ errorMessage: '" + message + "' }");
+    }
+
+    async function getRegisterCode() {
+        try {
+            var email = document.querySelector('input[name="email"]').value;
+            // 获取验证码
+            const response = await fetch(window.location.href + '/code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: email }),
+            });
+
+            const data = await response.json();
+            if (response.ok && data.code == 0) {
+                showToast("请求成功");
+            } else {
+                showToast(data.message ?? "请求失败");
+            }
+        } catch (error) {
+            showToast("发生异常:" + error);
+        }
+    }
+</script>
 #endexport
 #endextend

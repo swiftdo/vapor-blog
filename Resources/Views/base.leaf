@@ -3,10 +3,13 @@
 
     <head>
         <meta charset="UTF-8">
+        
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
         <title>#(title)</title>
+        
         <link href="/styles/cdn.jsdelivr.net_npm_daisyui@3.1.0_dist_full.css" rel="stylesheet" type="text/css">
         <script src="/js/cdn.tailwindcss.com_3.3.2.js"></script>
+        <script scr="/js/alpinejs_3.12.2.js" defer></script>
         #import("head")
         <style>
             html {
