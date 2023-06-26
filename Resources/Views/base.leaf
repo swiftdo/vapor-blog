@@ -20,8 +20,40 @@
     </head>
 
     <body>
+        
         #import("navbar")
         #import("content")
+
+        
+        <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('myToast',  {
+                showError: false,
+                errorMessage: '',
+                typeClass: 'alert alert-error',
+                showToast(message, type) {
+                    this.showError = true;
+                    this.errorMessage = message;
+                    if (type == 0 || type == undefined || type == null) {
+                        this.typeClass = "alert alert-success"
+                    } else if (type == -1) {
+                        this.typeClass = "alert alert-error"
+                    } else {
+                        this.typeClass = "alert alert-info"
+                    }
+                    
+                    setTimeout(() => {
+                        this.showError = false;
+                        this.errorMessage = '';
+                    }, 2500);
+                },
+            })
+        });
+
+        function showMyToast(message, type) {
+            Alpine.store('myToast').showToast(message, type);
+        }
+        </script>
     </body>
 
 </html>

@@ -41,12 +41,15 @@
         <button class="btn btn-lg mt-5 btn-outline" type="submit">注册</button>
     </form>
 
-    <div x-show="showError" class="toast toast-middle toast-center" >
-        <div :class="typeClass">
-            <span x-text="errorMessage"></span>
+    <!-- 弹窗 -->
+    <div x-show="$store.myToast.showError" class="toast toast-middle toast-center" >
+        <div :class="$store.myToast.typeClass">
+            <span x-text="$store.myToast.errorMessage"></span>
         </div>
     </div>
 </div>
+
+
 
 <dialog id="my_modal" class="modal">
     <form method="dialog" class="modal-box">
@@ -61,24 +64,6 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('registerData', () => ({
-                showError: false,
-                errorMessage: '',
-                typeClass: 'alert alert-error',
-                showToast(message, type) {
-                    this.showError = true;
-                    this.errorMessage = message;
-                    if (type == 0 || type == undefined || type == null) {
-                        this.typeClass = "alert alert-success"
-                    } else if (type == -1) {
-                        this.typeClass = "alert alert-error"
-                    } else {
-                        this.typeClass = "alert alert-info"
-                    }
-                    setTimeout(() => {
-                        this.showError = false;
-                        this.errorMessage = '';
-                    }, 2500);
-                },
                 async getRegisterCode() {
                     try {
                         var email = document.querySelector('input[name="email"]').value;
@@ -90,15 +75,14 @@
                             },
                             body: JSON.stringify({ email: email }),
                         });
-
                         const data = await response.json();
                         if (response.ok && data.code == 0) {
-                            this.showToast("请求成功");
+                            showMyToast("请求成功");
                         } else {
-                            this.showToast(data.message ?? "请求失败", -1);
+                            showMyToast(data.message ?? "请求失败", -1);
                         }
                     } catch (error) {
-                       this.showToast("发生异常:" + error, -1);
+                        showMyToast("发生异常:" + error, -1);
                     }
                 }
             
