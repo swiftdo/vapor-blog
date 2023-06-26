@@ -13,8 +13,6 @@ public func configure(_ app: Application) async throws {
   app.middleware.use(ErrorMiddleware.custom(environment: app.environment))
 
   app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
-  app.routes.defaultMaxBodySize = "100mb"
   app.views.use(.leaf)
 
   let corsConfiguration = CORSMiddleware.Configuration(

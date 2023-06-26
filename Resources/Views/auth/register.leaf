@@ -1,6 +1,6 @@
 #extend("basesimple"):
 #export("content"):
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center" x-data="registerData">
     <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg" method="post">
         <div class="text-4xl">注册</div>
         <div class="form-control w-full">
@@ -36,10 +36,16 @@
                 </label>
                 <input type="text" placeholder="请输入邮箱验证码" class="input input-lg input-bordered" />
             </div>
-            <button class="btn btn-lg" type="button" onclick="getRegisterCode()">获取邮箱验证码</button>
+            <button class="btn btn-lg" type="button" @click="getRegisterCode">获取邮箱验证码</button>
         </div>
         <button class="btn btn-lg mt-5 btn-outline" type="submit">注册</button>
     </form>
+
+    <div x-show="showError" class="toast toast-middle toast-center" >
+        <div :class="typeClass">
+            <span x-text="errorMessage"></span>
+        </div>
+    </div>
 </div>
 
 <dialog id="my_modal" class="modal">
@@ -52,38 +58,54 @@
     </form>
 </dialog>
 
-<template x-if="errorMessage">
-    <div x-text="errorMessage" class="fixed bottom-4 right-4 bg-red-500 text-white py-2 px-4 rounded"></div>
-</template>
-
 <script>
-    function showToast(message) {
-        const toast = document.querySelector('[x-data="{ errorMessage: \'\' }"]');
-        //toast.setAttribute('x-data', "{ errorMessage: '" + message + "' }");
-    }
-
-    async function getRegisterCode() {
-        try {
-            var email = document.querySelector('input[name="email"]').value;
-            // 获取验证码
-            const response = await fetch(window.location.href + '/code', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('registerData', () => ({
+                showError: false,
+                errorMessage: '',
+                typeClass: 'alert alert-error',
+                showToast(message, type) {
+                    this.showError = true;
+                    this.errorMessage = message;
+                    if (type == 0 || type == undefined || type == null) {
+                        this.typeClass = "alert alert-success"
+                    } else if (type == -1) {
+                        this.typeClass = "alert alert-error"
+                    } else {
+                        this.typeClass = "alert alert-info"
+                    }
+                    setTimeout(() => {
+                        this.showError = false;
+                        this.errorMessage = '';
+                    }, 2500);
                 },
-                body: JSON.stringify({ email: email }),
-            });
+                async getRegisterCode() {
+                    try {
+                        var email = document.querySelector('input[name="email"]').value;
+                        // 获取验证码
+                        const response = await fetch(window.location.href + '/code', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ email: email }),
+                        });
 
-            const data = await response.json();
-            if (response.ok && data.code == 0) {
-                showToast("请求成功");
-            } else {
-                showToast(data.message ?? "请求失败");
-            }
-        } catch (error) {
-            showToast("发生异常:" + error);
-        }
-    }
+                        const data = await response.json();
+                        if (response.ok && data.code == 0) {
+                            this.showToast("请求成功");
+                        } else {
+                            this.showToast(data.message ?? "请求失败", -1);
+                        }
+                    } catch (error) {
+                       this.showToast("发生异常:" + error, -1);
+                    }
+                }
+            
+            })
+        )
+    });
+
 </script>
 #endexport
 #endextend
