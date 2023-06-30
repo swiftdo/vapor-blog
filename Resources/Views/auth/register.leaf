@@ -42,14 +42,12 @@
     </form>
 
     <!-- 弹窗 -->
-    <div x-show="$store.myToast.showError" class="toast toast-middle toast-center" >
+    <div x-show="$store.myToast.showError" class="toast toast-middle toast-center">
         <div :class="$store.myToast.typeClass">
             <span x-text="$store.myToast.errorMessage"></span>
         </div>
     </div>
 </div>
-
-
 
 <dialog id="my_modal" class="modal">
     <form method="dialog" class="modal-box">
@@ -64,29 +62,29 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('registerData', () => ({
-                async getRegisterCode() {
-                    try {
-                        var email = document.querySelector('input[name="email"]').value;
-                        // 获取验证码
-                        const response = await fetch(window.location.href + '/code', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ email: email }),
-                        });
-                        const data = await response.json();
-                        if (response.ok && data.code == 0) {
-                            showMyToast("请求成功");
-                        } else {
-                            showMyToast(data.message ?? "请求失败", -1);
-                        }
-                    } catch (error) {
-                        showMyToast("发生异常:" + error, -1);
+            async getRegisterCode() {
+                try {
+                    var email = document.querySelector('input[name="email"]').value;
+                    // 获取验证码
+                    const response = await fetch(window.location.href + '/code', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email: email }),
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.code == 0) {
+                        showMyToast("请求成功");
+                    } else {
+                        showMyToast(data.message ?? "请求失败", -1);
                     }
+                } catch (error) {
+                    showMyToast("发生异常:" + error, -1);
                 }
-            
-            })
+            }
+
+        })
         )
     });
 
