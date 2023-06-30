@@ -32,7 +32,7 @@ extension ErrorMiddleware {
                 status = .internalServerError
                 headers = [:]
             }
-
+            
             req.logger.report(error: error)
             let response = Response(status: status, headers: headers)
 

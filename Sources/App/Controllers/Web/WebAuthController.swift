@@ -18,6 +18,7 @@ struct WebAuthController: RouteCollection {
     // 接口
     auth.post("register", use: register)
     auth.post("register", "code", use: getRegisterCode)
+    auth.post("login", use: login)
   }
 }
 
@@ -34,10 +35,15 @@ extension WebAuthController {
 
   private func register(_ req: Request) async throws -> Response {
     let _ = try await req.services.auth.register(req)
-    return req.redirect(to: "auth/login")
+    return req.redirect(to: "/web/auth/login")
   }
 
   private func getRegisterCode(_ req: Request) async throws -> OutJson<OutOk> {
     return try await req.services.auth.getRegisterCode(req)
+  }
+
+  private func login(_ req: Request) async throws -> Response {
+    let _ = try await req.services.auth.login(req)
+    return req.redirect(to: "/")
   }
 }

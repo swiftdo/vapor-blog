@@ -41,7 +41,7 @@ public struct AuthServiceImpl: AuthService {
       name: inRegister.name, email: inRegister.email, isEmailVerified: true, inviteCode: inviteCode
     )
 
-    if let inCode = inRegister.inviteCode {
+    if let inCode = inRegister.inviteCode, !inCode.isEmpty {
       /// 获取到邀请者
       let inviteUser =
         try await User

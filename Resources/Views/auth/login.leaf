@@ -1,20 +1,20 @@
 #extend("basesimple"):
 #export("content"):
 <div class="flex flex-col items-center">
-    <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg">
+    <form class="flex flex-col gap-5 p-10 m-20 bg-base-300 w-4/12 rounded-lg" method="post">
         <div class="text-4xl">登录</div>
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">邮箱</span>
             </label>
-            <input type="text" placeholder="请输入邮箱" class="input input-lg input-bordered w-full " />
+            <input type="text" name="email" placeholder="请输入邮箱" class="input input-lg input-bordered w-full " />
         </div>
 
         <div class="form-control w-full">
             <label class="label">
                 <span class="label-text">密码</span>
             </label>
-            <input type="text" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
+            <input type="text" name="password" placeholder="请输入密码" class="input input-lg input-bordered w-full " />
         </div>
 
         <button class="btn btn-lg mt-5 btn-outline">登录</button>

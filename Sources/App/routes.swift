@@ -3,10 +3,10 @@ import Vapor
 
 func routes(_ app: Application) throws {
 
-  app.get { req async throws -> View in
-    return try await req.view.render("hello", ["name": "Blog"])
-  }
+  // 前端
+  try app.register(collection: WebFrontController())
 
+  // 拦截报错
   let apiGroup = app.grouped("api")
   try apiGroup.register(collection: AuthController())
 
