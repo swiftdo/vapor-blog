@@ -199,8 +199,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   // 判断密码是否正确
-  private func isValidPwd(email: String, pwd: String, req: Request) async throws -> (Bool, UserAuth)
-  {
+  func isValidPwd(email: String, pwd: String, req: Request) async throws -> (Bool, UserAuth) {
     let ua = try await getUserAuth(email: email, req: req)
     guard let userAuth = ua else {
       throw ApiError(code: .userNotExist)

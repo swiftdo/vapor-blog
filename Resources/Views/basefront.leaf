@@ -20,29 +20,29 @@
         <div class="form-control">
             <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
         </div>
+        #if(user):
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                <img src="/images/logo.png" />
+                </div>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                <a class="justify-between">
+                    个人资料
+                </a>
+                </li>
+                <li><a>设置</a></li>
+                <li><a href="web/auth/logout">退出</a></li>
+            </ul>
+        </div>
+        #else:
         <a class="btn" href="/web/auth/login">登录</a>
         <a class="btn" href="/web/auth/register">注册</a>
-        <!-- <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                        <img src="/images/logo.png" />
-                        </div>
-                    </label>
-                    
-
-                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                        <a class="justify-between">
-                            个人资料
-                        </a>
-                        </li>
-                        <li><a>设置</a></li>
-                        <li><a>退出</a></li>
-                    </ul>
-                </div> -->
+        #endif
     </div>
 </div>
-
 #endexport
 
 #endextend

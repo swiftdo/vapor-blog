@@ -18,6 +18,8 @@ protocol AuthService: Service {
   func getRegisterCode(_ req: Request) async throws -> OutJson<OutOk>
   // 获取重置密码验证码
   func getResetPwdCode(_ req: Request) async throws -> OutJson<OutOk>
+  // 判断密码是否有效
+  func isValidPwd(email: String, pwd: String, req: Request) async throws -> (Bool, UserAuth)
 }
 
 extension ServiceFactory {
