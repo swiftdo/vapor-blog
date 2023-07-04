@@ -11,19 +11,18 @@ import Vapor
 
 struct WebAuthController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
-    let auth = routes.grouped("auth")
-    auth.get("register", use: toRegister)
-    auth.get("login", use: toLogin)
+    routes.get("register", use: toRegister)
+    routes.get("login", use: toLogin)
 
     // 接口
-    auth.post("register", use: register)
-    auth.post("register", "code", use: getRegisterCode)
+    routes.post("register", use: register)
+    routes.post("register", "code", use: getRegisterCode)
     
-    let credentialsRoute = auth.grouped(WebCredentialsAuthenticator())
+    let credentialsRoute = routes.grouped(WebCredentialsAuthenticator())
     credentialsRoute.post("login", use: login)
     
     // 退出
-    let tokenGroup = auth.grouped(WebSessionAuthenticator(), User.guardMiddleware())
+    let tokenGroup = routes.grouped(WebSessionAuthenticator(), User.guardMiddleware())
     tokenGroup.get("logout", use: logout)
   }
 }

@@ -5,37 +5,54 @@
     <div class="navbar-start">
         <a class="btn btn-ghost text-4xl">后台</a>
     </div>
-    <div class="navbar-center">
-        <ul class="menu menu-horizontal px-1">
-            <li><a>分类1</a></li>
-            <li><a>分类2</a></li>
-            <li><a>分类3</a></li>
-        </ul>
-    </div>
+    
     <div class="navbar-end gap-5">
-        <div class="form-control">
-            <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
+        <a class="btn" href="/">网站</a>
+        <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                <div class="w-10 rounded-full">
+                <img src="/images/logo.png" />
+                </div>
+            </label>
+            <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                <li>
+                <a class="justify-between" href="/web/backend">
+                    个人设置
+                </a>
+                </li>
+                <li><a onclick="my_modal_logout.showModal()">退出</a></li>
+            </ul>
         </div>
-        <a class="btn" href="/web/auth/login">登录</a>
-        <!-- <div class="dropdown dropdown-end">
-                    <label tabindex="0" class="btn btn-ghost btn-circle avatar">
-                        <div class="w-10 rounded-full">
-                        <img src="/images/logo.png" />
-                        </div>
-                    </label>
-                    
-
-                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <li>
-                        <a class="justify-between">
-                            个人资料
-                        </a>
-                        </li>
-                        <li><a>设置</a></li>
-                        <li><a>退出</a></li>
-                    </ul>
-                </div> -->
     </div>
 </div>
+
+<dialog id="my_modal_logout" class="modal">
+    <form method="dialog" class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        <h3 class="font-bold text-lg">提示！</h3>
+        <p class="py-4">确定登出？</p>
+        <div class="modal-action">
+            <a class="btn" href="/web/auth/logout">确定</a>
+        </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 #endexport
+
+#export("content"):
+<!-- 内容 -->
+<div class="flex flex-row">
+    <div class="w-60">
+        <ul class="menu menu-lg w-60 p-0 [&_li>*]:rounded-none">
+            <li><a href="/web/backend/tagMgt">标签管理</a></li>
+            <li><a href="/web/backend/categoryMgt">分类管理</a></li>
+            <li><a href="/web/backend/postMgt">文章管理</a></li>
+        </ul>
+    </div>
+    <div class="flex-auto">#import("contentRight")</div>
+</div>
+#endexport
+
 #endextend

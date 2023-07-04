@@ -29,11 +29,10 @@
             </label>
             <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                 <li>
-                <a class="justify-between">
-                    个人资料
+                <a class="justify-between" href="/web/backend">
+                    控制台
                 </a>
                 </li>
-                <li><a>设置</a></li>
                 <li><a onclick="my_modal_logout.showModal()">退出</a></li>
             </ul>
         </div>

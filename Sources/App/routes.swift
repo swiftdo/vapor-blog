@@ -11,6 +11,7 @@ func routes(_ app: Application) throws {
   try app.grouped(app.sessions.middleware).register(collection: WebFrontController())
 
   // 后台
-  let webGroup = app.grouped("web")
-  try webGroup.grouped(app.sessions.middleware).register(collection: WebAuthController())
+  let webGroup = app.grouped("web").grouped(app.sessions.middleware)
+  try webGroup.grouped("auth").register(collection: WebAuthController())
+  try webGroup.grouped("backend").register(collection: WebBackendController())
 }
