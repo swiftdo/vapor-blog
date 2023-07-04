@@ -34,7 +34,7 @@
                 </a>
                 </li>
                 <li><a>设置</a></li>
-                <li><a href="web/auth/logout">退出</a></li>
+                <li><a onclick="my_modal_logout.showModal()">退出</a></li>
             </ul>
         </div>
         #else:
@@ -43,6 +43,20 @@
         #endif
     </div>
 </div>
+
+<dialog id="my_modal_logout" class="modal">
+    <form method="dialog" class="modal-box">
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        <h3 class="font-bold text-lg">提示！</h3>
+        <p class="py-4">确定登出？</p>
+        <div class="modal-action">
+            <a class="btn" href="/web/auth/logout">确定</a>
+        </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+    </form>
+</dialog>
 #endexport
 
 #endextend

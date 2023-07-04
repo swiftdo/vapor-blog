@@ -24,7 +24,7 @@ struct WebAuthController: RouteCollection {
     
     // 退出
     let tokenGroup = auth.grouped(WebSessionAuthenticator(), User.guardMiddleware())
-    auth.get("logout", use: logout)
+    tokenGroup.get("logout", use: logout)
   }
 }
 
