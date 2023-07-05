@@ -43,12 +43,13 @@
 
 #export("content"):
 <!-- 内容 -->
-<div class="flex flex-row">
-    <div class="w-60">
-        <ul class="menu menu-lg w-60 p-0 [&_li>*]:rounded-none">
+<div class="flex flex-row h-full">
+    <div class="flex flex-col w-60" >
+        <ul class="menu menu-lg w-60 p-5 [&_li>*]:rounded-none">
             <li><a href="/web/backend/tagMgt">标签管理</a></li>
             <li><a href="/web/backend/categoryMgt">分类管理</a></li>
             <li><a href="/web/backend/postMgt">文章管理</a></li>
+            <li><a href="/web/backend/linkMgt">友情链接</a></li>
         </ul>
     </div>
     <div class="flex-auto">#import("contentRight")</div>

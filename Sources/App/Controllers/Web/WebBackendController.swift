@@ -16,6 +16,18 @@ struct WebBackendController: RouteCollection {
     tokenGroup.get("tagMgt", use: toTagMgt)
     tokenGroup.get("categoryMgt", use: toCategoryMgt)
     tokenGroup.get("postMgt", use: toPostMgt)
+    tokenGroup.get("linkMgt", use: toLinkMgt)
+    
+    // 标签
+    
+    
+    // 分类
+    
+    // 文章
+    
+    // 链接
+    
+    
   }
 }
 
@@ -38,4 +50,9 @@ extension WebBackendController {
   private func toPostMgt(_ req: Request) async throws -> View {
     return try await req.view.render("backend/postMgt")
   }
+
+  private func toLinkMgt(_ req: Request) async throws -> View {
+    return try await req.view.render("backend/toLinkMgt")
+  }
+  
 }
