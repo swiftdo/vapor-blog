@@ -46,10 +46,35 @@
 <div class="flex flex-row h-full">
     <div class="flex flex-col w-60" >
         <ul class="menu menu-lg w-60 p-5 [&_li>*]:rounded-none">
-            <li><a href="/web/backend/tagMgt">标签管理</a></li>
-            <li><a href="/web/backend/categoryMgt">分类管理</a></li>
-            <li><a href="/web/backend/postMgt">文章管理</a></li>
-            <li><a href="/web/backend/linkMgt">友情链接</a></li>
+            <li>
+                #if(tabName == "标签管理"):
+                <a href="/web/backend/tagMgt" class="active">标签管理</a>
+                #else:
+                <a href="/web/backend/tagMgt">标签管理</a>
+                #endif
+            </li>
+            <li>
+                #if(tabName == "分类管理"):
+                <a href="/web/backend/categoryMgt" class="active">分类管理</a>
+                #else:
+                <a href="/web/backend/categoryMgt">分类管理</a>
+                #endif
+            </li>
+            <li>
+                #if(tabName == "文章管理"):
+                <a href="/web/backend/postMgt" class="active">文章管理</a>
+                #else:
+                <a href="/web/backend/postMgt">文章管理</a>
+                #endif
+                
+            </li>
+            <li>
+                #if(tabName == "友情链接"):
+                <a href="/web/backend/linkMgt" class="active">友情链接</a>
+                #else:
+                <a href="/web/backend/linkMgt">友情链接</a>
+                #endif
+            </li>
         </ul>
     </div>
     <div class="flex-auto">#import("contentRight")</div>

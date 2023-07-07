@@ -40,19 +40,19 @@ extension WebBackendController {
   }
   
   private func toTagMgt(_ req: Request) async throws -> View {
-    return try await req.view.render("backend/tagMgt")
+      return try await req.view.render("backend/tagMgt", ["tabName": "标签管理"])
   }
   
   private func toCategoryMgt(_ req: Request) async throws -> View {
-    return try await req.view.render("backend/categoryMgt")
+    return try await req.view.render("backend/categoryMgt", ["tabName": "分类管理"])
   }
   
   private func toPostMgt(_ req: Request) async throws -> View {
-    return try await req.view.render("backend/postMgt")
+    return try await req.view.render("backend/postMgt", ["tabName": "文章管理"])
   }
 
   private func toLinkMgt(_ req: Request) async throws -> View {
-    return try await req.view.render("backend/toLinkMgt")
+    return try await req.view.render("backend/linkMgt", ["tabName": "友情链接"])
   }
   
 }
