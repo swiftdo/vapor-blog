@@ -1,2 +1,3 @@
 *.html linguist-language=swift
 .css linguist-language=swift
+*.leaf linguist-language=swift

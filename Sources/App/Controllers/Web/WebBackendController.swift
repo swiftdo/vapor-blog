@@ -19,6 +19,8 @@ struct WebBackendController: RouteCollection {
     tokenGroup.get("linkMgt", use: toLinkMgt)
     
     // 标签
+    tokenGroup.post("tag", use: addTag)
+    
     
     
     // 分类
@@ -55,4 +57,12 @@ extension WebBackendController {
     return try await req.view.render("backend/linkMgt", ["tabName": "友情链接"])
   }
   
+  
+  /// tag 管理
+  private func addTag(_ req: Request) async throws -> View {
+    
+    
+    
+    return try await req.view.render("backend/tagMgt", ["tabName": "标签管理"])
+  }
 }

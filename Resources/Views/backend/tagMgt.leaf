@@ -2,10 +2,9 @@
 #export("contentRight"):
 <div class="flex flex-col">
     <div class="flex flex-row gap-5 mr-5 my-5">
-        <button class="btn btn-primary">添加</button>
+        <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
         <button class="btn btn-error">删除</button>
     </div>
-
     <div class="overflow-x-auto">
         <table class="table">
           <!-- head -->
@@ -359,5 +358,17 @@
           </div>
       </div>
 </div>
+
+<dialog id="my_modal_add_tag" class="modal">
+  <form method="dialog" class="modal-box w-11/12 max-w-5xl">
+    <button class="btn  absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
+    <form method="post" action="">
+      <h3 class="font-bold text-lg">添加标签</h3>
+      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
+      <button class="btn" type="submit">提交</button>
+    </form>
+  </form>
+</dialog>
+
 #endexport
 #endextend

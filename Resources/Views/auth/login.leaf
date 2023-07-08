@@ -7,7 +7,7 @@
             <label class="label">
                 <span class="label-text">邮箱</span>
             </label>
-            <input type="text" name="email" placeholder="请输入邮箱" class="input input-lg input-bordered w-full " />
+            <input type="text" name="email" placeholder="请输入邮箱" class="input input-lg input-bordered w-full" />
         </div>
 
         <div class="form-control w-full">
