@@ -44,6 +44,12 @@ extension WebBackendController {
         ["value": "20", "label": "20条/页"],
         ["value": "30", "label": "30条/页"],
         ["value": "50", "label": "50条/页"]
+      ],
+      "menus": [
+        ["href": "/web/backend/tagMgt", "label": "标签管理"],
+        ["href": "/web/backend/categoryMgt", "label": "分类管理"],
+        ["href": "/web/backend/postMgt", "label": "文章管理"],
+        ["href": "/web/backend/linkMgt", "label": "友情链接"]
       ]
     ]
     return context
