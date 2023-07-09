@@ -14,7 +14,7 @@ struct CreateCategory: AsyncMigration {
         try await database.schema(Category.schema)
             .id()
             .field(Category.FieldKeys.name, .string)
-            .field(Category.FieldKeys.status, .int8, .required)
+            .field(Category.FieldKeys.status, .int, .required)
             .field(Category.FieldKeys.isNav, .bool, .required)
             .field(Category.FieldKeys.ownerId, .uuid, .required)
             .field(Category.FieldKeys.createdAt, .datetime)

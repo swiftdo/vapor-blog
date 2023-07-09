@@ -13,7 +13,7 @@ struct CreatePost: AsyncMigration {
         try await database.schema(Post.schema)
             .id()
             .field(Post.FieldKeys.title, .string)
-            .field(Post.FieldKeys.status, .int8, .required)
+            .field(Post.FieldKeys.status, .int, .required)
             .field(Post.FieldKeys.desc, .string)
             .field(Post.FieldKeys.content, .string, .required)
             .field(Post.FieldKeys.ownerId, .uuid, .required)

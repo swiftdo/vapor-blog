@@ -12,7 +12,7 @@ struct CreateTag: AsyncMigration {
         try await database.schema(Tag.schema)
             .id()
             .field(Tag.FieldKeys.name, .string)
-            .field(Tag.FieldKeys.status, .int8, .required)
+            .field(Tag.FieldKeys.status, .int, .required)
             .field(Tag.FieldKeys.ownerId, .uuid, .required)
             .field(Tag.FieldKeys.createdAt, .datetime)
             .field(Tag.FieldKeys.updatedAt, .datetime)

@@ -14,7 +14,7 @@ struct CreateComment: AsyncMigration {
         try await database.schema(Comment.schema)
             .id()
             .field(Comment.FieldKeys.content, .string)
-            .field(Comment.FieldKeys.status, .int8, .required)
+            .field(Comment.FieldKeys.status, .int, .required)
             .field(Comment.FieldKeys.website, .string)
             .field(Comment.FieldKeys.email, .string, .required)
             .field(Comment.FieldKeys.targetId, .uuid, .required)

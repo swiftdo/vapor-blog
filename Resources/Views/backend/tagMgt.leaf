@@ -1,6 +1,6 @@
 #extend("basebackend"):
 #export("contentRight"):
-<div class="flex flex-col">
+<div class="flex flex-col">   
     <div class="flex flex-row gap-5 mr-5 my-5">
         <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
         <button class="btn btn-error">删除</button>
@@ -15,14 +15,13 @@
                   <input type="checkbox" class="checkbox" />
                 </label>
               </th>
-              <th>Name</th>
-              <th>Job</th>
-              <th>Favorite Color</th>
-              <th></th>
+              <th>名称</th>
+              <th>状态</th>
+              <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            <!-- row 1 -->
+            #for(tag in data.items):
             <tr>
               <th>
                 <label>
@@ -31,343 +30,51 @@
               </th>
               <td>
                 <div class="flex items-center space-x-3">
-                  <div class="avatar">
-                    <div class="mask mask-squircle w-12 h-12">
-                      <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div class="font-bold">Hart Hagerty</div>
-                    <div class="text-sm opacity-50">United States</div>
-                  </div>
+                  #(tag.name)
                 </div>
               </td>
               <td>
-                Zemlak, Daniel and Leannon
-                <br/>
-                <span class="badge badge-ghost badge-sm">Desktop Support Technician</span>
+                #(tag.status)
               </td>
-              <td>Purple</td>
-              <th>
-                <button class="btn btn-ghost btn-xs">details</button>
-              </th>
+              <td>
+                <button class="btn">编辑</button>
+              </td>
             </tr>
-            <!-- row 2 -->
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" class="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div class="flex items-center space-x-3">
-                  <div class="avatar">
-                    <div class="mask mask-squircle w-12 h-12">
-                      <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div class="font-bold">Brice Swyre</div>
-                    <div class="text-sm opacity-50">China</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Carroll Group
-                <br/>
-                <span class="badge badge-ghost badge-sm">Tax Accountant</span>
-              </td>
-              <td>Red</td>
-              <th>
-                <button class="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-            <!-- row 3 -->
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" class="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div class="flex items-center space-x-3">
-                  <div class="avatar">
-                    <div class="mask mask-squircle w-12 h-12">
-                      <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div class="font-bold">Marjy Ferencz</div>
-                    <div class="text-sm opacity-50">Russia</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Rowe-Schoen
-                <br/>
-                <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-              </td>
-              <td>Crimson</td>
-              <th>
-                <button class="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
-            <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              <tr>
-                <th>
-                  <label>
-                    <input type="checkbox" class="checkbox" />
-                  </label>
-                </th>
-                <td>
-                  <div class="flex items-center space-x-3">
-                    <div class="avatar">
-                      <div class="mask mask-squircle w-12 h-12">
-                        <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                      </div>
-                    </div>
-                    <div>
-                      <div class="font-bold">Marjy Ferencz</div>
-                      <div class="text-sm opacity-50">Russia</div>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  Rowe-Schoen
-                  <br/>
-                  <span class="badge badge-ghost badge-sm">Office Assistant I</span>
-                </td>
-                <td>Crimson</td>
-                <th>
-                  <button class="btn btn-ghost btn-xs">details</button>
-                </th>
-              </tr>
-              
-            <!-- row 4 -->
-            <tr>
-              <th>
-                <label>
-                  <input type="checkbox" class="checkbox" />
-                </label>
-              </th>
-              <td>
-                <div class="flex items-center space-x-3">
-                  <div class="avatar">
-                    <div class="mask mask-squircle w-12 h-12">
-                      <img src="/images/logo.png" alt="Avatar Tailwind CSS Component" />
-                    </div>
-                  </div>
-                  <div>
-                    <div class="font-bold">Yancy Tear</div>
-                    <div class="text-sm opacity-50">Brazil</div>
-                  </div>
-                </div>
-              </td>
-              <td>
-                Wyman-Ledner
-                <br/>
-                <span class="badge badge-ghost badge-sm">Community Outreach Specialist</span>
-              </td>
-              <td>Indigo</td>
-              <th>
-                <button class="btn btn-ghost btn-xs">details</button>
-              </th>
-            </tr>
+            #endfor
           </tbody>
         </table>
-        <div class="join">
-            <button class="join-item btn">前一页</button>
-            <button class="join-item btn">1</button>
-            <button class="join-item btn btn-active">2</button>
-            <button class="join-item btn">3</button>
-            <button class="join-item btn">4</button>
-            <button class="join-item btn">后一页</button>
-          </div>
+        <div class="flex flex-row items-center">
+            <button class="btn"><</button>
+            <button class="btn">1</button>
+            <button class="btn">></button>
+            <div>到第</div>
+            <button class="btn btn-active">#(data.metadata.page)</button>
+            <div>页</div>
+            <button class="btn">确定</button>
+            <div>共#(data.metadata.total)条</div>
+
+            <select class="select select-bordered w-fit max-w-xs">
+              #for(per in perOptions):
+                #if(per.value == data.metadata.per):
+                <option value="#(per.value)" selected>#(per.label)</option>
+                #else:
+                <option value="#(per.value)">#(per.label)</option>
+                #endif
+              #endfor
+            </select>
+          </div> 
       </div>
 </div>
 
 <dialog id="my_modal_add_tag" class="modal">
-  <form method="dialog" class="modal-box w-11/12 max-w-5xl">
+  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
     <button class="btn  absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
-    <form method="post" action="">
+    <form method="post" action="/web/backend/tag">
       <h3 class="font-bold text-lg">添加标签</h3>
       <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
       <button class="btn" type="submit">提交</button>
     </form>
-  </form>
+  </div>
 </dialog>
 
 #endexport
