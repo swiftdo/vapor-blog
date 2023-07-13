@@ -33,18 +33,63 @@ struct WebBackendController: RouteCollection {
 }
 
 extension WebBackendController {
-  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil) async throws -> [String: AnyEncodable?] {
-    let user = try req.auth.require(User.self)
-    let context: [String: AnyEncodable?] = [
-      "tabName": .init(tabName),
-      "user": .init(user.asPublic()),
-      "data": data,
+  
+  private func genPageMetadata(pageMeta: PageMetadata) -> AnyEncodable {
+    let maxPage = pageMeta.pageCount
+    let curPage = pageMeta.page
+
+    var showMaxMore: Bool = true
+    var showMinMore: Bool = true
+    var showPages: [Int] = []
+    
+    if (maxPage <= 3) {
+      showMaxMore = false
+      showMinMore = false
+      showPages = [Int](1...maxPage)
+    } else {
+      if(curPage < 3) {
+        showMinMore = false
+        showMaxMore = true
+      }
+      else if (curPage > maxPage - 3) {
+        showMinMore = true
+        showMaxMore = false
+      }
+      
+      if (curPage == 1) {
+        showPages = [curPage, curPage + 1, curPage + 2]
+      } else if (curPage == maxPage) {
+        showPages = [curPage - 2, curPage - 1, curPage]
+      } else {
+        showPages = [curPage - 1,curPage, curPage + 1]
+      }
+    }
+    
+    return [
+      "maxPage": maxPage,
+      "minPage": 1,
+      "curPage": curPage,
+      "showMinMore": showMinMore,
+      "showMaxMore": showMaxMore,
+      "showPages": showPages,
+      "total": pageMeta.total,
+      "page":pageMeta.page,
+      "per": pageMeta.per,
       "perOptions": [
         ["value": "10", "label": "10条/页"],
         ["value": "20", "label": "20条/页"],
         ["value": "30", "label": "30条/页"],
         ["value": "50", "label": "50条/页"]
       ],
+    ]
+  }
+  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil) async throws -> [String: AnyEncodable?] {
+    let user = try req.auth.require(User.self)
+    let context: [String: AnyEncodable?] = [
+      "tabName": .init(tabName),
+      "user": .init(user.asPublic()),
+      "data": data,
+      "pageMeta": pageMeta != nil ? genPageMetadata(pageMeta: pageMeta!): nil,
       "menus": [
         ["href": "/web/backend/tagMgt", "label": "标签管理"],
         ["href": "/web/backend/categoryMgt", "label": "分类管理"],
@@ -62,7 +107,11 @@ extension WebBackendController {
   private func toTagMgt(_ req: Request) async throws -> View {
     let user = try req.auth.require(User.self)
     let tags = try await req.repositories.tag.page(ownerId: user.requireID())
-    let context = try await backendWrapper(req, tabName: "标签管理", data: .init(tags))
+    let context = try await backendWrapper(req,
+                                           tabName: "标签管理",
+                                           data: .init(tags),
+                                           pageMeta: tags.metadata
+    )
     return try await req.view.render("backend/tagMgt", context)
   }
   
