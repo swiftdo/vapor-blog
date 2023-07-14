@@ -1,4 +1,4 @@
-<div class="flex flex-row items-center" x-data="{ 
+<div class="flex flex-row items-center gap-2" x-data="{ 
   pageCtrl_curPage: #(pageMeta.curPage), 
   pageCtrl_per: #(pageMeta.per),
   pageCtrl_minPage: #(pageMeta.minPage),
@@ -83,7 +83,17 @@
 
   function confirmPage(e) {
     var per = this.pageCtrl_per;
+    var curPage = this.pageCtrl_curPage;
+    var minPage = this.pageCtrl_minPage;
+    var maxPage = this.pageCtrl_maxPage;
+
+    if (curPage < minPage) {
+      curPage = minPage;
+    }
+    if (curPage > maxPage) {
+      curPage = maxPage;
+    }    
     // 获取当前按钮的值
-    clickOnPage(this.pageCtrl_curPage, per)
+    clickOnPage(curPage, per);
   }
 </script>
