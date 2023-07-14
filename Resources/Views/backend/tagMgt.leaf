@@ -43,73 +43,10 @@
             #endfor
           </tbody>
         </table>
-        <div class="flex flex-row items-center">
-            <div class="flex gap-2">
-              #if(pageMeta.curPage == pageMeta.minPage):
-              <button class="btn btn-disabled"><</button>
-              #else:
-              <button class="btn btn-primary" onclick="preClickOnPage(#(pageMeta.curPage), #(pageMeta.per), #(pageMeta.minPage))"><</button>
-              #endif
-              #if(pageMeta.showMinMore):
-                <button class="btn" onclick="clickOnPage(#(pageMeta.minPage), #(pageMeta.per))">#(pageMeta.minPage)</button>
-                <button class="btn btn-disabled">...</button>
-              #else:
-              #endif
-              #for(pageNum in pageMeta.showPages):
-                #if(pageNum == pageMeta.curPage):
-                  <button class="btn btn-success" onclick="clickOnPage(#(pageNum), #(pageMeta.per))">#(pageNum)</button>
-                #else: 
-                  <button class="btn" onclick="clickOnPage(#(pageNum), #(pageMeta.per))">#(pageNum)</button>
-                #endif
-              #endfor
-              #if(pageMeta.showMaxMore):
-                <button class="btn btn-disabled">...</button>
-                <button class="btn" onclick="clickOnPage(#(pageMeta.maxPage), #(pageMeta.per))">#(pageMeta.maxPage)</button>
-              #else:
-              #endif
-              #if(pageMeta.curPage == pageMeta.maxPage):
-              <button class="btn btn-disabled">></button>
-              #else:
-              <button class="btn btn-primary" onclick="nextClickOnPage(#(pageMeta.curPage), #(pageMeta.per), #(pageMeta.maxPage))">></button>
-              #endif
-            </div>
-            <div>到第</div>
-            <button class="btn btn-active">#(pageMeta.page)</button>
-            <div>页</div>
-            <button class="btn">确定</button>
-            <div>共#(pageMeta.total)条</div>
-
-            <select class="select select-bordered w-fit max-w-xs">
-              #for(per in pageMeta.perOptions):
-                #if(per.value == pageMeta.per):
-                <option value="#(per.value)" selected>#(per.label)</option>
-                #else:
-                <option value="#(per.value)">#(per.label)</option>
-                #endif
-              #endfor
-            </select>
-          </div> 
+        #extend("backend/pageCtrl")
       </div>
 </div>
 
-<script>
-  function clickOnPage(page, per){
-    window.location.replace(`/web/backend/tagMgt?per=${per}&page=${page}`)
-  }
-  function preClickOnPage(page, per, minPage) {
-    if (page <= minPage) {
-      return ;
-    } 
-    clickOnPage(page -1 , per);
-  }
-
-  function nextClickOnPage(page, per, maxPage) {
-    if (page >= maxPage) {
-      return ;
-    }
-    clickOnPage(page + 1 , per);
-  }
-</script>
 
 <dialog id="my_modal_add_tag" class="modal">
   <div method="dialog" class="modal-box w-11/12 max-w-5xl">
