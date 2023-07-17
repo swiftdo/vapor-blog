@@ -27,6 +27,7 @@ struct TagRepositoryImpl: TagRepository {
           // status 1是正常, 2是删除
           group.filter(\.$owner.$id == ownerId).filter(\.$status == 1)
         }
+        .sort(\.$createdAt, .descending)
         .paginate(for:req)
         .map({$0.asPublic()})
   }

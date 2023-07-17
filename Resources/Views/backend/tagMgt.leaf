@@ -20,7 +20,6 @@
                 </label>
               </th>
               <th>名称</th>
-              <th>状态</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -36,9 +35,6 @@
                 <div class="flex items-center space-x-3">
                   #(tag.name)
                 </div>
-              </td>
-              <td>
-                #(tag.status)
               </td>
               <td>
                 <button class="btn">编辑</button>
@@ -102,5 +98,18 @@
     </form>
   </div>
 </dialog>
+
+<!-- 编辑标签 -->
+<dialog id="my_modal_add_tag" class="modal">
+  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
+    <button class="btn  absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
+    <form method="post" action="/web/backend/tag">
+      <h3 class="font-bold text-lg">添加标签</h3>
+      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
+      <button class="btn" type="submit">提交</button>
+    </form>
+  </div>
+</dialog>
+
 #endexport
 #endextend
