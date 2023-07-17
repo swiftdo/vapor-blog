@@ -21,7 +21,7 @@ struct WebBackendController: RouteCollection {
     
     // 标签
     tokenGroup.post("tag", use: addTag)
-    
+    tokenGroup.post("tags", "delete", use: deleteTags)
     // 分类
     
     // 文章
@@ -83,12 +83,13 @@ extension WebBackendController {
       ],
     ]
   }
-  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil) async throws -> [String: AnyEncodable?] {
+  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil, dataIds:[UUID]? = nil) async throws -> [String: AnyEncodable?] {
     let user = try req.auth.require(User.self)
     let context: [String: AnyEncodable?] = [
       "tabName": .init(tabName),
       "user": .init(user.asPublic()),
       "data": data,
+      "dataIds": .init(dataIds),
       "pageMeta": pageMeta != nil ? genPageMetadata(pageMeta: pageMeta!): nil,
       "menus": [
         ["href": "/web/backend/tagMgt", "label": "标签管理"],
@@ -110,7 +111,8 @@ extension WebBackendController {
     let context = try await backendWrapper(req,
                                            tabName: "标签管理",
                                            data: .init(tags),
-                                           pageMeta: tags.metadata
+                                           pageMeta: tags.metadata,
+                                           dataIds: tags.items.map({ $0.id! })
     )
     return try await req.view.render("backend/tagMgt", context)
   }
@@ -137,7 +139,14 @@ extension WebBackendController {
     try InTag.validate(content: req)
     let inTag = try req.content.decode(InTag.self)
     let _ = try await req.repositories.tag.add(inTag: inTag, ownerId: user.requireID())
-
     return req.redirect(to: "/web/backend/tagMgt");
+  }
+  
+  private func deleteTags(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
+    try InDeleteIds.validate(content: req)
+    let delIds = try req.content.decode(InDeleteIds.self)
+    try await req.repositories.tag.delete(tagIds: delIds, ownerId: user.requireID())
+    return OutJson(success: OutOk())
   }
 }

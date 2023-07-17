@@ -77,10 +77,10 @@
                     if (response.ok && data.code == 0) {
                         showMyToast("请求成功");
                     } else {
-                        showMyToast(data.message ?? "请求失败", -1);
+                        showMyErrorToast(data.message ?? "请求失败");
                     }
                 } catch (error) {
-                    showMyToast("发生异常:" + error, -1);
+                    showMyErrorToast("发生异常:" + error);
                 }
             }
 

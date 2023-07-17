@@ -3,12 +3,18 @@
   pageCtrl_per: #(pageMeta.per),
   pageCtrl_minPage: #(pageMeta.minPage),
   pageCtrl_maxPage: #(pageMeta.maxPage)
-}">
+}" x-init="
+  $watch('pageCtrl_per', value => {
+    if (value) {
+      clickOnPage(pageCtrl_curPage, value);
+    }
+  })
+">
     <div class="flex gap-2">
       #if(pageMeta.curPage == pageMeta.minPage):
       <button class="btn btn-disabled"><</button>
       #else:
-      <button class="btn btn-primary" @click="preClickOnPage"><</button>
+      <button class="btn bg-blue-500" @click="preClickOnPage"><</button>
       #endif
       #if(pageMeta.showMinMore):
         <button class="btn" @click="pageBtnClick">#(pageMeta.minPage)</button>
@@ -30,26 +36,20 @@
       #if(pageMeta.curPage == pageMeta.maxPage):
       <button class="btn btn-disabled">></button>
       #else:
-      <button class="btn btn-primary" @click="nextClickOnPage">></button>
+      <button class="btn bg-blue-500" @click="nextClickOnPage">></button>
       #endif
     </div>
     <div>到第</div>
-    <input x-model="pageCtrl_curPage" type="number" class="input input-bordered input-accent w-fit"/>
+    <input x-model="pageCtrl_curPage" type="number" class="input input-bordered input-accent max-w-xs w-fit"/>
     <div>页</div>
-    <button class="btn" @click="confirmPage">确定</button>
+    <button class="btn bg-blue-500" @click="confirmPage">确定</button>
     <div>共#(pageMeta.total)条</div>
 
-    <select class="select select-bordered w-fit max-w-xs">
+    <select class="select w-fit max-w-xs bg-blue-500" x-model="pageCtrl_per">
       #for(per in pageMeta.perOptions):
-        #if(per.value == pageMeta.per):
-        <option value="#(per.value)" selected>#(per.label)</option>
-        #else:
-        <option value="#(per.value)">#(per.label)</option>
-        #endif
+      <option value="#(per.value)">#(per.label)</option>
       #endfor
     </select>
-
-
 </div> 
 
 <script>

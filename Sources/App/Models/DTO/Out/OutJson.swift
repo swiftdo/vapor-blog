@@ -25,7 +25,7 @@ struct OutJson<T: Out>: Out, OutCodeMsg {
   init(error code: OutStatus) {
     self.init(code: code, data: nil)
   }
-
+  
   var isOk: Bool {
     return code == OutStatus.ok.code
   }

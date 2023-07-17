@@ -53,6 +53,16 @@
         function showMyToast(message, type) {
             Alpine.store('myToast').showToast(message, type);
         }
+
+        function showMySuccessToast(message) {
+            showMyToast(message, 0)
+        }
+        function showMyErrorToast(message) {
+            showMyToast(message, -1);
+        }
+        function showMyInfoToast(message) {
+            showMyToast(message, 1);
+        }
         </script>
     </body>
 
