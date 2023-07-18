@@ -29,7 +29,7 @@ struct B642JsonTag: UnsafeUnescapedLeafTag {
     }
     return LeafData.string("""
       var decoder = new TextDecoder();
-      var decodedString = decoder.decode(new Uint8Array(Array.from(atob(\(name)).map(c => c.charCodeAt(0)))));
+      var decodedString = decoder.decode(new Uint8Array(Array.from(atob(\(name))).map(c => c.charCodeAt(0))));
       var \(name) = JSON.parse(decodedString);
     """)
   }
