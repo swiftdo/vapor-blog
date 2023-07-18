@@ -2,6 +2,7 @@ import Fluent
 import FluentPostgresDriver
 import JWT
 import Leaf
+import LeafKit
 import SMTP
 import Vapor
 
@@ -14,6 +15,8 @@ public func configure(_ app: Application) async throws {
 
   app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
   app.views.use(.leaf)
+  app.leaf.tags["jsonb"] = Json2B64Tag()
+  app.leaf.tags["bjson"] = B642JsonTag()
 
   let corsConfiguration = CORSMiddleware.Configuration(
     allowedOrigin: .all,

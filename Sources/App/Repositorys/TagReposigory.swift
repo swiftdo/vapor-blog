@@ -13,6 +13,7 @@ protocol TagRepository: Repository {
   func add(inTag: InTag, ownerId: User.IDValue) async throws -> Tag
   func page(ownerId: User.IDValue) async throws -> Page<Tag.Public>
   func delete(tagIds: InDeleteIds, ownerId: User.IDValue) async throws
+  func update(tag: InUpdateTag) async throws
 }
 
 extension RepositoryFactory {

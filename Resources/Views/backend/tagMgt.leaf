@@ -4,6 +4,8 @@
   checkSels: [],
   isAllSelected: false,
   dataIds: #(dataIds),
+  isEditPopupOpen: false,
+  editedTag: {},
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
         <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
@@ -37,13 +39,26 @@
                 </div>
               </td>
               <td>
-                <button class="btn">编辑</button>
+                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
               </td>
             </tr>
             #endfor
           </tbody>
         </table>
         #extend("backend/pageCtrl")
+      </div>
+
+      <div x-show="isEditPopupOpen" @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+        <div class="bg-black p-4 rounded-lg shadow-lg">
+          <form @submit.prevent="submitForm">
+            <div class="flex flex-row justify-between"> 
+              <div class="text-4xl">修改标签</div> 
+              <button class="btn" @click="isEditPopupOpen = false">关闭</button>
+            </div>
+            <input type="text" id="name" x-model="editedTag.name" class="input" required>
+            <button type="submit" class="btn mt-4">提交</button>
+          </form>
+        </div>
       </div>
 </div>
 
@@ -81,10 +96,14 @@
       // 处理错误情况
       showMyErrorToast("发生异常:" + error);
     }
-    
-
-
   }
+
+  // 更新
+  function openEditPopup(tag) {
+    #bjson("tag")
+    alert(tag)
+  }
+
 </script>
 
 <!-- 添加标签的弹窗 -->
@@ -98,18 +117,5 @@
     </form>
   </div>
 </dialog>
-
-<!-- 编辑标签 -->
-<dialog id="my_modal_add_tag" class="modal">
-  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
-    <button class="btn  absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
-    <form method="post" action="/web/backend/tag">
-      <h3 class="font-bold text-lg">添加标签</h3>
-      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
-      <button class="btn" type="submit">提交</button>
-    </form>
-  </div>
-</dialog>
-
 #endexport
 #endextend

@@ -41,4 +41,11 @@ struct TagRepositoryImpl: TagRepository {
         .update()
   }
   
+  func update(tag: InUpdateTag) async throws {
+    try await Tag.query(on: req.db)
+      .set(\.$name, to: tag.name)
+      .filter(\.$id == tag.id)
+      .update()
+  }
+  
 }
