@@ -6,7 +6,7 @@
 }" x-init="
   $watch('pageCtrl_per', value => {
     if (value) {
-      clickOnPage(pageCtrl_curPage, value);
+      clickOnPage(1, value);
     }
   })
 ">

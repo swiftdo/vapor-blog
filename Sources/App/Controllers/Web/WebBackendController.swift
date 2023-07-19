@@ -22,6 +22,7 @@ struct WebBackendController: RouteCollection {
     // 标签
     tokenGroup.post("tag", use: addTag)
     tokenGroup.post("tags", "delete", use: deleteTags)
+    tokenGroup.post("tag", "update", use: updateTag)
     // 分类
     
     // 文章
@@ -140,6 +141,14 @@ extension WebBackendController {
     let inTag = try req.content.decode(InTag.self)
     let _ = try await req.repositories.tag.add(inTag: inTag, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/tagMgt");
+  }
+  
+  private func updateTag(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
+    try InUpdateTag.validate(content: req)
+    let inTag = try req.content.decode(InUpdateTag.self)
+    let _ = try await req.repositories.tag.update(tag: inTag)
+    return OutJson(success: OutOk())
   }
   
   private func deleteTags(_ req: Request) async throws -> OutJson<OutOk> {
