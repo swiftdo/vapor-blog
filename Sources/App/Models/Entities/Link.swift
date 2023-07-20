@@ -38,10 +38,14 @@ final class Link: Model {
     
     init() { }
 
-    init(id: UUID? = nil) throws {
-        self.id = id
-        
-    }
+  init(id: UUID? = nil, title: String, href: String, status: Int = 1, weight: Int = 1, ownerId: User.IDValue) {
+    self.id = id
+    self.title = title
+    self.href = href
+    self.status = status
+    self.weight = weight
+    self.$owner.id = ownerId
+  }
 }
 
 extension Link {

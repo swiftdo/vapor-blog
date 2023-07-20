@@ -28,18 +28,19 @@ final class Category: Model {
     var owner: User
     
     @Timestamp(key: FieldKeys.createdAt, on: .create)
-        var createdAt: Date?
+    var createdAt: Date?
 
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     var updatedAt: Date?
 
     init() {}
     
-    init(id: UUID? = nil, name: String, ownerId: User.IDValue, status: Int = 1) {
-        self.id = id
-        self.name = name
-        self.$owner.id = ownerId
-        self.status = status
+  init(id: UUID? = nil, name: String, ownerId: User.IDValue, status: Int = 1, isNav: Bool = true) {
+      self.id = id
+      self.name = name
+      self.$owner.id = ownerId
+      self.status = status
+      self.isNav = isNav
     }
 }
 

@@ -23,13 +23,21 @@ struct WebBackendController: RouteCollection {
     tokenGroup.post("tag", use: addTag)
     tokenGroup.post("tags", "delete", use: deleteTags)
     tokenGroup.post("tag", "update", use: updateTag)
+    
     // 分类
+    tokenGroup.post("category", use: addCategory)
+    tokenGroup.post("categories", "delete", use: deleteCategories)
+    tokenGroup.post("category", "update", use: updateCategory)
     
     // 文章
+    tokenGroup.post("post", use: addPost)
+    tokenGroup.post("posts", "delete", use: deletePosts)
+    tokenGroup.post("post", "update", use: updatePost)
     
     // 链接
-    
-    
+    tokenGroup.post("link", use: addLink)
+    tokenGroup.post("links", "delete",use: deleteLinks)
+    tokenGroup.post("link", "update", use: updateLink)
   }
 }
 
@@ -120,19 +128,21 @@ extension WebBackendController {
   
   private func toCategoryMgt(_ req: Request) async throws -> View {
     let context = try await backendWrapper(req, tabName: "分类管理")
+    // 分类列表
     return try await req.view.render("backend/categoryMgt", context)
   }
   
   private func toPostMgt(_ req: Request) async throws -> View {
     let context = try await backendWrapper(req, tabName: "文章管理")
+    // 文章列表
     return try await req.view.render("backend/postMgt", context)
   }
 
   private func toLinkMgt(_ req: Request) async throws -> View {
     let context = try await backendWrapper(req, tabName: "友情链接")
+    // 连接列表
     return try await req.view.render("backend/linkMgt", context)
   }
-  
   
   /// tag 管理
   private func addTag(_ req: Request) async throws -> Response {
@@ -158,4 +168,53 @@ extension WebBackendController {
     try await req.repositories.tag.delete(tagIds: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
+  
+  // 分类
+  private func addCategory(_ req: Request) async throws -> Response {
+    // TODO: -
+    return req.redirect(to: "/web/backend/tagMgt");
+  }
+  
+  private func updateCategory(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
+  private func deleteCategories(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
+  // 文章
+  private func addPost(_ req: Request) async throws -> Response {
+    // TODO: -
+    return req.redirect(to: "/web/backend/tagMgt");
+  }
+  
+  private func updatePost(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
+  private func deletePosts(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
+  // 文章
+  private func addLink(_ req: Request) async throws -> Response {
+    // TODO: -
+    return req.redirect(to: "/web/backend/tagMgt");
+  }
+  
+  private func updateLink(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
+  private func deleteLinks(_ req: Request) async throws -> OutJson<OutOk> {
+    // TODO: -
+    return OutJson(success: OutOk())
+  }
+  
 }
