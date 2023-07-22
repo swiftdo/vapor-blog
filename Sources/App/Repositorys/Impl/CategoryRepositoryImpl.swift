@@ -17,7 +17,7 @@ struct CategoryRepositoryImpl: CategoryRepository {
   }
   
   func add(inCategory: InCategory, ownerId: User.IDValue) async throws -> Category {
-    let category = Category(name: inCategory.name, ownerId: ownerId)
+    let category = Category(name: inCategory.name, ownerId: ownerId, isNav: inCategory.isNav)
     try await category.create(on: req.db)
     return category
   }

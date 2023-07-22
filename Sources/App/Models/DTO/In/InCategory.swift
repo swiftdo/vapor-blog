@@ -9,11 +9,12 @@ import Foundation
 import Vapor
 
 struct InCategory: In {
-    let name: String  // 名称
+  let name: String  // 名称
+  let isNav: Bool
 }
 
 extension InCategory: Validatable {
     static func validations(_ validations: inout Validations) {
-      validations.add("name", as: String.self, is: .count(1...10))
+      validations.add("name", as: String.self, is: .count(1...50))
     }
 }

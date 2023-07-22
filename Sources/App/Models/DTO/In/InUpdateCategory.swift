@@ -16,7 +16,7 @@ struct InUpdateCategory: In {
 
 extension InUpdateCategory: Validatable {
     static func validations(_ validations: inout Validations) {
-      validations.add("name", as: String.self, is: .count(1...10))
+      validations.add("name", as: String.self, is: .count(1...50))
       validations.add("id", as: String.self, is: !.empty)
     }
 }

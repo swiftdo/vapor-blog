@@ -1,8 +1,156 @@
 #extend("basebackend"):
 #export("contentRight"):
-<div class="flex flex-col items-center justify-center">
-    <div class="text-6xl py-20 ">分类管理</div>
-    <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
+<div class="flex flex-col" x-data='{
+  checkSels: [],
+  isAllSelected: false,
+  dataIds: #(dataIds),
+  isEditPopupOpen: false,
+  editedCategory: {},
+  openEditPopup(tag) {
+    #bjson("tag")
+    this.editedCategory = tag;
+    this.isEditPopupOpen = true;
+  }
+}'>   
+    <div class="flex flex-row gap-5 mr-5 my-5">
+        <button class="btn btn-primary" onclick="my_modal_add_category.showModal()">添加</button>
+        <button class="btn btn-error" @click="deleteTags">删除</button>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="isAllSelected" @click="toggleAllItemsSelection" />
+                </label>
+              </th>
+              <th>名称</th>
+              <th>导航</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            #for(tag in data.items):
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(tag.id)" x-on:change="itemCheckboxChange"/>
+                </label>
+              </th>
+              <td>
+                <div class="flex items-center space-x-3">
+                  #(tag.name)
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center space-x-3">
+                  #if(tag.isNav): 是 #else: 否 #endif
+                </div>
+              </td>
+              <td>
+                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+              </td>
+            </tr>
+            #endfor
+          </tbody>
+        </table>
+        #extend("backend/pageCtrl")
+      </div>
+
+      <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+        <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+          <div class="flex flex-col gap-5 ">
+            <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
+            <div class="text-3xl">修改分类</div>
+            <input type="text" name="name" x-model="editedCategory.name" class="input" required>
+            <div>
+                <span>开启导航：</span>
+                <input type="checkbox" name="isNav" x-model="editedCategory.isNav">
+            </div>
+            <button class="btn" @click="updateCategory">提交</button>
+          </div>
+        </div>
+      </div>
 </div>
+
+<script>
+  // 全选/未全选
+  function toggleAllItemsSelection() {
+    this.checkSels = this.isAllSelected ? []: this.dataIds;
+  }
+
+  // 单个选择
+  function itemCheckboxChange() {
+    this.isAllSelected = this.checkSels.length == this.dataIds.length;
+  }
+
+  // 更新
+  async function updateCategory() {
+    try {
+      const response = await fetch('/web/backend/category/update', {
+        method: 'POST',
+        body: JSON.stringify(this.editedCategory),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+        showMyToast("请求成功");
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+
+  // 删除
+  async function deleteTags() {
+    try {
+      const response = await fetch('/web/backend/categories/delete', {
+        method: 'POST',
+        body: JSON.stringify({ ids: this.checkSels }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        showMyToast("请求成功");
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+</script>
+
+<!-- 添加标签的弹窗 -->
+<dialog id="my_modal_add_category" class="modal">
+  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
+    <button class="btn absolute right-2 top-2" onclick="my_modal_add_category.close()">✕</button>
+    <form method="post" action="/web/backend/category">
+      <h3 class="font-bold text-lg">添加标签</h3>
+      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
+      <div class="mb-5">
+        <span>开启导航：</span>
+        <input type="checkbox" name="isNav">
+      </div>
+      <button class="btn" type="submit">提交</button>
+    </form>
+  </div>
+</dialog>
 #endexport
 #endextend

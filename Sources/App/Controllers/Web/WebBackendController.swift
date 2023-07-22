@@ -235,7 +235,6 @@ extension WebBackendController {
   
   // 文章
   private func addLink(_ req: Request) async throws -> Response {
-    // TODO: -
     let user = try req.auth.require(User.self)
     try InLink.validate(content: req)
     let inLink = try req.content.decode(InLink.self)
