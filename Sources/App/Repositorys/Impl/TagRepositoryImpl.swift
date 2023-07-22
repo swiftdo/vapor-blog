@@ -47,5 +47,4 @@ struct TagRepositoryImpl: TagRepository {
       .filter(\.$id == tag.id)
       .update()
   }
-  
 }

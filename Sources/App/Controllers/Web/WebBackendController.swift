@@ -127,20 +127,36 @@ extension WebBackendController {
   }
   
   private func toCategoryMgt(_ req: Request) async throws -> View {
-    let context = try await backendWrapper(req, tabName: "分类管理")
-    // 分类列表
+    let user = try req.auth.require(User.self)
+    let categories = try await req.repositories.category.page(ownerId: user.requireID())
+    let context = try await backendWrapper(req,
+                                           tabName: "分类管理",
+                                           data: .init(categories),
+                                           pageMeta: categories.metadata,
+                                           dataIds: categories.items.map({$0.id!}))
     return try await req.view.render("backend/categoryMgt", context)
   }
   
   private func toPostMgt(_ req: Request) async throws -> View {
-    let context = try await backendWrapper(req, tabName: "文章管理")
+    let user = try req.auth.require(User.self)
+    let posts = try await req.repositories.post.page(ownerId: user.requireID())
+    let context = try await backendWrapper(req,
+                                           tabName: "文章管理",
+                                           data: .init(posts),
+                                           pageMeta: posts.metadata,
+                                           dataIds: posts.items.map({$0.id!}))
     // 文章列表
     return try await req.view.render("backend/postMgt", context)
   }
 
   private func toLinkMgt(_ req: Request) async throws -> View {
-    let context = try await backendWrapper(req, tabName: "友情链接")
-    // 连接列表
+    let user = try req.auth.require(User.self)
+    let links = try await req.repositories.link.page(ownerId: user.requireID())
+    let context = try await backendWrapper(req,
+                                           tabName: "友情链接",
+                                           data: .init(links),
+                                           pageMeta: links.metadata,
+                                           dataIds: links.items.map({$0.id!}))
     return try await req.view.render("backend/linkMgt", context)
   }
   
@@ -171,49 +187,74 @@ extension WebBackendController {
   
   // 分类
   private func addCategory(_ req: Request) async throws -> Response {
-    // TODO: -
-    return req.redirect(to: "/web/backend/tagMgt");
+    let user = try req.auth.require(User.self)
+    try InCategory.validate(content: req)
+    let inCategory = try req.content.decode(InCategory.self)
+    let _ = try await req.repositories.category.add(inCategory: inCategory, ownerId: user.requireID())
+    return req.redirect(to: "/web/backend/categoryMgt");
   }
   
   private func updateCategory(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    try InUpdateCategory.validate(content: req)
+    let inCat = try req.content.decode(InUpdateCategory.self)
+    let _ = try await req.repositories.category.update(category: inCat)
     return OutJson(success: OutOk())
   }
   
   private func deleteCategories(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    let user = try req.auth.require(User.self)
+    try InDeleteIds.validate(content: req)
+    let delIds = try req.content.decode(InDeleteIds.self)
+    try await req.repositories.category.delete(categoryIds: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
   // 文章
   private func addPost(_ req: Request) async throws -> Response {
-    // TODO: -
-    return req.redirect(to: "/web/backend/tagMgt");
+    let user = try req.auth.require(User.self)
+    try InPost.validate(content: req)
+    let inPost = try req.content.decode(InPost.self)
+    let _ = try await req.repositories.post.add(inPost: inPost, ownerId: user.requireID())
+    return req.redirect(to: "/web/backend/postMgt");
   }
   
   private func updatePost(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    try InUpdatePost.validate(content: req)
+    let inPost = try req.content.decode(InUpdatePost.self)
+    let _ = try await req.repositories.post.update(post: inPost)
     return OutJson(success: OutOk())
   }
   
   private func deletePosts(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    let user = try req.auth.require(User.self)
+    try InDeleteIds.validate(content: req)
+    let delIds = try req.content.decode(InDeleteIds.self)
+    try await req.repositories.post.delete(postIds: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
   // 文章
   private func addLink(_ req: Request) async throws -> Response {
     // TODO: -
-    return req.redirect(to: "/web/backend/tagMgt");
+    let user = try req.auth.require(User.self)
+    try InLink.validate(content: req)
+    let inLink = try req.content.decode(InLink.self)
+    let _ = try await req.repositories.link.add(inLink: inLink, ownerId: user.requireID())
+    return req.redirect(to: "/web/backend/linkMgt");
   }
   
   private func updateLink(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    try InUpdateLink.validate(content: req)
+    let inLink = try req.content.decode(InUpdateLink.self)
+    let _ = try await req.repositories.link.update(link: inLink)
     return OutJson(success: OutOk())
   }
   
   private func deleteLinks(_ req: Request) async throws -> OutJson<OutOk> {
-    // TODO: -
+    let user = try req.auth.require(User.self)
+    try InDeleteIds.validate(content: req)
+    let delIds = try req.content.decode(InDeleteIds.self)
+    try await req.repositories.link.delete(linkIds: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
