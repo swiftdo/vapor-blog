@@ -31,6 +31,12 @@ extension WebFrontController {
   }
   
   private func toIndex(_ req: Request) async throws -> View {
-    return try await req.view.render("front/index", frontWrapper(req, cateName: "首页"))
+    let user = req.auth.get(User.self)
+    let posts = try await req.repositories.post.page(ownerId: user?.id)
+    return try await req.view.render("front/index",
+                                     frontWrapper(req,
+                                                  cateName: "首页",
+                                                  data: .init(posts),
+                                                  pageMeta: posts.metadata))
   }
 }

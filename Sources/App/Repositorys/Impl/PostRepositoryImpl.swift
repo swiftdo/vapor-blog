@@ -26,7 +26,7 @@ struct PostRepositoryImpl: PostRepository {
     return post
   }
   
-  func page(ownerId: User.IDValue) async throws -> FluentKit.Page<Post.Public> {
+  func page(ownerId: User.IDValue?) async throws -> FluentKit.Page<Post.Public> {
     return try await Post.query(on: req.db)
         .filter(\.$status == 1)
         .sort(\.$createdAt, .descending)
