@@ -14,6 +14,7 @@ struct InUpdatePost: In {
   let desc: String
   let content: String
   let categoryId: UUID
+  let tagIds: [UUID]
 }
 
 extension InUpdatePost: Validatable {

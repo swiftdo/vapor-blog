@@ -18,6 +18,8 @@ extension Post {
     let content: String
     let categoryId: UUID
     let tagIds: [UUID]
+    let category: Category.Public
+    let tags: [Tag.Public]
   }
   
   func asPublic() -> Public {
@@ -29,7 +31,9 @@ extension Post {
       desc: self.desc,
       content: self.content,
       categoryId: self.$category.id,
-      tagIds: self.tags.map{ $0.id! }
+      tagIds: self.tags.map{ $0.id! },
+      category: self.category.asPublic(),
+      tags: self.tags.map { $0.asPublic() }
     )
   }
 }

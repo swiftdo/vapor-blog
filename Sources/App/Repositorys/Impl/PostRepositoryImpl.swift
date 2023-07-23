@@ -34,6 +34,7 @@ struct PostRepositoryImpl: PostRepository {
         }
         .sort(\.$createdAt, .descending)
         .with(\.$tags)
+        .with(\.$category)
         .paginate(for: req)
         .map({ $0.asPublic() })
   }
@@ -48,15 +49,29 @@ struct PostRepositoryImpl: PostRepository {
   }
   
   func update(post: InUpdatePost) async throws {
-    try await Post.query(on: req.db)
-      .set(\.$title, to: post.title)
-      .set(\.$desc, to: post.desc)
-      .set(\.$content, to: post.content)
-      .set(\.$category.$id, to: post.categoryId)
-      .filter(\.$id == post.id)
-      .update()
+    
+    try await req.db.transaction { db in
+      try await Post.query(on: db)
+        .set(\.$title, to: post.title)
+        .set(\.$desc, to: post.desc)
+        .set(\.$content, to: post.content)
+        .set(\.$category.$id, to: post.categoryId)
+        .filter(\.$id == post.id)
+        .update()
+      
+      guard let ret = try await Post.query(on: db)
+        .with(\.$tags)
+        .filter(\.$id == post.id)
+        .first()
+      else {
+        throw ApiError(code: .postNotExist)
+      }
+      
+      try await ret.$tags.detachAll(on: db)
+      let newTags = try await Tag.query(on: db).filter(\.$id ~~ post.tagIds).all()
+      try await ret.$tags.attach(newTags, on: db)
+    }
   }
-  
 //  private func asPublic(_ post: Post, req: Request) async throws -> Post.Public {
 //    let tagIds = try await self.$tags.get(on: req.db).map { tag in try tag.requireID() }
 //    return post.asPublicWith(tagIds: tagIds)

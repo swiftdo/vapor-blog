@@ -35,12 +35,13 @@
               </th>
               <th>标题</th>
               <th>详情</th>
+              <th>分类</th>
               <th>标签</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            #for(tag in data.items):
+            #for(post in data.items):
             <tr>
               <th>
                 <label>
@@ -49,19 +50,24 @@
               </th>
               <td>
                 <div class="flex items-center space-x-3">
-                  #(tag.title)
+                  #(post.title)
                 </div>
               </td>
               <td>
                 <div class="flex items-center space-x-3">
-                  #(tag.content)
+                  #(post.content)
                 </div>
               </td>
               <td>
-                <div>#(tag.tagIds)</div>
+                <div>#(post.category.name)</div>
               </td>
               <td>
-                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+                #for(tag in post.tags):
+                    #(tag.name),
+                #endfor
+              </td>
+              <td>
+                <button class="btn" @click="openEditPopup('#jsonb(post)')">编辑</button>
               </td>
             </tr>
             #endfor
