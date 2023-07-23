@@ -14,6 +14,7 @@ extension Category {
     let status: Int
     let ownerId: UUID
     let isNav: Bool
+    let owner: User.Public?
   }
   
   func asPublic() -> Public {
@@ -22,7 +23,8 @@ extension Category {
       name: self.name,
       status: self.status,
       ownerId: self.$owner.id,
-      isNav: self.isNav
+      isNav: self.isNav,
+      owner: self.$owner.value?.asPublic()
     )
   }
 }

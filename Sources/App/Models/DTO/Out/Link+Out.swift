@@ -15,6 +15,7 @@ extension Link {
     let ownerId: UUID
     let href: String
     let weight: Int
+    let owner: User.Public?
   }
   
   func asPublic() -> Public {
@@ -24,7 +25,8 @@ extension Link {
       status: self.status,
       ownerId: self.$owner.id,
       href: self.href,
-      weight: self.weight
+      weight: self.weight,
+      owner: self.$owner.value?.asPublic()
     )
   }
 }

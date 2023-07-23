@@ -23,10 +23,8 @@ struct LinkRepositoryImpl: LinkRepository {
   
   func page(ownerId: User.IDValue) async throws -> FluentKit.Page<Link.Public> {
     return try await Link.query(on: req.db)
-        .group(.and) { group in
-          // status 1是正常, 2是删除
-          group.filter(\.$owner.$id == ownerId).filter(\.$status == 1)
-        }
+        .with(\.$owner)
+        .filter(\.$status == 1)
         .sort(\.$createdAt, .descending)
         .paginate(for:req)
         .map({$0.asPublic()})

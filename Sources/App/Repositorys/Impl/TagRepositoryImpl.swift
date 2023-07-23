@@ -48,6 +48,7 @@ struct TagRepositoryImpl: TagRepository {
   
   func all(ownerId: User.IDValue) async throws -> [Tag.Public] {
     try await Tag.query(on: req.db)
+      .filter(\.$status == 1)
       .sort(\.$createdAt, .descending)
       .all()
       .map({$0.asPublic()})

@@ -28,6 +28,7 @@
               </th>
               <th>名称</th>
               <th>导航</th>
+              <th>创建者</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -50,13 +51,16 @@
                 </div>
               </td>
               <td>
+                <div>#(tag.owner.name)</div>
+              </td>
+              <td>
                 <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
               </td>
             </tr>
             #endfor
           </tbody>
         </table>
-        #extend("backend/pageCtrl")
+        #extend("partial/pageCtrl")
       </div>
 
       <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">

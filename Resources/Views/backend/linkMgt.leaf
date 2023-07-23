@@ -1,8 +1,146 @@
 #extend("basebackend"):
 #export("contentRight"):
-<div class="flex flex-col items-center justify-center">
-    <div class="text-6xl py-20 ">友情链接</div>
-    <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
+<div class="flex flex-col" x-data='{
+  checkSels: [],
+  isAllSelected: false,
+  dataIds: #(dataIds),
+  isEditPopupOpen: false,
+  editedTag: {},
+  openEditPopup(tag) {
+    #bjson("tag")
+    this.editedTag = tag;
+    this.isEditPopupOpen = true;
+  }
+}'>   
+    <div class="flex flex-row gap-5 mr-5 my-5">
+        <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
+        <button class="btn btn-error" @click="deleteTags">删除</button>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="isAllSelected" @click="toggleAllItemsSelection" />
+                </label>
+              </th>
+              <th>名称</th>
+              <th>创建者</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            #for(tag in data.items):
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(tag.id)" x-on:change="itemCheckboxChange"/>
+                </label>
+              </th>
+              <td>
+                <div class="flex items-center space-x-3">
+                  #(tag.name)
+                </div>
+              </td>
+              <td>
+                <div>#(tag.owner.name)</div>
+              </td>
+              <td>
+                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+              </td>
+            </tr>
+            #endfor
+          </tbody>
+        </table>
+        #extend("partial/pageCtrl")
+      </div>
+
+      <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+        <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+          <div class="flex flex-col gap-5 ">
+            <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
+            <div class="text-3xl">修改标签</div>
+            <input type="text" name="name" x-model="editedTag.name" class="input" required>
+            <button class="btn" @click="updateTag">提交</button>
+          </div>
+        </div>
+      </div>
 </div>
+
+<script>
+  // 全选/未全选
+  function toggleAllItemsSelection() {
+    this.checkSels = this.isAllSelected ? []: this.dataIds;
+  }
+
+  // 单个选择
+  function itemCheckboxChange() {
+    this.isAllSelected = this.checkSels.length == this.dataIds.length;
+  }
+
+  // 更新
+  async function updateTag() {
+    try {
+      const response = await fetch('/web/backend/tag/update', {
+        method: 'POST',
+        body: JSON.stringify(this.editedTag),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+        showMyToast("请求成功");
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+
+  // 删除
+  async function deleteTags() {
+    try {
+      const response = await fetch('/web/backend/tags/delete', {
+        method: 'POST',
+        body: JSON.stringify({ ids: this.checkSels }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        showMyToast("请求成功");
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+</script>
+
+<!-- 添加标签的弹窗 -->
+<dialog id="my_modal_add_tag" class="modal">
+  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
+    <button class="btn absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
+    <form method="post" action="/web/backend/tag">
+      <h3 class="font-bold text-lg">添加标签</h3>
+      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
+      <button class="btn" type="submit">提交</button>
+    </form>
+  </div>
+</dialog>
 #endexport
 #endextend

@@ -25,6 +25,7 @@ struct CategoryRepositoryImpl: CategoryRepository {
   func page(ownerId: User.IDValue) async throws -> FluentKit.Page<Category.Public> {
     return try await Category.query(on: req.db)
       .filter(\.$status == 1)
+      .with(\.$owner)
       .sort(\.$createdAt, .descending)
       .paginate(for: req)
       .map({$0.asPublic()})
@@ -47,8 +48,9 @@ struct CategoryRepositoryImpl: CategoryRepository {
       .update()
   }
   
-  func all(ownerId: User.IDValue) async throws -> [Category.Public] {
+  func all(ownerId: User.IDValue? = nil) async throws -> [Category.Public] {
     try await Category.query(on: req.db)
+      .filter(\.$status == 1)
       .sort(\.$createdAt, .descending)
       .all()
       .map({$0.asPublic()})

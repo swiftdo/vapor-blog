@@ -10,7 +10,7 @@ import Fluent
 
 /// Category 增删改查
 protocol CategoryRepository: Repository {
-  func all(ownerId: User.IDValue) async throws -> [Category.Public]
+  func all(ownerId: User.IDValue?) async throws -> [Category.Public]
   func add(param: InCategory, ownerId: User.IDValue) async throws -> Category
   func page(ownerId: User.IDValue) async throws -> Page<Category.Public>
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws

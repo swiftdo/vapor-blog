@@ -1,6 +1,7 @@
 
 import Fluent
 import Vapor
+import AnyCodable
 
 struct WebFrontController: RouteCollection {
   func boot(routes: RoutesBuilder) throws {
@@ -11,12 +12,25 @@ struct WebFrontController: RouteCollection {
 }
 
 extension WebFrontController {
-    private func toIndex(_ req: Request) async throws -> View {
-      let user = req.auth.get(User.self)
-      let outUser = user?.asPublic()
-      
-      req.logger.info(.init(stringLiteral: outUser?.email ?? "wu"))
-        // 获取到当前用户信息
-      return try await req.view.render("front/index", ["user": outUser])
+  private func frontWrapper(_ req: Request, cateName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil,  extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
+    let user = req.auth.get(User.self)
+    let outUser = user?.asPublic()
+    let cates = try await req.repositories.category.all(ownerId: outUser?.id)
+    
+    var context: [String: AnyEncodable?] = [
+      "cateName": .init(cateName),
+      "user": .init(outUser),
+      "data": data,
+      "pageMeta": PageUtil.genPageMetadata(pageMeta: pageMeta),
+      "cates": .init(cates)
+    ]
+    if let extra = extra {
+      context.merge(extra) { $1 }
     }
+    return context
+  }
+  
+  private func toIndex(_ req: Request) async throws -> View {
+    return try await req.view.render("front/index", frontWrapper(req, cateName: "首页"))
+  }
 }

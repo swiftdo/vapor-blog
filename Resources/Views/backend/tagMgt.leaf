@@ -58,7 +58,7 @@
             #endfor
           </tbody>
         </table>
-        #extend("backend/pageCtrl")
+        #extend("partial/pageCtrl")
       </div>
 
       <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">

@@ -32,6 +32,7 @@ struct PostRepositoryImpl: PostRepository {
         .sort(\.$createdAt, .descending)
         .with(\.$tags)
         .with(\.$category)
+        .with(\.$owner)
         .paginate(for: req)
         .map({ $0.asPublic() })
   }

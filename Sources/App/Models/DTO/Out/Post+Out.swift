@@ -20,6 +20,7 @@ extension Post {
     let tagIds: [UUID]
     let category: Category.Public
     let tags: [Tag.Public]
+    let owner: User.Public?
   }
   
   func asPublic() -> Public {
@@ -33,7 +34,8 @@ extension Post {
       categoryId: self.$category.id,
       tagIds: self.tags.map{ $0.id! },
       category: self.category.asPublic(),
-      tags: self.tags.map { $0.asPublic() }
+      tags: self.tags.map { $0.asPublic() },
+      owner: self.$owner.value?.asPublic()
     )
   }
 }
