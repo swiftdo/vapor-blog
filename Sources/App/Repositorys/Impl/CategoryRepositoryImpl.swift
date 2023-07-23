@@ -16,42 +16,39 @@ struct CategoryRepositoryImpl: CategoryRepository {
       self.req = req
   }
   
-  func add(inCategory: InCategory, ownerId: User.IDValue) async throws -> Category {
-    let category = Category(name: inCategory.name, ownerId: ownerId, isNav: inCategory.isNav)
+  func add(in: InCategory, ownerId: User.IDValue) async throws -> Category {
+    let category = Category(name: in.name, ownerId: ownerId, isNav: in.isNav)
     try await category.create(on: req.db)
     return category
   }
   
   func page(ownerId: User.IDValue) async throws -> FluentKit.Page<Category.Public> {
     return try await Category.query(on: req.db)
-      .group(.and) {group in
-        group.filter(\.$owner.$id == ownerId).filter(\.$status == 1)
-      }
+      .filter(\.$status == 1)
       .sort(\.$createdAt, .descending)
       .paginate(for: req)
       .map({$0.asPublic()})
   }
   
-  func delete(categoryIds: InDeleteIds, ownerId: User.IDValue) async throws {
+  func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws {
       try await Category.query(on: req.db)
         .set(\.$status, to: 0)
         .group(.and) {group in
-          group.filter(\.$id ~~ categoryIds.ids).filter(\.$owner.$id == ownerId)
+          group.filter(\.$id ~~ ids.ids).filter(\.$owner.$id == ownerId)
         }
         .update()
   }
   
-  func update(category: InUpdateCategory) async throws {
+  func update(in: InUpdateCategory, ownerId: User.IDValue) async throws {
     try await Category.query(on: req.db)
-      .set(\.$name, to: category.name)
-      .set(\.$isNav, to: category.isNav)
-      .filter(\.$id == category.id)
+      .set(\.$name, to: in.name)
+      .set(\.$isNav, to: in.isNav)
+      .filter(\.$id == in.id)
       .update()
   }
   
-  func allCategories(ownerId: User.IDValue) async throws -> [Category.Public] {
+  func all(ownerId: User.IDValue) async throws -> [Category.Public] {
     try await Category.query(on: req.db)
-      .filter(\.$owner.$id == ownerId)
       .sort(\.$createdAt, .descending)
       .all()
       .map({$0.asPublic()})

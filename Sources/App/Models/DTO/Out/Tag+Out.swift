@@ -13,6 +13,7 @@ extension Tag {
     let name: String
     let status: Int
     let ownerId: UUID
+    let owner: User.Public?
   }
   
   func asPublic() -> Public {
@@ -20,7 +21,8 @@ extension Tag {
           id: self.id,
           name: self.name,
           status: self.status,
-          ownerId: self.$owner.id
+          ownerId: self.$owner.id,
+          owner: self.$owner.value?.asPublic()
       )
   }
   

@@ -27,6 +27,7 @@
                 </label>
               </th>
               <th>名称</th>
+              <th>创建者</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -39,12 +40,19 @@
                 </label>
               </th>
               <td>
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center">
                   #(tag.name)
                 </div>
               </td>
               <td>
-                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+                <div class="flex items-center">
+                  #(tag.owner.name)
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center">
+                  <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+                </div>
               </td>
             </tr>
             #endfor

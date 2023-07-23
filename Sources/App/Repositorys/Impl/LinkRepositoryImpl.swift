@@ -15,8 +15,8 @@ struct LinkRepositoryImpl: LinkRepository {
       self.req = req
   }
   
-  func add(inLink: InLink, ownerId: User.IDValue) async throws -> Link {
-    let link = Link(title: inLink.title, href: inLink.href, ownerId: ownerId)
+  func add(in: InLink, ownerId: User.IDValue) async throws -> Link {
+    let link = Link(title: in.title, href: in.href, ownerId: ownerId)
     try await link.create(on: req.db)
     return link
   }
@@ -32,21 +32,21 @@ struct LinkRepositoryImpl: LinkRepository {
         .map({$0.asPublic()})
   }
   
-  func delete(linkIds: InDeleteIds, ownerId: User.IDValue) async throws {
+  func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws {
     try await Link.query(on: req.db)
       .set(\.$status, to: 0)
       .group(.and) {group in
-        group.filter(\.$id ~~ linkIds.ids).filter(\.$owner.$id == ownerId)
+        group.filter(\.$id ~~ ids.ids).filter(\.$owner.$id == ownerId)
       }
       .update()
   }
   
-  func update(link: InUpdateLink) async throws {
+  func update(in: InUpdateLink, ownerId: User.IDValue) async throws {
     try await Link.query(on: req.db)
-      .set(\.$title, to: link.title)
-      .set(\.$weight, to: link.weight)
-      .set(\.$href, to: link.href)
-      .filter(\.$id == link.id)
+      .set(\.$title, to: in.title)
+      .set(\.$weight, to: in.weight)
+      .set(\.$href, to: in.href)
+      .filter(\.$id == in.id)
       .update()
   }
 }

@@ -144,8 +144,8 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     let userId = try user.requireID()
     let posts = try await req.repositories.post.page(ownerId: userId)
-    let tags = try await req.repositories.tag.allTags(ownerId: userId)
-    let categories = try await req.repositories.category.allCategories(ownerId: userId)
+    let tags = try await req.repositories.tag.all(ownerId: userId)
+    let categories = try await req.repositories.category.all(ownerId: userId)
     let context = try await backendWrapper(req,
                                            tabName: "文章管理",
                                            data: .init(posts),
@@ -174,15 +174,15 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InTag.validate(content: req)
     let inTag = try req.content.decode(InTag.self)
-    let _ = try await req.repositories.tag.add(inTag: inTag, ownerId: user.requireID())
+    let _ = try await req.repositories.tag.add(in: inTag, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/tagMgt");
   }
   
   private func updateTag(_ req: Request) async throws -> OutJson<OutOk> {
-//    let user = try req.auth.require(User.self)
+    let user = try req.auth.require(User.self)
     try InUpdateTag.validate(content: req)
     let inTag = try req.content.decode(InUpdateTag.self)
-    let _ = try await req.repositories.tag.update(tag: inTag)
+    let _ = try await req.repositories.tag.update(in: inTag, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -190,7 +190,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InDeleteIds.validate(content: req)
     let delIds = try req.content.decode(InDeleteIds.self)
-    try await req.repositories.tag.delete(tagIds: delIds, ownerId: user.requireID())
+    try await req.repositories.tag.delete(ids: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -199,14 +199,15 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InCategory.validate(content: req)
     let inCategory = try req.content.decode(InCategory.self)
-    let _ = try await req.repositories.category.add(inCategory: inCategory, ownerId: user.requireID())
+    let _ = try await req.repositories.category.add(in: inCategory, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/categoryMgt");
   }
   
   private func updateCategory(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
     try InUpdateCategory.validate(content: req)
     let inCat = try req.content.decode(InUpdateCategory.self)
-    let _ = try await req.repositories.category.update(category: inCat)
+    let _ = try await req.repositories.category.update(in: inCat, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -214,7 +215,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InDeleteIds.validate(content: req)
     let delIds = try req.content.decode(InDeleteIds.self)
-    try await req.repositories.category.delete(categoryIds: delIds, ownerId: user.requireID())
+    try await req.repositories.category.delete(ids: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -223,14 +224,15 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InPost.validate(content: req)
     let inPost = try req.content.decode(InPost.self)
-    let _ = try await req.repositories.post.add(inPost: inPost, ownerId: user.requireID())
+    let _ = try await req.repositories.post.add(in: inPost, ownerId: user.requireID())
     return OutJson(success: OutOk());
   }
   
   private func updatePost(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
     try InUpdatePost.validate(content: req)
     let inPost = try req.content.decode(InUpdatePost.self)
-    let _ = try await req.repositories.post.update(post: inPost)
+    let _ = try await req.repositories.post.update(in: inPost, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -238,7 +240,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InDeleteIds.validate(content: req)
     let delIds = try req.content.decode(InDeleteIds.self)
-    try await req.repositories.post.delete(postIds: delIds, ownerId: user.requireID())
+    try await req.repositories.post.delete(ids: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -247,14 +249,15 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InLink.validate(content: req)
     let inLink = try req.content.decode(InLink.self)
-    let _ = try await req.repositories.link.add(inLink: inLink, ownerId: user.requireID())
+    let _ = try await req.repositories.link.add(in: inLink, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/linkMgt");
   }
   
   private func updateLink(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
     try InUpdateLink.validate(content: req)
     let inLink = try req.content.decode(InUpdateLink.self)
-    let _ = try await req.repositories.link.update(link: inLink)
+    let _ = try await req.repositories.link.update(in: inLink, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -262,7 +265,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InDeleteIds.validate(content: req)
     let delIds = try req.content.decode(InDeleteIds.self)
-    try await req.repositories.link.delete(linkIds: delIds, ownerId: user.requireID())
+    try await req.repositories.link.delete(ids: delIds, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   

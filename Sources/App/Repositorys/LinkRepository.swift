@@ -10,10 +10,10 @@ import Fluent
 
 /// Link增删改查
 protocol LinkRepository: Repository {
-  func add(inLink: InLink, ownerId: User.IDValue) async throws -> Link
+  func add(in: InLink, ownerId: User.IDValue) async throws -> Link
   func page(ownerId: User.IDValue) async throws -> Page<Link.Public>
-  func delete(linkIds: InDeleteIds, ownerId: User.IDValue) async throws
-  func update(link: InUpdateLink) async throws
+  func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
+  func update(in: InUpdateLink, ownerId: User.IDValue) async throws
 }
 
 extension RepositoryFactory {

@@ -16,9 +16,9 @@ struct PostRepositoryImpl: PostRepository {
       self.req = req
   }
   
-  func add(inPost: InPost, ownerId: User.IDValue) async throws -> Post {
-    let post = Post(title: inPost.title, ownerId: ownerId, content: inPost.content, desc: inPost.desc, categoryId: inPost.categoryId)
-    let tags = try await Tag.query(on: req.db).filter(\.$id ~~ inPost.tagIds).all()
+  func add(in: InPost, ownerId: User.IDValue) async throws -> Post {
+    let post = Post(title: in.title, ownerId: ownerId, content: in.content, desc: in.desc, categoryId: in.categoryId)
+    let tags = try await Tag.query(on: req.db).filter(\.$id ~~ in.tagIds).all()
     try await req.db.transaction { db in
       try await post.create(on: db)
       try await post.$tags.attach(tags, on: db)
@@ -28,10 +28,7 @@ struct PostRepositoryImpl: PostRepository {
   
   func page(ownerId: User.IDValue) async throws -> FluentKit.Page<Post.Public> {
     return try await Post.query(on: req.db)
-        .group(.and) { group in
-          // status 1是正常, 2是删除
-          group.filter(\.$owner.$id == ownerId).filter(\.$status == 1)
-        }
+        .filter(\.$status == 1)
         .sort(\.$createdAt, .descending)
         .with(\.$tags)
         .with(\.$category)
@@ -39,43 +36,36 @@ struct PostRepositoryImpl: PostRepository {
         .map({ $0.asPublic() })
   }
   
-  func delete(postIds: InDeleteIds, ownerId: User.IDValue) async throws {
+  func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws {
     try await Post.query(on: req.db)
       .set(\.$status, to: 0)
       .group(.and) {group in
-        group.filter(\.$id ~~ postIds.ids).filter(\.$owner.$id == ownerId)
+        group.filter(\.$id ~~ ids.ids).filter(\.$owner.$id == ownerId)
       }
       .update()
   }
   
-  func update(post: InUpdatePost) async throws {
-    
+  func update(in: InUpdatePost, ownerId: User.IDValue) async throws {
     try await req.db.transaction { db in
       try await Post.query(on: db)
-        .set(\.$title, to: post.title)
-        .set(\.$desc, to: post.desc)
-        .set(\.$content, to: post.content)
-        .set(\.$category.$id, to: post.categoryId)
-        .filter(\.$id == post.id)
+        .set(\.$title, to: in.title)
+        .set(\.$desc, to: in.desc)
+        .set(\.$content, to: in.content)
+        .set(\.$category.$id, to: in.categoryId)
+        .filter(\.$id == in.id)
         .update()
       
       guard let ret = try await Post.query(on: db)
         .with(\.$tags)
-        .filter(\.$id == post.id)
+        .filter(\.$id == in.id)
         .first()
       else {
         throw ApiError(code: .postNotExist)
       }
       
       try await ret.$tags.detachAll(on: db)
-      let newTags = try await Tag.query(on: db).filter(\.$id ~~ post.tagIds).all()
+      let newTags = try await Tag.query(on: db).filter(\.$id ~~ in.tagIds).all()
       try await ret.$tags.attach(newTags, on: db)
     }
   }
-//  private func asPublic(_ post: Post, req: Request) async throws -> Post.Public {
-//    let tagIds = try await self.$tags.get(on: req.db).map { tag in try tag.requireID() }
-//    return post.asPublicWith(tagIds: tagIds)
-//  }
-  
-  
 }
