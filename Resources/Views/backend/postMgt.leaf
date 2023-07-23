@@ -1,8 +1,237 @@
 #extend("basebackend"):
+#export("head"):
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+#endexport
+
 #export("contentRight"):
-<div class="flex flex-col items-center justify-center">
-    <div class="text-6xl py-20 ">文章管理</div>
-    <img class="w-1/12 py-20" src="/images/logo.png" alt="logo">
+<div class="flex flex-col" x-data='{
+  checkSels: [],
+  isAllSelected: false,
+  dataIds: #(dataIds),
+  isEditPopupOpen: false,
+  isAddPopupOpen: false,
+  addedPost: {},
+  editedPost: {},
+  openEditPopup(tag) {
+    #bjson("tag")
+    this.editedPost = tag;
+    this.isEditPopupOpen = true;
+    editEditor.setContents(JSON.parse(tag.content))
+  }
+}'>   
+    <div class="flex flex-row gap-5 mr-5 my-5">
+        <button class="btn btn-primary" @click="isAddPopupOpen=true">添加</button>
+        <button class="btn btn-error" @click="deleteTags">删除</button>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table">
+          <!-- head -->
+          <thead>
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="isAllSelected" @click="toggleAllItemsSelection" />
+                </label>
+              </th>
+              <th>标题</th>
+              <th>详情</th>
+              <th>标签</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            #for(tag in data.items):
+            <tr>
+              <th>
+                <label>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(tag.id)" x-on:change="itemCheckboxChange"/>
+                </label>
+              </th>
+              <td>
+                <div class="flex items-center space-x-3">
+                  #(tag.title)
+                </div>
+              </td>
+              <td>
+                <div class="flex items-center space-x-3">
+                  #(tag.content)
+                </div>
+              </td>
+              <td>
+                <div>#(tag.tagIds)</div>
+              </td>
+              <td>
+                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+              </td>
+            </tr>
+            #endfor
+          </tbody>
+        </table>
+        #extend("backend/pageCtrl")
+      </div>
+
+      <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+        <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+          <div class="flex flex-col gap-5 ">
+            <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
+            <div class="text-3xl">修改文章</div>
+            <input type="text" x-model="editedPost.title" class="input" placeholder="文章标题" required>
+            <input type="text" x-model="editedPost.desc" class="input" placeholder="文章描述" required>
+            <label for="article-content" class="block font-medium">选择详情：</label>
+            <div id="article-content" class="gap-0"><div id="editEditor"></div></div>
+            <label for="select-option-category" class="block font-medium">文章分类：</label>
+            <select id="select-option-category" x-model="editedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                <option value="" disabled selected>请选择</option>
+                #for(cate in optionCategories):
+                <option value="#(cate.id)">#(cate.name)</option>
+                #endfor
+            </select>
+
+            <label for="select-option-tags" class="block font-medium">文章标签：</label>
+            <select id="select-option-tags" multiple x-model="editedPost.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                <option value="" disabled selected>请选择</option>
+                #for(tag in optionTags):
+                <option value="#(tag.id)">#(tag.name)</option>
+                #endfor
+            </select>
+            <button class="btn" @click="updatePost">提交</button>
+          </div>
+        </div>
+      </div>
+
+      <div x-cloak x-show="isAddPopupOpen" x-transition @click.away="isAddPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+        <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+          <div class="flex flex-col gap-5">
+            <button class="btn absolute right-2 top-2" @click="isAddPopupOpen = false">✕</button>
+            <div class="text-3xl">添加文章</div>
+            <input type="text" x-model="addedPost.title" class="input" placeholder="文章标题" required>
+            <input type="text" x-model="addedPost.desc" class="input" placeholder="文章描述" required>
+            <label for="article-content" class="block font-medium">选择详情：</label>
+            <div id="article-content" class="gap-0"><div id="addEditor"></div></div>
+            <label for="select-option-category" class="block font-medium">文章分类：</label>
+            <select id="select-option-category" x-model="addedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                <option value="" disabled selected>请选择</option>
+                #for(cate in optionCategories):
+                <option value="#(cate.id)">#(cate.name)</option>
+                #endfor
+            </select>
+
+            <label for="select-option-tags" class="block font-medium">文章标签：</label>
+            <select id="select-option-tags" multiple x-model="addedPost.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                <option value="" disabled selected>请选择</option>
+                #for(tag in optionTags):
+                <option value="#(tag.id)">#(tag.name)</option>
+                #endfor
+            </select>
+            <button class="btn" @click="addPost">提交</button>
+          </div>
+        </div>
+      </div>
 </div>
+
+<!-- 初始化编辑器 -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+
+  var addEditor = new Quill('#addEditor', {
+    theme: 'snow',
+    placeholder: '文章内容',
+  });
+
+  var editEditor = new Quill('#editEditor', {
+    theme: 'snow',
+    placeholder: '文章内容',
+  });
+  // 全选/未全选
+  function toggleAllItemsSelection() {
+    this.checkSels = this.isAllSelected ? []: this.dataIds;
+  }
+
+  // 单个选择
+  function itemCheckboxChange() {
+    this.isAllSelected = this.checkSels.length == this.dataIds.length;
+  }
+
+  // 更新
+  async function updatePost() {
+    this.editedPost.content = JSON.stringify(editEditor.getContents());
+    try {
+      const response = await fetch('/web/backend/post/update', {
+        method: 'POST',
+        body: JSON.stringify(this.editedPost),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+        showMyToast("请求成功");
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+
+  // 删除
+  async function deleteTags() {
+    try {
+      const response = await fetch('/web/backend/posts/delete', {
+        method: 'POST',
+        body: JSON.stringify({ ids: this.checkSels }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.ok && data.code == 0) {
+        showMyToast("请求成功");
+        // 从定向
+        // 刷新当前页面
+        location.reload();
+      } else {
+        showMyErrorToast(data.message ?? "请求失败");
+      }
+    } catch (error) {
+      // 处理错误情况
+      showMyErrorToast("发生异常:" + error);
+    }
+  }
+
+  // 新增
+  async function addPost() {
+    // 获取到富文本内容
+    try {
+        this.addedPost.content = JSON.stringify(addEditor.getContents());
+        const response = await fetch('/web/backend/post', {
+          method: 'POST',
+          body: JSON.stringify(this.addedPost),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (response.ok && data.code == 0) {
+          this.isEditPopupOpen = true;
+          showMyToast("请求成功");
+          // 从定向
+          // 刷新当前页面
+          location.reload();
+        } else {
+          showMyErrorToast(data.message ?? "请求失败");
+        }
+      } catch (error) {
+        // 处理错误情况
+        showMyErrorToast("发生异常:" + error);
+      }
+
+  }
+</script>
+
 #endexport
 #endextend

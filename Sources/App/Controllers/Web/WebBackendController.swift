@@ -92,9 +92,9 @@ extension WebBackendController {
       ],
     ]
   }
-  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil, dataIds:[UUID]? = nil) async throws -> [String: AnyEncodable?] {
+  private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil, dataIds:[UUID]? = nil, extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
     let user = try req.auth.require(User.self)
-    let context: [String: AnyEncodable?] = [
+    var context: [String: AnyEncodable?] = [
       "tabName": .init(tabName),
       "user": .init(user.asPublic()),
       "data": data,
@@ -107,6 +107,9 @@ extension WebBackendController {
         ["href": "/web/backend/linkMgt", "label": "友情链接"]
       ]
     ]
+    if let extra = extra {
+      context.merge(extra) { $1 }
+    }
     return context
   }
   
@@ -139,13 +142,19 @@ extension WebBackendController {
   
   private func toPostMgt(_ req: Request) async throws -> View {
     let user = try req.auth.require(User.self)
-    let posts = try await req.repositories.post.page(ownerId: user.requireID())
+    let userId = try user.requireID()
+    let posts = try await req.repositories.post.page(ownerId: userId)
+    let tags = try await req.repositories.tag.allTags(ownerId: userId)
+    let categories = try await req.repositories.category.allCategories(ownerId: userId)
     let context = try await backendWrapper(req,
                                            tabName: "文章管理",
                                            data: .init(posts),
                                            pageMeta: posts.metadata,
-                                           dataIds: posts.items.map({$0.id!}))
-    // 文章列表
+                                           dataIds: posts.items.map({$0.id!}),
+                                           extra: [
+                                            "optionTags": .init(tags),
+                                            "optionCategories": .init(categories)
+                                           ])
     return try await req.view.render("backend/postMgt", context)
   }
 
@@ -170,7 +179,7 @@ extension WebBackendController {
   }
   
   private func updateTag(_ req: Request) async throws -> OutJson<OutOk> {
-    let user = try req.auth.require(User.self)
+//    let user = try req.auth.require(User.self)
     try InUpdateTag.validate(content: req)
     let inTag = try req.content.decode(InUpdateTag.self)
     let _ = try await req.repositories.tag.update(tag: inTag)
@@ -210,12 +219,12 @@ extension WebBackendController {
   }
   
   // 文章
-  private func addPost(_ req: Request) async throws -> Response {
+  private func addPost(_ req: Request) async throws -> OutJson<OutOk>  {
     let user = try req.auth.require(User.self)
     try InPost.validate(content: req)
     let inPost = try req.content.decode(InPost.self)
     let _ = try await req.repositories.post.add(inPost: inPost, ownerId: user.requireID())
-    return req.redirect(to: "/web/backend/postMgt");
+    return OutJson(success: OutOk());
   }
   
   private func updatePost(_ req: Request) async throws -> OutJson<OutOk> {

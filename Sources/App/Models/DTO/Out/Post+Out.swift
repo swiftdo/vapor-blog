@@ -6,6 +6,7 @@
 //
 
 import Vapor
+import FluentKit
 
 extension Post {
   struct Public: Out {
@@ -16,6 +17,7 @@ extension Post {
     let desc: String
     let content: String
     let categoryId: UUID
+    let tagIds: [UUID]
   }
   
   func asPublic() -> Public {
@@ -26,7 +28,8 @@ extension Post {
       ownerId: self.$owner.id,
       desc: self.desc,
       content: self.content,
-      categoryId: self.$category.id
+      categoryId: self.$category.id,
+      tagIds: self.tags.map{ $0.id! }
     )
   }
 }

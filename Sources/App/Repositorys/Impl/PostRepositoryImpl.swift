@@ -17,9 +17,12 @@ struct PostRepositoryImpl: PostRepository {
   }
   
   func add(inPost: InPost, ownerId: User.IDValue) async throws -> Post {
-    //TODO: -tag 怎么处理
     let post = Post(title: inPost.title, ownerId: ownerId, content: inPost.content, desc: inPost.desc, categoryId: inPost.categoryId)
-    try await post.create(on: req.db)
+    let tags = try await Tag.query(on: req.db).filter(\.$id ~~ inPost.tagIds).all()
+    try await req.db.transaction { db in
+      try await post.create(on: db)
+      try await post.$tags.attach(tags, on: db)
+    }
     return post
   }
   
@@ -30,8 +33,9 @@ struct PostRepositoryImpl: PostRepository {
           group.filter(\.$owner.$id == ownerId).filter(\.$status == 1)
         }
         .sort(\.$createdAt, .descending)
-        .paginate(for:req)
-        .map({$0.asPublic()})
+        .with(\.$tags)
+        .paginate(for: req)
+        .map({ $0.asPublic() })
   }
   
   func delete(postIds: InDeleteIds, ownerId: User.IDValue) async throws {
@@ -52,6 +56,11 @@ struct PostRepositoryImpl: PostRepository {
       .filter(\.$id == post.id)
       .update()
   }
+  
+//  private func asPublic(_ post: Post, req: Request) async throws -> Post.Public {
+//    let tagIds = try await self.$tags.get(on: req.db).map { tag in try tag.requireID() }
+//    return post.asPublicWith(tagIds: tagIds)
+//  }
   
   
 }

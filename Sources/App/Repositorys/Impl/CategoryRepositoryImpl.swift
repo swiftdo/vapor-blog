@@ -48,5 +48,13 @@ struct CategoryRepositoryImpl: CategoryRepository {
       .filter(\.$id == category.id)
       .update()
   }
+  
+  func allCategories(ownerId: User.IDValue) async throws -> [Category.Public] {
+    try await Category.query(on: req.db)
+      .filter(\.$owner.$id == ownerId)
+      .sort(\.$createdAt, .descending)
+      .all()
+      .map({$0.asPublic()})
+  }
 }
 
