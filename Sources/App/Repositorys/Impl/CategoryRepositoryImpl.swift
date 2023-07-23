@@ -16,8 +16,8 @@ struct CategoryRepositoryImpl: CategoryRepository {
       self.req = req
   }
   
-  func add(in: InCategory, ownerId: User.IDValue) async throws -> Category {
-    let category = Category(name: in.name, ownerId: ownerId, isNav: in.isNav)
+  func add(param: InCategory, ownerId: User.IDValue) async throws -> Category {
+    let category = Category(name: param.name, ownerId: ownerId, isNav: param.isNav)
     try await category.create(on: req.db)
     return category
   }
@@ -39,11 +39,11 @@ struct CategoryRepositoryImpl: CategoryRepository {
         .update()
   }
   
-  func update(in: InUpdateCategory, ownerId: User.IDValue) async throws {
+  func update(param: InUpdateCategory, ownerId: User.IDValue) async throws {
     try await Category.query(on: req.db)
-      .set(\.$name, to: in.name)
-      .set(\.$isNav, to: in.isNav)
-      .filter(\.$id == in.id)
+      .set(\.$name, to: param.name)
+      .set(\.$isNav, to: param.isNav)
+      .filter(\.$id == param.id)
       .update()
   }
   

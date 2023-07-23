@@ -16,9 +16,9 @@ struct PostRepositoryImpl: PostRepository {
       self.req = req
   }
   
-  func add(in: InPost, ownerId: User.IDValue) async throws -> Post {
-    let post = Post(title: in.title, ownerId: ownerId, content: in.content, desc: in.desc, categoryId: in.categoryId)
-    let tags = try await Tag.query(on: req.db).filter(\.$id ~~ in.tagIds).all()
+  func add(param: InPost, ownerId: User.IDValue) async throws -> Post {
+    let post = Post(title: param.title, ownerId: ownerId, content: param.content, desc: param.desc, categoryId: param.categoryId)
+    let tags = try await Tag.query(on: req.db).filter(\.$id ~~ param.tagIds).all()
     try await req.db.transaction { db in
       try await post.create(on: db)
       try await post.$tags.attach(tags, on: db)
@@ -45,26 +45,26 @@ struct PostRepositoryImpl: PostRepository {
       .update()
   }
   
-  func update(in: InUpdatePost, ownerId: User.IDValue) async throws {
+  func update(param: InUpdatePost, ownerId: User.IDValue) async throws {
     try await req.db.transaction { db in
       try await Post.query(on: db)
-        .set(\.$title, to: in.title)
-        .set(\.$desc, to: in.desc)
-        .set(\.$content, to: in.content)
-        .set(\.$category.$id, to: in.categoryId)
-        .filter(\.$id == in.id)
+        .set(\.$title, to: param.title)
+        .set(\.$desc, to: param.desc)
+        .set(\.$content, to: param.content)
+        .set(\.$category.$id, to: param.categoryId)
+        .filter(\.$id == param.id)
         .update()
       
       guard let ret = try await Post.query(on: db)
         .with(\.$tags)
-        .filter(\.$id == in.id)
+        .filter(\.$id == param.id)
         .first()
       else {
         throw ApiError(code: .postNotExist)
       }
       
       try await ret.$tags.detachAll(on: db)
-      let newTags = try await Tag.query(on: db).filter(\.$id ~~ in.tagIds).all()
+      let newTags = try await Tag.query(on: db).filter(\.$id ~~ param.tagIds).all()
       try await ret.$tags.attach(newTags, on: db)
     }
   }

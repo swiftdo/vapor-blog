@@ -11,10 +11,10 @@ import Fluent
 /// tag 增删改查
 protocol TagRepository: Repository {
   func all(ownerId: User.IDValue) async throws -> [Tag.Public]
-  func add(in: InTag, ownerId: User.IDValue) async throws -> Tag
+  func add(param: InTag, ownerId: User.IDValue) async throws -> Tag
   func page(ownerId: User.IDValue) async throws -> Page<Tag.Public>
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
-  func update(in: InUpdateTag, ownerId: User.IDValue) async throws
+  func update(param: InUpdateTag, ownerId: User.IDValue) async throws
 }
 
 extension RepositoryFactory {

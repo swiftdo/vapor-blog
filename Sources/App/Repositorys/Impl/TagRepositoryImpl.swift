@@ -15,8 +15,8 @@ struct TagRepositoryImpl: TagRepository {
       self.req = req
   }
   
-  func add(in: InTag, ownerId: User.IDValue) async throws -> Tag {
-    let tag = Tag(name: in.name, ownerId: ownerId)
+  func add(param: InTag, ownerId: User.IDValue) async throws -> Tag {
+    let tag = Tag(name: param.name, ownerId: ownerId)
     try await tag.create(on: req.db)
     return tag
   }
@@ -39,10 +39,10 @@ struct TagRepositoryImpl: TagRepository {
         .update()
   }
   
-  func update(in: InUpdateTag, ownerId: User.IDValue) async throws {
+  func update(param: InUpdateTag, ownerId: User.IDValue) async throws {
     try await Tag.query(on: req.db)
-      .set(\.$name, to: in.name)
-      .filter(\.$id == in.id)
+      .set(\.$name, to: param.name)
+      .filter(\.$id == param.id)
       .update()
   }
   

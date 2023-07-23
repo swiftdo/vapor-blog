@@ -15,8 +15,8 @@ struct LinkRepositoryImpl: LinkRepository {
       self.req = req
   }
   
-  func add(in: InLink, ownerId: User.IDValue) async throws -> Link {
-    let link = Link(title: in.title, href: in.href, ownerId: ownerId)
+  func add(param: InLink, ownerId: User.IDValue) async throws -> Link {
+    let link = Link(title: param.title, href: param.href, ownerId: ownerId)
     try await link.create(on: req.db)
     return link
   }
@@ -41,12 +41,12 @@ struct LinkRepositoryImpl: LinkRepository {
       .update()
   }
   
-  func update(in: InUpdateLink, ownerId: User.IDValue) async throws {
+  func update(param: InUpdateLink, ownerId: User.IDValue) async throws {
     try await Link.query(on: req.db)
-      .set(\.$title, to: in.title)
-      .set(\.$weight, to: in.weight)
-      .set(\.$href, to: in.href)
-      .filter(\.$id == in.id)
+      .set(\.$title, to: param.title)
+      .set(\.$weight, to: param.weight)
+      .set(\.$href, to: param.href)
+      .filter(\.$id == param.id)
       .update()
   }
 }

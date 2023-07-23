@@ -174,7 +174,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InTag.validate(content: req)
     let inTag = try req.content.decode(InTag.self)
-    let _ = try await req.repositories.tag.add(in: inTag, ownerId: user.requireID())
+    let _ = try await req.repositories.tag.add(param: inTag, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/tagMgt");
   }
   
@@ -182,7 +182,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InUpdateTag.validate(content: req)
     let inTag = try req.content.decode(InUpdateTag.self)
-    let _ = try await req.repositories.tag.update(in: inTag, ownerId: user.requireID())
+    let _ = try await req.repositories.tag.update(param: inTag, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -199,7 +199,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InCategory.validate(content: req)
     let inCategory = try req.content.decode(InCategory.self)
-    let _ = try await req.repositories.category.add(in: inCategory, ownerId: user.requireID())
+    let _ = try await req.repositories.category.add(param: inCategory, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/categoryMgt");
   }
   
@@ -207,7 +207,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InUpdateCategory.validate(content: req)
     let inCat = try req.content.decode(InUpdateCategory.self)
-    let _ = try await req.repositories.category.update(in: inCat, ownerId: user.requireID())
+    let _ = try await req.repositories.category.update(param: inCat, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -224,7 +224,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InPost.validate(content: req)
     let inPost = try req.content.decode(InPost.self)
-    let _ = try await req.repositories.post.add(in: inPost, ownerId: user.requireID())
+    let _ = try await req.repositories.post.add(param: inPost, ownerId: user.requireID())
     return OutJson(success: OutOk());
   }
   
@@ -232,7 +232,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InUpdatePost.validate(content: req)
     let inPost = try req.content.decode(InUpdatePost.self)
-    let _ = try await req.repositories.post.update(in: inPost, ownerId: user.requireID())
+    let _ = try await req.repositories.post.update(param: inPost, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
@@ -249,7 +249,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InLink.validate(content: req)
     let inLink = try req.content.decode(InLink.self)
-    let _ = try await req.repositories.link.add(in: inLink, ownerId: user.requireID())
+    let _ = try await req.repositories.link.add(param: inLink, ownerId: user.requireID())
     return req.redirect(to: "/web/backend/linkMgt");
   }
   
@@ -257,7 +257,7 @@ extension WebBackendController {
     let user = try req.auth.require(User.self)
     try InUpdateLink.validate(content: req)
     let inLink = try req.content.decode(InUpdateLink.self)
-    let _ = try await req.repositories.link.update(in: inLink, ownerId: user.requireID())
+    let _ = try await req.repositories.link.update(param: inLink, ownerId: user.requireID())
     return OutJson(success: OutOk())
   }
   
