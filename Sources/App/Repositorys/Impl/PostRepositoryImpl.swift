@@ -26,9 +26,18 @@ struct PostRepositoryImpl: PostRepository {
     return post
   }
   
-  func page(ownerId: User.IDValue?) async throws -> FluentKit.Page<Post.Public> {
-    return try await Post.query(on: req.db)
-        .filter(\.$status == 1)
+  func page(ownerId: User.IDValue?, inIndex: InSearchPost?) async throws -> FluentKit.Page<Post.Public> {
+    
+    let pageQuery = Post.query(on: req.db)
+      .filter(\.$status == 1)
+    
+    if let inIndex = inIndex {
+      if let cateId = inIndex.categoryId {
+        pageQuery.filter(\.$category.$id == cateId)
+      }
+    }
+    
+    return try await pageQuery
         .sort(\.$createdAt, .descending)
         .with(\.$tags)
         .with(\.$category)
@@ -68,5 +77,15 @@ struct PostRepositoryImpl: PostRepository {
       let newTags = try await Tag.query(on: db).filter(\.$id ~~ param.tagIds).all()
       try await ret.$tags.attach(newTags, on: db)
     }
+  }
+  
+  func get(id: Post.IDValue, ownerId: User.IDValue?) async throws -> Post.Public? {
+    let post = try await Post.query(on: req.db)
+      .filter(\.$id == id)
+      .with(\.$owner)
+      .with(\.$category)
+      .with(\.$tags)
+      .first()
+    return post?.asPublic()
   }
 }

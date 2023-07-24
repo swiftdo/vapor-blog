@@ -12,10 +12,15 @@
         </div>
         <h2 class="text-4xl font-semibold mb-2">#(article.title)</h2>
         <p class="text-gray-600 line-clamp-3 my-5">#(article.desc)</p>
-        <div class="flex flex-row gap-2 mt-5">
-            #for(tag in article.tags):
-            <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
-            #endfor
+        <div class="flex flex-row justify-between items-center">
+            <div class="flex flex-row gap-2 mt-5">
+                #for(tag in article.tags):
+                <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
+                #endfor
+            </div>
+            <div>
+                <a class="btn" href="/detail?postId=#(article.id)">查看详情</a>
+            </div>
         </div>
       </div>
       #endfor

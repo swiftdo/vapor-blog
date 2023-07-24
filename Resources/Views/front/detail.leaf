@@ -1,0 +1,7 @@
+#extend("basefront"):
+#export("content"):
+<div class="container mx-auto px-4 py-4">
+    详情页 
+</div>
+#endexport
+#endextend

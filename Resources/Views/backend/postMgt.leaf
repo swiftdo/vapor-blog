@@ -50,12 +50,12 @@
                 </label>
               </th>
               <td>
-                <div class="flex items-center">
+                <div class="flex items-center space-x-3">
                   #(post.title)
                 </div>
               </td>
               <td>
-                <div class="flex items-center">
+                <div class="line-clamp-2">
                   #(post.desc)
                 </div>
               </td>

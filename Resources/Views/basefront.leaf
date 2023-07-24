@@ -9,13 +9,20 @@
         </div>
         <a class="btn btn-ghost text-4xl" href="/">博客</a>
     </div>
+
+    #if(!hideNavCate):
     <div class="navbar-center">
         <ul class="menu menu-horizontal text-xl gap-2">
-            <li><a>分类1</a></li>
-            <li><a>分类2</a></li>
-            <li><a>分类3</a></li>
+            #for(cate in categories):
+                #if(cateId == cate.id):
+                <li><a href="/index?categoryId=#(cate.id)" class="active">#(cate.name)</a></li>
+                #else:
+                <li><a href="/index?categoryId=#(cate.id)">#(cate.name)</a></li>
+                #endif
+            #endfor
         </ul>
     </div>
+    #endif
     <div class="navbar-end gap-2">
         <div class="form-control">
             <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />

@@ -8,21 +8,25 @@ struct WebFrontController: RouteCollection {
     
     let tokenGroup = routes.grouped(WebSessionAuthenticator())
     tokenGroup.get(use: toIndex)
+    tokenGroup.get("index", use: toIndex)
+    
+    tokenGroup.get("detail", use: toDetail)
   }
 }
 
 extension WebFrontController {
-  private func frontWrapper(_ req: Request, cateName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil,  extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
+  private func frontWrapper(_ req: Request, cateId: UUID? = nil, hideNavCate: Bool = false, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil,  extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
     let user = req.auth.get(User.self)
     let outUser = user?.asPublic()
     let cates = try await req.repositories.category.all(ownerId: outUser?.id)
     
     var context: [String: AnyEncodable?] = [
-      "cateName": .init(cateName),
+      "cateId": .init(cateId),
       "user": .init(outUser),
       "data": data,
       "pageMeta": PageUtil.genPageMetadata(pageMeta: pageMeta),
-      "cates": .init(cates)
+      "categories": .init(cates),
+      "hideNavCate": .init(hideNavCate)
     ]
     if let extra = extra {
       context.merge(extra) { $1 }
@@ -30,12 +34,22 @@ extension WebFrontController {
     return context
   }
   
+  private func toDetail(_ req: Request) async throws -> View {
+    let user = req.auth.get(User.self)
+    let postId: String = req.query["postId"]!
+    let post = try await req.repositories.post.get(id: .init(uuidString: postId)!, ownerId: user?.requireID())
+    
+    return try await req.view.render("front/detail", frontWrapper(req, hideNavCate: true, data: .init(post)))
+    
+  }
+  
   private func toIndex(_ req: Request) async throws -> View {
     let user = req.auth.get(User.self)
-    let posts = try await req.repositories.post.page(ownerId: user?.id)
+    let inIndex = try req.query.decode(InSearchPost.self)
+    let posts = try await req.repositories.post.page(ownerId: user?.id, inIndex: inIndex)
     return try await req.view.render("front/index",
                                      frontWrapper(req,
-                                                  cateName: "首页",
+                                                  cateId: inIndex.categoryId,
                                                   data: .init(posts),
                                                   pageMeta: posts.metadata))
   }

@@ -11,9 +11,16 @@ import Fluent
 /// Link增删改查
 protocol PostRepository: Repository {
   func add(param: InPost, ownerId: User.IDValue) async throws -> Post
-  func page(ownerId: User.IDValue?) async throws -> Page<Post.Public>
+  func page(ownerId: User.IDValue?, inIndex: InSearchPost?) async throws -> Page<Post.Public>
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
   func update(param: InUpdatePost, ownerId: User.IDValue) async throws
+  func get(id: Post.IDValue, ownerId: User.IDValue?) async throws -> Post.Public?
+}
+
+extension PostRepository {
+  func page(ownerId: User.IDValue?) async throws -> Page<Post.Public> {
+    return try await page(ownerId: ownerId, inIndex: nil)
+  }
 }
 
 extension RepositoryFactory {

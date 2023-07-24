@@ -42,7 +42,6 @@ struct WebBackendController: RouteCollection {
 }
 
 extension WebBackendController {
-  
   private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil, dataIds:[UUID]? = nil, extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
     let user = try req.auth.require(User.self)
     var context: [String: AnyEncodable?] = [
