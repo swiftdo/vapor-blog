@@ -1,7 +1,27 @@
 #extend("basefront"):
+
+#export("head"):
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+#endexport
+
 #export("content"):
-<div class="container mx-auto px-4 py-4">
-    详情页 
+
+<div class="flex flex-col m-20">
+    <article  class="prose">
+        <h1>#(data.title)</h1>
+        <div id="postDetail"></div>
+    </article>
 </div>
+<!-- 初始化编辑器 -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var postShow = new Quill('#postDetail', {
+        theme: 'bubble',
+        readOnly: true,
+    });
+    var content = #unsafeHTML(data.content);
+    console.log(content)
+    postShow.setContents(content);
+</script>
 #endexport
 #endextend
