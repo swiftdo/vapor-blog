@@ -47,4 +47,12 @@ struct LinkRepositoryImpl: LinkRepository {
       .filter(\.$id == param.id)
       .update()
   }
+  
+  func all(ownerId: User.IDValue?) async throws -> [Link.Public] {
+    return try await Link.query(on: req.db)
+        .filter(\.$status == 1)
+        .sort(\.$weight, .descending)
+        .all()
+        .map({$0.asPublic()})
+  }
 }

@@ -19,6 +19,7 @@ extension WebFrontController {
     let user = req.auth.get(User.self)
     let outUser = user?.asPublic()
     let cates = try await req.repositories.category.all(ownerId: outUser?.id)
+    let links = try await req.repositories.link.all(ownerId: outUser?.id)
     
     var context: [String: AnyEncodable?] = [
       "cateId": .init(cateId),
@@ -26,7 +27,8 @@ extension WebFrontController {
       "data": data,
       "pageMeta": PageUtil.genPageMetadata(pageMeta: pageMeta),
       "categories": .init(cates),
-      "hideNavCate": .init(hideNavCate)
+      "hideNavCate": .init(hideNavCate),
+      "links": .init(links)
     ]
     if let extra = extra {
       context.merge(extra) { $1 }

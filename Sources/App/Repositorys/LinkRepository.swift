@@ -14,6 +14,7 @@ protocol LinkRepository: Repository {
   func page(ownerId: User.IDValue) async throws -> Page<Link.Public>
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
   func update(param: InUpdateLink, ownerId: User.IDValue) async throws
+  func all(ownerId: User.IDValue?) async throws -> [Link.Public]
 }
 
 extension RepositoryFactory {

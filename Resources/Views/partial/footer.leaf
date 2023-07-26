@@ -9,14 +9,9 @@
     <div class="flex flex-col gap-4 justify-center items-center">
         <h1 class="text-2xl">友链</h1>
         <div class="grid grid-cols-3 gap-5">
-            <div>名称1名称1</div>
-            <div>名称2名称1</div>
-            <div>名称3名称1</div>
-            <div>名称4</div>
-            <div>名称6</div>
-            <div>名称7名称1</div>
-            <div>名称8</div>
-            <div>名称9名称1</div>
+            #for(link in links):
+                <a class="hover:text-blue-700" href="#(link.href)" target="_blank">#(link.title)</a>
+            #endfor
         </div>
 
     </div>
@@ -25,7 +20,7 @@
         <div>© 2023 swiftdo</div>
         <div>Designed By swiftdo Powered By Vapor</div>
         <div>
-            <a href="https://github.com/swiftdo/vapor-demo" target="_blank">
+            <a class="hover:text-blue-700" href="https://github.com/swiftdo/vapor-demo" target="_blank">
                 Github
             </a>
         </div>
