@@ -10,18 +10,18 @@
   dataIds: #(dataIds),
   isEditPopupOpen: false,
   isAddPopupOpen: false,
-  addedPost: {},
-  editedPost: {},
+  addedItem: {},
+  editedItem: {},
   openEditPopup(tag) {
     #bjson("tag")
-    this.editedPost = tag;
+    this.editedItem = tag;
     this.isEditPopupOpen = true;
     editEditor.setContents(JSON.parse(tag.content))
   }
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
         <button class="btn btn-primary" @click="isAddPopupOpen=true">添加</button>
-        <button class="btn btn-error" @click="deleteTags">删除</button>
+        <button class="btn btn-error" @click="deleteItems">删除</button>
     </div>
     <div class="overflow-x-auto">
         <table class="table">
@@ -42,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            #for(post in data.items):
+            #for(item in data.items):
             <tr>
               <th>
                 <label>
@@ -51,27 +51,27 @@
               </th>
               <td>
                 <div class="flex items-center space-x-3">
-                  #(post.title)
+                  #(item.title)
                 </div>
               </td>
               <td>
                 <div class="line-clamp-2">
-                  #(post.desc)
+                  #(item.desc)
                 </div>
               </td>
               <td>
-                <div>#(post.category.name)</div>
+                <div>#(item.category.name)</div>
               </td>
               <td>
-                #for(tag in post.tags):
+                #for(tag in item.tags):
                     #(tag.name),
                 #endfor
               </td>
               <td>
-                <div>#(post.owner.name)</div>
+                <div>#(item.owner.name)</div>
               </td>
               <td>
-                <button class="btn" @click="openEditPopup('#jsonb(post)')">编辑</button>
+                <button class="btn" @click="openEditPopup('#jsonb(item)')">编辑</button>
               </td>
             </tr>
             #endfor
@@ -85,11 +85,11 @@
           <div class="flex flex-col gap-5">
             <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
             <div class="text-3xl">修改文章</div>
-            <input type="text" x-model="editedPost.title" class="input" placeholder="文章标题" required>
+            <input type="text" x-model="editedItem.title" class="input" placeholder="文章标题" required>
             <label for="article-content" class="block font-medium">文章详情：</label>
             <div id="article-content" class="gap-0"><div id="editEditor"></div></div>
             <label for="select-option-category" class="block font-medium">文章分类：</label>
-            <select id="select-option-category" x-model="editedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+            <select id="select-option-category" x-model="editedItem.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
                 <option value="" disabled selected>请选择</option>
                 #for(cate in optionCategories):
                 <option value="#(cate.id)">#(cate.name)</option>
@@ -97,13 +97,13 @@
             </select>
 
             <label for="select-option-tags" class="block font-medium">文章标签：</label>
-            <select id="select-option-tags" multiple x-model="editedPost.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+            <select id="select-option-tags" multiple x-model="editedItem.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
                 <option value="" disabled selected>请选择</option>
                 #for(tag in optionTags):
                 <option value="#(tag.id)">#(tag.name)</option>
                 #endfor
             </select>
-            <button class="btn" @click="updatePost">提交</button>
+            <button class="btn" @click="updateItem">提交</button>
           </div>
         </div>
       </div>
@@ -113,11 +113,11 @@
           <div class="flex flex-col gap-5">
             <button class="btn absolute right-2 top-2" @click="isAddPopupOpen = false">✕</button>
             <div class="text-3xl">添加文章</div>
-            <input type="text" x-model="addedPost.title" class="input" placeholder="文章标题" required>
+            <input type="text" x-model="addedItem.title" class="input" placeholder="文章标题" required>
             <label for="article-content" class="block font-medium">文章详情：</label>
             <div id="article-content" class="gap-0"><div id="addEditor"></div></div>
             <label for="select-option-category" class="block font-medium">文章分类：</label>
-            <select id="select-option-category" x-model="addedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+            <select id="select-option-category" x-model="addedItem.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
                 <option value="" disabled selected>请选择</option>
                 #for(cate in optionCategories):
                 <option value="#(cate.id)">#(cate.name)</option>
@@ -125,13 +125,13 @@
             </select>
 
             <label for="select-option-tags" class="block font-medium">文章标签：</label>
-            <select id="select-option-tags" multiple x-model="addedPost.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+            <select id="select-option-tags" multiple x-model="addedItem.tagIds" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
                 <option value="" disabled selected>请选择</option>
                 #for(tag in optionTags):
                 <option value="#(tag.id)">#(tag.name)</option>
                 #endfor
             </select>
-            <button class="btn" @click="addPost">提交</button>
+            <button class="btn" @click="addItem">提交</button>
           </div>
         </div>
       </div>
@@ -183,13 +183,13 @@
   }
 
   // 更新
-  async function updatePost() {
-    this.editedPost.content = JSON.stringify(editEditor.getContents());
-    this.editedPost.desc = editEditor.getText();
+  async function updateItem() {
+    this.editedItem.content = JSON.stringify(editEditor.getContents());
+    this.editedItem.desc = editEditor.getText();
     try {
       const response = await fetch('/web/backend/post/update', {
         method: 'POST',
-        body: JSON.stringify(this.editedPost),
+        body: JSON.stringify(this.editedItem),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -210,7 +210,7 @@
   }
 
   // 删除
-  async function deleteTags() {
+  async function deleteItems() {
     try {
       const response = await fetch('/web/backend/posts/delete', {
         method: 'POST',
@@ -235,14 +235,14 @@
   }
 
   // 新增
-  async function addPost() {
+  async function addItem() {
     // 获取到富文本内容
     try {
-        this.addedPost.content = JSON.stringify(addEditor.getContents());
-        this.addedPost.desc = addEditor.getText();
+        this.addedItem.content = JSON.stringify(addEditor.getContents());
+        this.addedItem.desc = addEditor.getText();
         const response = await fetch('/web/backend/post', {
           method: 'POST',
-          body: JSON.stringify(this.addedPost),
+          body: JSON.stringify(this.addedItem),
           headers: {
             'Content-Type': 'application/json'
           }
