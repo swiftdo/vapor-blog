@@ -65,4 +65,8 @@
 </dialog>
 #endexport
 
+#export("footer"):
+ #extend("partial/footer")
+#endexport
+
 #endextend

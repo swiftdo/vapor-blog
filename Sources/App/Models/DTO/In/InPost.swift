@@ -18,6 +18,6 @@ struct InPost: In {
 
 extension InPost: Validatable {
     static func validations(_ validations: inout Validations) {
-      validations.add("title", as: String.self, is: .count(1...50))
+      validations.add("title", as: String.self, is: .count(1...100))
     }
 }

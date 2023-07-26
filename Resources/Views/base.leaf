@@ -26,6 +26,7 @@
         
         #import("navbar")
         #import("content")
+        #import("footer")
 
         
         <script>

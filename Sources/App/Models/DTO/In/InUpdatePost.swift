@@ -19,7 +19,7 @@ struct InUpdatePost: In {
 
 extension InUpdatePost: Validatable {
     static func validations(_ validations: inout Validations) {
-      validations.add("title", as: String.self, is: .count(1...20))
+      validations.add("title", as: String.self, is: .count(1...100))
       validations.add("id", as: String.self, is: !.empty)
     }
 }

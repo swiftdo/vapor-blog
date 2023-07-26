@@ -5,9 +5,27 @@
 <style>
     .quill-custom-theme .ql-editor {
         font-size: 18px;
-        line-height: 1.5;
+        line-height: 1.6;
         font-family: "思源宋体", "Source Han Serif", "微软雅黑", "Microsoft YaHei", "宋体", SimSun, sans-serif;
+        padding: 0px;
     }
+
+    /* 设置标题样式 */
+  .ql-editor h1 {
+    font-size: 36px;
+    font-weight: bold;
+  }
+  
+  .ql-editor h2 {
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .ql-editor h3 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
 
 </style>
 #endexport
@@ -15,10 +33,20 @@
 #export("content"):
 
 <div class="flex flex-col m-20">
-    <article  class="prose">
-        <h1>#(data.title)</h1>
-        <div id="postDetail" class="quill-custom-theme"></div>
-    </article>
+    
+    <h1 class="my-10 text-5xl">#(data.title)</h1>
+    <div class="flex flex-row items-center gap-4 mb-10">
+        <div>#(data.owner.name)</div>
+        <div>#date(data.createdAt, "yyyy-MM-dd")</div>
+        <button class="btn bg-primary rounded-full">#(data.category.name)</button>
+    </div>
+    <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
+    <hr class="mt-10">
+    <div class="flex flex-row gap-2 mt-5">
+        #for(tag in data.tags):
+        <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
+        #endfor
+    </div>
 </div>
 <!-- 初始化编辑器 -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
@@ -26,7 +54,7 @@
     hljs.configure({   // optionally configure hljs
         languages: ['javascript', 'ruby', 'python', 'swift']
     });
-    var postShow = new Quill('#postDetail', {
+    var quill = new Quill('#postDetail', {
         theme: 'snow',
         readOnly: true,
         modules: {
@@ -35,7 +63,7 @@
         }
     });
     var content = #unsafeHTML(data.content);
-    postShow.setContents(content);
+    quill.setContents(content)
 </script>
 #endexport
 #endextend
