@@ -11,6 +11,7 @@ import Vapor
 struct InLink: In {
   let title: String  // 名称
   let href: String // href
+  let weight: SpecInt
 }
 
 extension InLink: Validatable {

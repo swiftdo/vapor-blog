@@ -195,12 +195,12 @@ extension WebBackendController {
   }
   
   // 文章
-  private func addLink(_ req: Request) async throws -> Response {
+  private func addLink(_ req: Request) async throws -> OutJson<OutOk> {
     let user = try req.auth.require(User.self)
     try InLink.validate(content: req)
     let inLink = try req.content.decode(InLink.self)
     let _ = try await req.repositories.link.add(param: inLink, ownerId: user.requireID())
-    return req.redirect(to: "/web/backend/linkMgt");
+    return OutJson(success: OutOk());
   }
   
   private func updateLink(_ req: Request) async throws -> OutJson<OutOk> {

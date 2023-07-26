@@ -1,20 +1,23 @@
 #extend("basebackend"):
+
 #export("contentRight"):
 <div class="flex flex-col" x-data='{
   checkSels: [],
   isAllSelected: false,
   dataIds: #(dataIds),
   isEditPopupOpen: false,
-  editedTag: {},
+  isAddPopupOpen: false,
+  addedItem: {},
+  editedItem: {},
   openEditPopup(tag) {
     #bjson("tag")
-    this.editedTag = tag;
+    this.editedItem = tag;
     this.isEditPopupOpen = true;
   }
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
-        <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
-        <button class="btn btn-error" @click="deleteTags">删除</button>
+        <button class="btn btn-primary" @click="isAddPopupOpen=true">添加</button>
+        <button class="btn btn-error" @click="deleteItems">删除</button>
     </div>
     <div class="overflow-x-auto">
         <table class="table">
@@ -27,28 +30,36 @@
                 </label>
               </th>
               <th>名称</th>
+              <th>链接</th>
               <th>创建者</th>
+              <th>权重</th>
               <th>操作</th>
             </tr>
           </thead>
           <tbody>
-            #for(tag in data.items):
+            #for(item in data.items):
             <tr>
               <th>
                 <label>
-                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(tag.id)" x-on:change="itemCheckboxChange"/>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(link.id)" x-on:change="itemCheckboxChange"/>
                 </label>
               </th>
               <td>
                 <div class="flex items-center space-x-3">
-                  #(tag.name)
+                  #(item.title)
                 </div>
               </td>
               <td>
-                <div>#(tag.owner.name)</div>
+                <div>#(item.href)</div>
               </td>
               <td>
-                <button class="btn" @click="openEditPopup('#jsonb(tag)')">编辑</button>
+                <div>#(item.owner.name)</div>
+              </td>
+              <td>
+                <div>#(item.weight)</div>
+              </td>
+              <td>
+                <button class="btn" @click="openEditPopup('#jsonb(item)')">编辑</button>
               </td>
             </tr>
             #endfor
@@ -57,19 +68,42 @@
         #extend("partial/pageCtrl")
       </div>
 
-      <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex items-center justify-center">
+      <div x-cloak x-show="isEditPopupOpen" x-transition @click.away="isEditPopupOpen = false" class="fixed inset-1 flex flex-col items-center justify-center">
         <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
-          <div class="flex flex-col gap-5 ">
+          <div class="flex flex-col gap-5">
             <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
-            <div class="text-3xl">修改标签</div>
-            <input type="text" name="name" x-model="editedTag.name" class="input" required>
-            <button class="btn" @click="updateTag">提交</button>
+            <div class="text-3xl">修改友链</div>
+            <label for="tag-name" class="block font-medium">友链名称：</label>
+            <input id="tag-name" type="text" x-model="editedItem.title" class="input" placeholder="友链名称" required>
+            <label for="tag-href" class="block font-medium">友链链接：</label>
+            <input id="tag-href" type="text" x-model="editedItem.href" class="input" placeholder="友链链接" required>
+            <label for="tag-weight" class="block font-medium">友链权重：</label>
+            <input id="tag-weight" type="number" x-model="editedItem.weight" class="input" placeholder="友链链接" required>
+            <button class="btn" @click="updateItem">提交</button>
+          </div>
+        </div>
+      </div>
+
+      <div x-cloak x-show="isAddPopupOpen" x-transition @click.away="isAddPopupOpen = false" class="fixed inset-1 flex flex-col items-center justify-center">
+        <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+          <div class="flex flex-col gap-5">
+            <button class="btn absolute right-2 top-2" @click="isAddPopupOpen = false">✕</button>
+            <div class="text-3xl">添加友链</div>
+            <label for="tag-name" class="block font-medium">友链名称：</label>
+            <input id="tag-name" type="text" x-model="addedItem.title" class="input" placeholder="友链名称" required>
+            <label for="tag-href" class="block font-medium">友链链接：</label>
+            <input id="tag-href" type="text" x-model="addedItem.href" class="input" placeholder="友链链接" required>
+            <label for="tag-weight" class="block font-medium">友链权重：</label>
+            <input id="tag-weight" type="number" x-model="addedItem.weight" class="input" placeholder="友链链接" required>
+            <button class="btn" @click="addItem">提交</button>
           </div>
         </div>
       </div>
 </div>
 
+
 <script>
+
   // 全选/未全选
   function toggleAllItemsSelection() {
     this.checkSels = this.isAllSelected ? []: this.dataIds;
@@ -81,11 +115,11 @@
   }
 
   // 更新
-  async function updateTag() {
+  async function updateItem() {
     try {
-      const response = await fetch('/web/backend/tag/update', {
+      const response = await fetch('/web/backend/link/update', {
         method: 'POST',
-        body: JSON.stringify(this.editedTag),
+        body: JSON.stringify(this.editedItem),
         headers: {
           'Content-Type': 'application/json'
         }
@@ -106,9 +140,9 @@
   }
 
   // 删除
-  async function deleteTags() {
+  async function deleteItems() {
     try {
-      const response = await fetch('/web/backend/tags/delete', {
+      const response = await fetch('/web/backend/links/delete', {
         method: 'POST',
         body: JSON.stringify({ ids: this.checkSels }),
         headers: {
@@ -129,18 +163,35 @@
       showMyErrorToast("发生异常:" + error);
     }
   }
+
+  // 新增
+  async function addItem() {
+    // 获取到富文本内容
+    try {
+        const response = await fetch('/web/backend/link', {
+          method: 'POST',
+          body: JSON.stringify(this.addedItem),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = await response.json();
+        if (response.ok && data.code == 0) {
+          this.isEditPopupOpen = true;
+          showMyToast("请求成功");
+          // 从定向
+          // 刷新当前页面
+          location.reload();
+        } else {
+          showMyErrorToast(data.message ?? "请求失败");
+        }
+      } catch (error) {
+        // 处理错误情况
+        showMyErrorToast("发生异常:" + error);
+      }
+
+  }
 </script>
 
-<!-- 添加标签的弹窗 -->
-<dialog id="my_modal_add_tag" class="modal">
-  <div method="dialog" class="modal-box w-11/12 max-w-5xl">
-    <button class="btn absolute right-2 top-2" onclick="my_modal_add_tag.close()">✕</button>
-    <form method="post" action="/web/backend/tag">
-      <h3 class="font-bold text-lg">添加标签</h3>
-      <input type="text" placeholder="标签名称" name="name" class="input input-bordered w-full my-5" />
-      <button class="btn" type="submit">提交</button>
-    </form>
-  </div>
-</dialog>
 #endexport
 #endextend

@@ -16,7 +16,7 @@ struct LinkRepositoryImpl: LinkRepository {
   }
   
   func add(param: InLink, ownerId: User.IDValue) async throws -> Link {
-    let link = Link(title: param.title, href: param.href, ownerId: ownerId)
+    let link = Link(title: param.title, href: param.href, weight: param.weight.castInt(), ownerId: ownerId)
     try await link.create(on: req.db)
     return link
   }

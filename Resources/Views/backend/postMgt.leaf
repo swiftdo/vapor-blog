@@ -86,7 +86,7 @@
             <button class="btn absolute right-2 top-2" @click="isEditPopupOpen = false">✕</button>
             <div class="text-3xl">修改文章</div>
             <input type="text" x-model="editedPost.title" class="input" placeholder="文章标题" required>
-            <label for="article-content" class="block font-medium">选择详情：</label>
+            <label for="article-content" class="block font-medium">文章详情：</label>
             <div id="article-content" class="gap-0"><div id="editEditor"></div></div>
             <label for="select-option-category" class="block font-medium">文章分类：</label>
             <select id="select-option-category" x-model="editedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
@@ -114,7 +114,7 @@
             <button class="btn absolute right-2 top-2" @click="isAddPopupOpen = false">✕</button>
             <div class="text-3xl">添加文章</div>
             <input type="text" x-model="addedPost.title" class="input" placeholder="文章标题" required>
-            <label for="article-content" class="block font-medium">选择详情：</label>
+            <label for="article-content" class="block font-medium">文章详情：</label>
             <div id="article-content" class="gap-0"><div id="addEditor"></div></div>
             <label for="select-option-category" class="block font-medium">文章分类：</label>
             <select id="select-option-category" x-model="addedPost.categoryId" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
