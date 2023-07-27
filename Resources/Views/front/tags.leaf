@@ -1,0 +1,15 @@
+#extend("basefront"):
+#export("content"):
+
+<div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-left">
+        <div class="text-5xl my-20">所有标签</div>
+    <div class="grid grid-cols-4 lg:grid-cols-6 gap-4 mx-auto mb-80">
+        #for(tag in data):
+        <button class="btn bg-gray-800 py-4 px-5 rounded-full">#(tag.name)</button>
+        #endfor
+    </div>
+    </div>
+</div>
+#endexport
+#endextend

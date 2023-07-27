@@ -21,7 +21,7 @@ struct TagRepositoryImpl: TagRepository {
     return tag
   }
   
-  func page(ownerId: User.IDValue) async throws -> Page<Tag.Public> {
+  func page(ownerId: User.IDValue?) async throws -> Page<Tag.Public> {
     return try await Tag.query(on: req.db)
         .filter(\.$status == 1)
         .with(\.$owner)
@@ -46,7 +46,7 @@ struct TagRepositoryImpl: TagRepository {
       .update()
   }
   
-  func all(ownerId: User.IDValue) async throws -> [Tag.Public] {
+  func all(ownerId: User.IDValue?) async throws -> [Tag.Public] {
     try await Tag.query(on: req.db)
       .filter(\.$status == 1)
       .sort(\.$createdAt, .descending)

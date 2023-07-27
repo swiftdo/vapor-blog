@@ -24,6 +24,11 @@
     </div>
     #endif
     <div class="navbar-end gap-2">
+        <div x-data="{ currentPath: window.location.pathname }" class="menu menu-horizontal text-xl gap-2">
+            <li><a href="/tags" :class="currentPath == '/tags' ? 'active' : ''">标签</a></li>
+            <li><a href="/categories" :class="currentPath == '/categories' ? 'active' : ''">分类</a></li>
+        </div>
+
         <div class="form-control">
             <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
         </div>

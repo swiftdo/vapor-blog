@@ -9,8 +9,9 @@ struct WebFrontController: RouteCollection {
     let tokenGroup = routes.grouped(WebSessionAuthenticator())
     tokenGroup.get(use: toIndex)
     tokenGroup.get("index", use: toIndex)
-    
     tokenGroup.get("detail", use: toDetail)
+    tokenGroup.get("tags", use: toTags)
+    tokenGroup.get("categories", use: toCategories)
   }
 }
 
@@ -54,5 +55,19 @@ extension WebFrontController {
                                                   cateId: inIndex.categoryId,
                                                   data: .init(posts),
                                                   pageMeta: posts.metadata))
+  }
+  
+  // 所有标签
+  private func toTags(_ req: Request) async throws -> View {
+    let user = req.auth.get(User.self)
+    let tags = try await req.repositories.tag.all(ownerId: user?.id)
+    return try await req.view.render("front/tags",frontWrapper(req, data: .init(tags)))
+  }
+  
+  // 所有分类
+  private func toCategories(_ req: Request) async throws -> View {
+    let user = req.auth.get(User.self)
+    let categories = try await req.repositories.category.all(ownerId: user?.id)
+    return try await req.view.render("front/categories",frontWrapper(req, data: .init(categories)))
   }
 }
