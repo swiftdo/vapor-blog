@@ -31,8 +31,7 @@
           </div>
     </div>
 
-    <div  class="ml-4 rounded" style="width: 300px; height:300px; background-color:gray">
-    </div>
+    <div class="ml-4 rounded bg-stone-950 w-72 h-72"></div>
 
     
 </div>

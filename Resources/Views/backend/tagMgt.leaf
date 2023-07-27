@@ -14,7 +14,7 @@
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
         <button class="btn btn-primary" onclick="my_modal_add_tag.showModal()">添加</button>
-        <button class="btn btn-error" @click="deleteTags">删除</button>
+        <button class="btn btn-error" @click="deleteItems">删除</button>
     </div>
     <div class="overflow-x-auto">
         <table class="table">
@@ -110,7 +110,7 @@
   }
 
   // 删除
-  async function deleteTags() {
+  async function deleteItems() {
     try {
       const response = await fetch('/web/backend/tags/delete', {
         method: 'POST',

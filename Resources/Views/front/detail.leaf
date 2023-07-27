@@ -11,41 +11,51 @@
     }
 
     /* 设置标题样式 */
-  .ql-editor h1 {
-    font-size: 36px;
-    font-weight: bold;
-  }
-  
-  .ql-editor h2 {
-    font-size: 28px;
-    font-weight: bold;
-  }
-  
-  .ql-editor h3 {
-    font-size: 20px;
-    font-weight: bold;
-  }
+    .ql-editor h1 {
+        font-size: 36px;
+        font-weight: bold;
+    }
 
+    .ql-editor h2 {
+        font-size: 28px;
+        font-weight: bold;
+    }
 
+    .ql-editor h3 {
+        font-size: 20px;
+        font-weight: bold;
+    }
 </style>
 #endexport
 
 #export("content"):
 
-<div class="flex flex-col m-20">
-    
-    <h1 class="my-10 text-5xl">#(data.title)</h1>
-    <div class="flex flex-row items-center gap-4 mb-10">
-        <div>#(data.owner.name)</div>
-        <div>#date(data.createdAt, "yyyy-MM-dd")</div>
-        <button class="btn bg-primary rounded-full">#(data.category.name)</button>
+<div class="flex mx-20 mb-20">
+    <div class="flex-1 flex flex-col">
+        <h1 class="my-10 text-5xl ">#(data.title)</h1>
+        <div class="flex flex-row items-center gap-4 mb-10">
+            <div>#(data.owner.name)</div>
+            <div>#date(data.createdAt, "yyyy-MM-dd")</div>
+            <button class="btn bg-primary rounded-full">#(data.category.name)</button>
+        </div>
+        <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
+        <hr class="mt-10">
+        <div class="flex flex-row gap-2 mt-5">
+            #for(tag in data.tags):
+            <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
+            #endfor
+        </div>
     </div>
-    <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
-    <hr class="mt-10">
-    <div class="flex flex-row gap-2 mt-5">
-        #for(tag in data.tags):
-        <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
-        #endfor
+    <div class="ml-4 rounded bg-stone-950 w-72">
+        <div class="flex flex-col sticky bg-gray-700 right-20 top-0">
+            <div>目录</div>
+            <div id="article-nav"></div>
+        </div>
+
+        <div class="flex flex-col mt-20 bg-gray-900">
+            <div>目录</div>
+            <div class="w-72">图像、pdf文件，甚至交互式网站，在这个无限的空间里展现你的想法。你的Canvas文件使用开源JSON文件格式存储在本地</div>
+        </div>
     </div>
 </div>
 <!-- 初始化编辑器 -->
@@ -54,7 +64,68 @@
     hljs.configure({   // optionally configure hljs
         languages: ['javascript', 'ruby', 'python', 'swift']
     });
-    var quill = new Quill('#postDetail', {
+
+    var Link = Quill.import('formats/link');
+
+    class MyLink extends Link {
+        static create(value) {
+            let node = Link.create(value);
+            value = Link.sanitize(value);
+            node.setAttribute('href', value);
+            if (value.startsWith("#")) {
+                node.removeAttribute('target');
+            } else {
+                node.setAttribute("target", "_blank");
+            }
+            return node;
+        }
+
+        format(name, value) {
+            super.format(name, value);
+
+            if (name !== this.statics.blotName || !value) {
+                return;
+            }
+
+            if (value.startsWith("#")) {
+                this.domNode.removeAttribute("target");
+            } else {
+                this.domNode.setAttribute("target", "_blank");
+            }
+        }
+    }
+    Quill.register(MyLink);
+
+    var linkIds = [];
+    function getRandomId(domNode) {
+        let _id = Math.random().toString(16).slice(2, 9);
+        linkIds.push(_id);
+        return _id;
+    }
+
+    var Header = Quill.import("formats/header")
+    class MyHeader extends Header {
+        constructor(domNode) {
+            let a = super(domNode);
+            domNode.setAttribute('id', getRandomId(domNode));
+            this.cache = {};
+        }
+
+        static create(value) {
+            const node = super.create();
+            return node;
+        }
+
+        static formats(domNode) {
+            return {
+                id: domNode.getAttribute("id")
+            };
+        }
+    }
+    Quill.register("formats/header", MyHeader);
+    MyHeader.blotName = "header"
+
+    var quill = new Quill(document.createElement("div"), {
         theme: 'snow',
         readOnly: true,
         modules: {
@@ -64,6 +135,41 @@
     });
     var content = #unsafeHTML(data.content);
     quill.setContents(content)
+
+    let index = 0;
+    let linkHeaders = [];
+    quill.getContents().ops.forEach(ops => {
+        index++;
+        if (ops?.attributes?.header) {
+            if (quill.getContents().ops[index - 2].insert !== "\n") {
+                linkHeaders.push(quill.getContents().ops[index - 2].insert.trim());
+            }
+        }
+    });
+
+    var headerNav = "";
+    linkHeaders.forEach(h => {
+        headerNav += `<li><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
+    });
+
+    headerNav = "<ul>" + headerNav + "</ul>"
+
+    console.log(headerNav)
+
+    document.getElementById("article-nav").innerHTML = headerNav;
+    document.getElementById("postDetail").innerHTML = quill.container.innerHTML;
+
+    // 先标记 id,然后将 id 进行替换未标题内容
+    linkIds.forEach(hid => {
+        try {
+            var node = document.getElementById(hid);
+            console.log(node)
+            // 将空格变为-
+            node.id = node.innerHTML.trim().replace(/\s/g, "-");
+        } catch (error) {
+
+        }
+    });
 </script>
 #endexport
 #endextend
