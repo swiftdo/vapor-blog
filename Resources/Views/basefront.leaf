@@ -2,7 +2,7 @@
 
 #export("navbar"):
 <!-- 导航 -->
-<div class="navbar bg-base-300 px-20 py-5">
+<div class="navbar bg-base-300 px-20 py-5 sticky left-0 top-0 right-0">
     <div class="navbar-start gap-2">
         <div class="w-10 rounded-full">
             <img src="/images/logo.png" />

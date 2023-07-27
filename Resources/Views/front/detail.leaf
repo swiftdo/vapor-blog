@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="ml-4 rounded bg-stone-950 w-72">
-        <div class="flex flex-col sticky bg-gray-700 right-20 top-0">
+        <div class="flex flex-col sticky bg-gray-700 right-20 top-20">
             <div>目录</div>
             <div id="article-nav"></div>
         </div>
