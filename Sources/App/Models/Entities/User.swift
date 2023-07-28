@@ -44,6 +44,10 @@ final class User: Model {
 
   @Timestamp(key: FieldKeys.updatedAt, on: .update)
   var updatedAt: Date?
+  
+  // 多个角色
+  @Siblings(through: UserRole.self, from: \.$user, to: \.$role)
+  var roles: [Role]
 
   init() {}
 
