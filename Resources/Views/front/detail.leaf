@@ -36,13 +36,13 @@
         <div class="flex flex-row items-center gap-4 mb-10">
             <div>#(data.owner.name)</div>
             <div>#date(data.createdAt, "yyyy-MM-dd")</div>
-            <button class="btn bg-primary rounded-full">#(data.category.name)</button>
+            <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(data.category.id)">#(data.category.name)</a>
         </div>
         <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
         <hr class="mt-10">
         <div class="flex flex-row gap-2 mt-5">
             #for(tag in data.tags):
-            <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
+            <a class="btn bg-gray-800 py-2 px-5 rounded-full" href="/list?listFor=tag&tagId=#(tag.id)">##(tag.name)</a>
             #endfor
         </div>
     </div>
