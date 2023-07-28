@@ -12,6 +12,7 @@ struct WebFrontController: RouteCollection {
     tokenGroup.get("detail", use: toDetail)
     tokenGroup.get("tags", use: toTags)
     tokenGroup.get("categories", use: toCategories)
+    tokenGroup.get("list", use: toIndex)
   }
 }
 
@@ -54,7 +55,8 @@ extension WebFrontController {
                                      frontWrapper(req,
                                                   cateId: inIndex.categoryId,
                                                   data: .init(posts),
-                                                  pageMeta: posts.metadata))
+                                                  pageMeta: posts.metadata,
+                                                  extra: ["listFor": .init(inIndex.listFor)]))
   }
   
   // 所有标签
@@ -70,4 +72,5 @@ extension WebFrontController {
     let categories = try await req.repositories.category.all(ownerId: user?.id)
     return try await req.view.render("front/categories",frontWrapper(req, data: .init(categories)))
   }
+    
 }

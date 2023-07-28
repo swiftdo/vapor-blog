@@ -6,7 +6,7 @@
         <div class="text-5xl my-20">所有标签</div>
     <div class="grid grid-cols-4 lg:grid-cols-6 gap-4 mx-auto mb-80">
         #for(tag in data):
-        <button class="btn bg-gray-800 py-4 px-5 rounded-full">#(tag.name)</button>
+        <a class="btn bg-gray-800 py-4 px-5 rounded-full" href="/list?listFor=tag&tagId=#(tag.id)">#(tag.name)</a>
         #endfor
     </div>
     </div>

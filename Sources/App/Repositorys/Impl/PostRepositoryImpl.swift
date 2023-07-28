@@ -35,6 +35,13 @@ struct PostRepositoryImpl: PostRepository {
       if let cateId = inIndex.categoryId {
         pageQuery.filter(\.$category.$id == cateId)
       }
+      if let tagId = inIndex.tagId {
+        pageQuery.join(siblings: \.$tags).filter(Tag.self, \Tag.$id == tagId)
+      }
+    
+      if let searchKey = inIndex.searchKey {
+        pageQuery.filter(\.$title ~~ searchKey)
+      }
     }
     
     return try await pageQuery

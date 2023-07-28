@@ -7,7 +7,7 @@
         
         <div class="grid grid-cols-4 lg:grid-cols-6 gap-4 mx-auto mb-96">
             #for(category in data):
-            <button class="btn bg-gray-800 py-4 px-5 rounded-full">#(category.name)</button>
+            <a class="btn bg-gray-800 py-4 px-5 rounded-full" href="/list?listFor=category&categoryId=#(category.id)">#(category.name)</a>
             #endfor
         </div>
     </div>

@@ -2,7 +2,7 @@
 
 #export("navbar"):
 <!-- 导航 -->
-<div class="navbar bg-base-300 px-20 py-5 sticky left-0 top-0 right-0">
+<div x-data="{ currentPath: window.location.pathname }" class="navbar bg-base-300 px-20 py-5 sticky left-0 top-0 right-0">
     <div class="navbar-start gap-2">
         <div class="w-10 rounded-full">
             <img src="/images/logo.png" />
@@ -13,6 +13,7 @@
     #if(!hideNavCate):
     <div class="navbar-center">
         <ul class="menu menu-horizontal text-xl gap-2">
+            <li><a href="/" :class="currentPath == '/' ? 'active' : ''">首页</a></li>
             #for(cate in categories):
                 #if(cateId == cate.id):
                 <li><a href="/index?categoryId=#(cate.id)" class="active">#(cate.name)</a></li>
@@ -24,7 +25,7 @@
     </div>
     #endif
     <div class="navbar-end gap-2">
-        <div x-data="{ currentPath: window.location.pathname }" class="menu menu-horizontal text-xl gap-2">
+        <div class="menu menu-horizontal text-xl gap-2">
             <li><a href="/tags" :class="currentPath == '/tags' ? 'active' : ''">标签</a></li>
             <li><a href="/categories" :class="currentPath == '/categories' ? 'active' : ''">分类</a></li>
         </div>

@@ -1,5 +1,6 @@
 #extend("basefront"):
 #export("content"):
+
 <div class="container mx-auto px-4 py-4 flex flex-row">
     <div class="flex-1">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -8,14 +9,14 @@
               <div class="flex flex-row items-center gap-4 mb-4">
                   <div>#(article.owner.name)</div>
                   <div>#date(article.createdAt, "yyyy-MM-dd")</div>
-                  <button class="btn bg-primary rounded-full">#(article.category.name)</button>
+                  <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(article.categoryId)">#(article.category.name)</a>
               </div>
               <h2 class="text-4xl font-semibold mb-2">#(article.title)</h2>
               <p class="text-gray-600 line-clamp-3 my-5">#(article.desc)</p>
               <div class="flex flex-row justify-between items-center">
                   <div class="flex flex-row gap-2 mt-5">
                       #for(tag in article.tags):
-                      <button class="btn bg-gray-800 py-2 px-5 rounded-full">##(tag.name)</button>
+                      <a class="btn bg-gray-800 py-2 px-5 rounded-full" href="/list?listFor=tag&tagId=#(tag.id)">##(tag.name)</a>
                       #endfor
                   </div>
                   <div>
@@ -25,17 +26,11 @@
             </div>
             #endfor
           </div>
-      
           <div class="my-5">
               #extend("partial/pageCtrl")
           </div>
     </div>
-
     <div class="ml-4 rounded bg-stone-950 w-72 h-72"></div>
-
-    
 </div>
-
-
 #endexport
 #endextend

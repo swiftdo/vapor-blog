@@ -9,4 +9,7 @@ import Foundation
 
 struct InSearchPost: In {
   let categoryId: UUID?
+  let tagId: UUID?
+  let searchKey: String? // 搜索的词
+  let listFor: String? // tag, category, search
 }
