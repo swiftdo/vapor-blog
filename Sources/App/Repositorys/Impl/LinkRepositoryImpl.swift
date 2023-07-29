@@ -42,7 +42,7 @@ struct LinkRepositoryImpl: LinkRepository {
   func update(param: InUpdateLink, ownerId: User.IDValue) async throws {
     try await Link.query(on: req.db)
       .set(\.$title, to: param.title)
-      .set(\.$weight, to: param.weight)
+      .set(\.$weight, to: param.weight.castInt())
       .set(\.$href, to: param.href)
       .filter(\.$id == param.id)
       .update()

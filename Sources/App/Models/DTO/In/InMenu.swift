@@ -11,7 +11,7 @@ struct InMenu: In {
   
   let name: String
   let parentId: UUID?
-  let weight: Int
+  let weight: SpecInt
   let url: String
 
 }

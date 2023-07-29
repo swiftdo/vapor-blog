@@ -10,7 +10,7 @@ struct InUpdateMenu: In {
   let id: UUID
   let name: String
   let parentId: UUID?
-  let weight: Int
+  let weight: SpecInt
   let url: String
   let status: Int
 }

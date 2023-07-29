@@ -8,8 +8,8 @@
 import Foundation
 
 extension Role {
-  struct Public {
-    let id: Role.IDValue?
+  struct Public: Out {
+    let id: UUID?
     let name: String
     let desc: String?
   }

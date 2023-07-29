@@ -17,7 +17,7 @@ struct MenuRepositoryImpl: MenuRepository {
   }
   
   func add(param: InMenu, ownerId: User.IDValue) async throws -> Menu {
-    let item = Menu(name: param.name, url: param.url, weight: param.weight, parentId: param.parentId)
+    let item = Menu(name: param.name, url: param.url, weight: param.weight.castInt(), parentId: param.parentId)
     try await item.create(on: req.db)
     return item
   }
@@ -43,7 +43,7 @@ struct MenuRepositoryImpl: MenuRepository {
   func update(param: InUpdateMenu, ownerId: User.IDValue) async throws {
     try await Menu.query(on: req.db)
       .set(\.$name, to: param.name)
-      .set(\.$weight, to: param.weight)
+      .set(\.$weight, to: param.weight.castInt())
       .set(\.$url, to: param.url)
       .set(\.$status, to: param.status)
       .filter(\.$id == param.id)

@@ -11,7 +11,7 @@ import Vapor
 struct InUpdateLink: In {
   let title: String  // tag 名称
   let href: String
-  let weight: Int 
+  let weight: SpecInt
   let id: UUID // tag 的id
 }
 

@@ -8,8 +8,8 @@
 import Foundation
 
 extension Permission {
-  struct Public {
-    let id: Permission.IDValue?
+  struct Public: Out {
+    let id: UUID?
     let name: String
     let code: String
     let desc: String?

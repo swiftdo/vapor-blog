@@ -46,7 +46,7 @@
             <tr>
               <th>
                 <label>
-                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(tag.id)" x-on:change="itemCheckboxChange"/>
+                  <input type="checkbox" class="checkbox border-gray-300" x-model="checkSels" value="#(item.id)" x-on:change="itemCheckboxChange"/>
                 </label>
               </th>
               <td>

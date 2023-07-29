@@ -8,8 +8,8 @@
 import Foundation
 
 extension Menu {
-  struct Public {
-    let id: Menu.IDValue?
+  struct Public: Out {
+    let id: UUID?
     let name: String
     let url: String
     let weight: Int
