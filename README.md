@@ -1,5 +1,7 @@
 ## Vapor 博客系统实战项目
 
+开发状态：开发中...
+
 源码：
 
 [https://github.com/swiftdo/vapor-blog](https://github.com/swiftdo/vapor-blog)
