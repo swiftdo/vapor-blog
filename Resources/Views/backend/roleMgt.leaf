@@ -55,9 +55,12 @@
                 </div>
               </td>
               <td>
-                #for(permission in item.permissions):
-                 <span class="p-2 rounded bg-gray-700">#(permission.name)</span>
-                #endfor
+                <div class="max-w-md flex flex-row gap-2 flex-wrap">
+                    #for(permission in item.permissions):
+                    <span class="p-2 rounded bg-gray-700">#(permission.name)</span>
+                    #endfor
+                </div>
+                
               </td>
               <td>
                 <button class="btn" @click="openEditPopup('#jsonb(item)')">编辑</button>
