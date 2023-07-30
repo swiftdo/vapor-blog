@@ -2,6 +2,8 @@
 
 开发状态：开发中...
 
+页面预览：[页面预览](https://github.com/swiftdo/vapor-blog/wiki/%E9%A1%B5%E9%9D%A2%E9%A2%84%E8%A7%88)
+
 源码：
 
 [https://github.com/swiftdo/vapor-blog](https://github.com/swiftdo/vapor-blog)

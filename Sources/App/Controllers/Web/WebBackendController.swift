@@ -355,7 +355,7 @@ extension WebBackendController {
     // 获取角色列表
     let roles = try await req.repositories.role.all(ownerId: user.requireID())
     let context = try await backendWrapper(req,
-                                           tabName: "菜单管理",
+                                           tabName: "用户管理",
                                            data: .init(items),
                                            pageMeta: items.metadata,
                                            dataIds: items.items.map({$0.id!}),
