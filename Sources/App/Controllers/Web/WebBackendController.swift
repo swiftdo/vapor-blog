@@ -246,11 +246,13 @@ extension WebBackendController {
   private func toRoleMgt(_ req: Request) async throws -> View {
     let user = try req.auth.require(User.self)
     let items = try await req.repositories.role.page(ownerId: user.requireID())
+    let permissions = try await req.repositories.permission.all(ownerId: user.requireID())
     let context = try await backendWrapper(req,
                                            tabName: "角色管理",
                                            data: .init(items),
                                            pageMeta: items.metadata,
-                                           dataIds: items.items.map({$0.id!}))
+                                           dataIds: items.items.map({$0.id!}),
+                                           extra: ["optionPermissions": .init(permissions)])
     return try await req.view.render("backend/roleMgt", context)
   }
   private func addRole(_ req: Request) async throws -> OutJson<OutOk> {
@@ -281,11 +283,14 @@ extension WebBackendController {
   private func toPermissionMgt(_ req: Request) async throws -> View {
     let user = try req.auth.require(User.self)
     let items = try await req.repositories.permission.page(ownerId: user.requireID())
+    let menus = try await req.repositories.menu.all(ownerId: user.requireID())
     let context = try await backendWrapper(req,
                                            tabName: "权限管理",
                                            data: .init(items),
                                            pageMeta: items.metadata,
-                                           dataIds: items.items.map({$0.id!}))
+                                           dataIds: items.items.map({$0.id!}),
+                                           extra: ["optionMenus": .init(menus)]
+    )
     return try await req.view.render("backend/permissionMgt", context)
   }
   

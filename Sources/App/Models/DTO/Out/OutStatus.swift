@@ -32,4 +32,6 @@ extension OutStatus {
   static var emailCodeExpired = OutStatus(code: 28, message: "验证码已过期，请重新获取")
   static var inviteUserNotExist = OutStatus(code: 29, message: "邀请码不存在")
   static var postNotExist = OutStatus(code: 30, message: "文章不存在")
+  static var roleNotExist = OutStatus(code: 31, message: "角色不存在")
+  static var permissionNotExist = OutStatus(code: 32, message: "权限不存在")
 }

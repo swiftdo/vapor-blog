@@ -1,5 +1,11 @@
 #extend("basebackend"):
 
+#export("head"):
+<!-- <link href="/lib/choices/base.min.css" rel="stylesheet"> -->
+<link href="/lib/choices/choices.min.css" rel="stylesheet">
+<script src="/lib/choices/choices.min.js"></script>
+#endexport
+
 #export("contentRight"):
 <div class="flex flex-col" x-data='{
   checkSels: [],
@@ -13,6 +19,7 @@
     #bjson("tag")
     this.editedItem = tag;
     this.isEditPopupOpen = true;
+    menuChoices.setChoiceByValue(this.editedItem.menuIds);
   }
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
@@ -32,6 +39,7 @@
               <th>名称</th>
               <th>权限码</th>
               <th>描述</th>
+              <th>可访问菜单</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -55,6 +63,12 @@
                 <div>#(item.desc)</div>
               </td>
               <td>
+                #for(menu in item.menus):
+                 <span class="p-2 rounded bg-gray-700">#(menu.name)</span>
+                #endfor
+              </td>
+
+              <td>
                 <button class="btn" @click="openEditPopup('#jsonb(item)')">编辑</button>
               </td>
             </tr>
@@ -75,6 +89,12 @@
             <input id="tag-href" type="text" x-model="editedItem.code" class="input" placeholder="权限码" required>
             <label for="tag-weight" class="block font-medium">描述：</label>
             <input id="tag-weight" type="text" x-model="editedItem.desc" class="input" placeholder="描述" required>
+            <label for="select-option-menu" class="block font-medium">可访问菜单：</label>
+            <select multiple id="select-option-menu" class="menus-choice mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                #for(menu in optionMenus):
+                <option value="#(menu.id)">#(menu.name)</option>
+                #endfor
+            </select>
             <button class="btn" @click="updateItem">提交</button>
           </div>
         </div>
@@ -100,6 +120,9 @@
 
 <script>
 
+  const element = document.querySelector('.menus-choice');
+  const menuChoices = new Choices(element, {removeItemButton: true});
+
   // 全选/未全选
   function toggleAllItemsSelection() {
     this.checkSels = this.isAllSelected ? []: this.dataIds;
@@ -113,6 +136,7 @@
   // 更新
   async function updateItem() {
     try {
+      this.editedItem.menuIds = menuChoices.getValue(true);
       const response = await fetch('/web/backend/permission/update', {
         method: 'POST',
         body: JSON.stringify(this.editedItem),

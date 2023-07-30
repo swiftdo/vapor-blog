@@ -79,7 +79,6 @@ struct PostRepositoryImpl: PostRepository {
       else {
         throw ApiError(code: .postNotExist)
       }
-      
       try await ret.$tags.detachAll(on: db)
       let newTags = try await Tag.query(on: db).filter(\.$id ~~ param.tagIds).all()
       try await ret.$tags.attach(newTags, on: db)

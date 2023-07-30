@@ -24,6 +24,7 @@ struct PermissionRepositoryImpl: PermissionRepository {
   
   func page(ownerId: User.IDValue?) async throws -> FluentKit.Page<Permission.Public> {
     return try await Permission.query(on: req.db)
+        .with(\.$menus)
         .sort(\.$createdAt, .descending)
         .paginate(for:req)
         .map({$0.asPublic()})
@@ -36,12 +37,25 @@ struct PermissionRepositoryImpl: PermissionRepository {
   }
   
   func update(param: InUpdatePermission, ownerId: User.IDValue) async throws {
-    try await Permission.query(on: req.db)
-      .set(\.$name, to: param.name)
-      .set(\.$desc, to: param.desc)
-      .set(\.$code, to: param.code)
-      .filter(\.$id == param.id)
-      .update()
+    try await req.db.transaction { db in
+      try await Permission.query(on: db)
+        .set(\.$name, to: param.name)
+        .set(\.$desc, to: param.desc)
+        .set(\.$code, to: param.code)
+        .filter(\.$id == param.id)
+        .update()
+      
+      guard let ret = try await Permission.query(on: db)
+        .with(\.$menus)
+        .filter(\.$id == param.id)
+        .first()
+      else {
+        throw ApiError(code: .roleNotExist)
+      }
+      try await ret.$menus.detachAll(on: db)
+      let menus = try await Menu.query(on: db).filter(\.$id ~~ param.menuIds).all()
+      try await ret.$menus.attach(menus, on: db)
+    }
   }
   
   func all(ownerId: User.IDValue?) async throws -> [Permission.Public] {

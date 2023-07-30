@@ -12,9 +12,16 @@ extension Role {
     let id: UUID?
     let name: String
     let desc: String?
+    let permissions: [Permission.Public]?
+    let permissionIds: [UUID]?
   }
   
   func asPublic() -> Public {
-    return Public(id: self.id, name: self.name, desc: self.desc)
+    return Public(id: self.id,
+                  name: self.name,
+                  desc: self.desc,
+                  permissions: self.$permissions.value?.map({$0.asPublic()}),
+                  permissionIds: self.$permissions.value?.map({$0.id!})
+    )
   }
 }

@@ -1,5 +1,11 @@
 #extend("basebackend"):
 
+#export("head"):
+<!-- <link href="/lib/choices/base.min.css" rel="stylesheet"> -->
+<link href="/lib/choices/choices.min.css" rel="stylesheet">
+<script src="/lib/choices/choices.min.js"></script>
+#endexport
+
 #export("contentRight"):
 <div class="flex flex-col" x-data='{
   checkSels: [],
@@ -13,6 +19,7 @@
     #bjson("tag")
     this.editedItem = tag;
     this.isEditPopupOpen = true;
+    permissionChoices.setChoiceByValue(this.editedItem.permissionIds)
   }
 }'>   
     <div class="flex flex-row gap-5 mr-5 my-5">
@@ -30,6 +37,7 @@
                 </label>
               </th>
               <th>名称</th>
+              <th>拥有权限</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -45,6 +53,11 @@
                 <div class="flex items-center space-x-3">
                   #(item.name)
                 </div>
+              </td>
+              <td>
+                #for(permission in item.permissions):
+                 <span class="p-2 rounded bg-gray-700">#(permission.name)</span>
+                #endfor
               </td>
               <td>
                 <button class="btn" @click="openEditPopup('#jsonb(item)')">编辑</button>
@@ -63,6 +76,12 @@
             <div class="text-3xl">修改角色</div>
             <label for="tag-name" class="block font-medium">角色名称：</label>
             <input id="tag-name" type="text" x-model="editedItem.name" class="input" placeholder="角色名称" required>
+            <label for="select-option-permission" class="block font-medium">拥有权限：</label>
+            <select multiple id="select-option-permission" class="permissions-choice mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
+                #for(perm in optionPermissions):
+                <option value="#(perm.id)" >#(perm.name)</option>
+                #endfor
+            </select>
             <button class="btn" @click="updateItem">提交</button>
           </div>
         </div>
@@ -84,6 +103,10 @@
 
 <script>
 
+  const element = document.querySelector('.permissions-choice');
+  const permissionChoices = new Choices(element, {removeItemButton: true});
+
+
   // 全选/未全选
   function toggleAllItemsSelection() {
     this.checkSels = this.isAllSelected ? []: this.dataIds;
@@ -97,6 +120,7 @@
   // 更新
   async function updateItem() {
     try {
+      this.editedItem.permissionIds = permissionChoices.getValue(true)
       const response = await fetch('/web/backend/role/update', {
         method: 'POST',
         body: JSON.stringify(this.editedItem),

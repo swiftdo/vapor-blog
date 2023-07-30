@@ -11,6 +11,7 @@ struct InUpdatePermission: In {
   let code: String
   let desc: String?
   let id: UUID
+  let menuIds: [UUID]
 }
 
 extension InUpdatePermission: Validatable {

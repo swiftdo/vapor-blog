@@ -10,6 +10,7 @@ import Vapor
 struct InUpdateRole: In {
   let name: String
   let id: UUID
+  let permissionIds: [UUID]
 }
 
 extension InUpdateRole: Validatable {

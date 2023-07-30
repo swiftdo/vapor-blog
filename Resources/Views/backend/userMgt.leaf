@@ -71,7 +71,7 @@
             <label for="select-option-role" class="block font-medium">用户角色：</label>
             <select multiple id="select-option-role" class="roles-choice mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500">
                 #for(role in optionRoles):
-                <option value="#(role.id)" x-bind:selected="true">#(role.name)</option>
+                <option value="#(role.id)">#(role.name)</option>
                 #endfor
             </select>
             <button class="btn" @click="updateItem">提交</button>
@@ -81,10 +81,8 @@
 </div>
 <script>
 
-    const element = document.querySelector('.roles-choice');
-
-    const roleChoices = new Choices(element, {removeItemButton: true});
-
+  const element = document.querySelector('.roles-choice');
+  const roleChoices = new Choices(element, {removeItemButton: true});
 
   // 全选/未全选
   function toggleAllItemsSelection() {
