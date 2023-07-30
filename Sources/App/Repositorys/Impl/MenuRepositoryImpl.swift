@@ -45,7 +45,6 @@ struct MenuRepositoryImpl: MenuRepository {
       .set(\.$name, to: param.name)
       .set(\.$weight, to: param.weight.castInt())
       .set(\.$url, to: param.url)
-      .set(\.$status, to: param.status)
       .filter(\.$id == param.id)
       .update()
   }

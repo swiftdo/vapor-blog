@@ -64,22 +64,14 @@ struct WebBackendController: RouteCollection {
 extension WebBackendController {
   private func backendWrapper(_ req: Request, tabName: String, data: AnyEncodable? = nil, pageMeta:PageMetadata? = nil, dataIds:[UUID]? = nil, extra: [String: AnyEncodable?]? = nil) async throws -> [String: AnyEncodable?] {
     let user = try req.auth.require(User.self)
+    let menus = try await req.services.backend.menus(user: user)
     var context: [String: AnyEncodable?] = [
       "tabName": .init(tabName),
       "user": .init(user.asPublic()),
       "data": data,
       "dataIds": .init(dataIds),
       "pageMeta": PageUtil.genPageMetadata(pageMeta: pageMeta),
-      "menus": [
-        ["href": "/web/backend/userMgt", "label": "用户管理"],
-        ["href": "/web/backend/roleMgt", "label": "角色管理"],
-        ["href": "/web/backend/permissionMgt", "label": "权限管理"],
-        ["href": "/web/backend/menuMgt", "label": "菜单管理"],
-        ["href": "/web/backend/tagMgt", "label": "标签管理"],
-        ["href": "/web/backend/categoryMgt", "label": "分类管理"],
-        ["href": "/web/backend/postMgt", "label": "文章管理"],
-        ["href": "/web/backend/linkMgt", "label": "友情链接"]
-      ]
+      "menus": .init(menus)
     ]
     if let extra = extra {
       context.merge(extra) { $1 }

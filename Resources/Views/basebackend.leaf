@@ -48,10 +48,10 @@
         <ul class="menu menu-lg w-60 p-5 [&_li>*]:rounded-none">
             #for(menu in menus):
             <li>
-                #if(tabName == menu.label):
-                <a href="#(menu.href)" class="active">#(menu.label)</a>
+                #if(tabName == menu.name):
+                <a href="#(menu.url)" class="active">#(menu.name)</a>
                 #else:
-                <a href="#(menu.href)">#(menu.label)</a>
+                <a href="#(menu.url)">#(menu.name)</a>
                 #endif
             </li>
             #endfor

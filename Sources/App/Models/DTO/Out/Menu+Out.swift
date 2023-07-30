@@ -14,9 +14,14 @@ extension Menu {
     let url: String
     let weight: Int
     let parentId: Menu.IDValue?
+    let children: [Public]?
+    
+    func mergeWith(children: [Public]?) -> Public {
+      return Public(id: self.id, name: self.name, url: self.url, weight: self.weight, parentId: self.parentId, children: children)
+    }
   }
-  
-  func asPublic() -> Public {
-    return Public(id: self.id, name: self.name, url: self.url,  weight: self.weight, parentId: self.$parent.id)
+    
+  func asPublic(with children: [Public]? = nil) -> Public {
+    return Public(id: self.id, name: self.name, url: self.url,  weight: self.weight, parentId: self.$parent.id, children: children)
   }
 }

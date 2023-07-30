@@ -12,7 +12,6 @@ struct InUpdateMenu: In {
   let parentId: UUID?
   let weight: SpecInt
   let url: String
-  let status: Int
 }
 
 extension InUpdateMenu: Validatable {
