@@ -14,6 +14,9 @@ struct WebBackendController: RouteCollection {
     // 必须要登录
     let tokenGroup = routes.grouped(WebSessionAuthenticator(), User.guardMiddleware())
     tokenGroup.get(use: toIndex)
+    
+    // TODO: 超级管理员具有的初始化配置
+    // tokenGroup.get("config", use: configBackend)
    
     // 标签
     tokenGroup.get("tagMgt", use: toTagMgt)

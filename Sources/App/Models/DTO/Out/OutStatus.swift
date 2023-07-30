@@ -34,4 +34,5 @@ extension OutStatus {
   static var postNotExist = OutStatus(code: 30, message: "文章不存在")
   static var roleNotExist = OutStatus(code: 31, message: "角色不存在")
   static var permissionNotExist = OutStatus(code: 32, message: "权限不存在")
+  static var userRoleNotExist = OutStatus(code: 33, message: "普通用户角色未设置")
 }

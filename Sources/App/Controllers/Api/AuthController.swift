@@ -49,6 +49,12 @@ extension AuthController {
     guard userAuth == nil else {
       throw ApiError(code: .userExist)
     }
+    
+    let role = try await Role.query(on: req.db).filter(\.$name == Constants.userRoleName).first()
+    guard let role = role else {
+      throw ApiError(code: .userRoleNotExist)
+    }
+
     let emailCode = try await validEmailCode(
       type: "register",
       email: inRegister.email,
@@ -74,10 +80,12 @@ extension AuthController {
       user.superiorId = inviteUser.id
     }
     try await user.create(on: req.db)
+    
     let pwd = try await req.password.async.hash(inRegister.password)
     let ua = try UserAuth(
       userId: user.requireID(), authType: "email", identifier: inRegister.email, credential: pwd)
     try await ua.create(on: req.db)
+    try await user.$roles.attach(role, method: .ifNotExists, on: req.db)
     emailCode.status = 1
     try await emailCode.save(on: req.db)
     return OutJson(success: OutOk())

@@ -29,6 +29,10 @@ public struct AuthServiceImpl: AuthService {
     guard userAuth == nil else {
       throw ApiError(code: .userExist)
     }
+    let role = try await Role.query(on: req.db).filter(\.$name == Constants.userRoleName).first()
+    guard let role = role else {
+      throw ApiError(code: .userRoleNotExist)
+    }
     let emailCode = try await validEmailCode(
       type: "register",
       email: inRegister.email,
@@ -60,6 +64,7 @@ public struct AuthServiceImpl: AuthService {
     try await ua.create(on: req.db)
     emailCode.status = 1
     try await emailCode.save(on: req.db)
+    try await user.$roles.attach(role, method: .ifNotExists, on: req.db)
     return OutJson(success: OutOk())
   }
 
