@@ -57,4 +57,16 @@ struct MenuRepositoryImpl: MenuRepository {
         .all()
         .map({$0.asPublic()})
   }
+  
+  func all(permissions: [Permission]) async throws -> [Menu.Public] {
+    let permissionIds = permissions.map { $0.id! }
+    return try await Menu.query(on: req.db)
+      .join(siblings: \.$permissions)
+      .filter(Permission.self, \Permission.$id ~~ permissionIds)
+      .filter(\.$status == 1)
+      .with(\.$permissions)
+      .sort(\.$weight, .descending)
+      .all()
+      .map({$0.asPublic()})
+  }
 }

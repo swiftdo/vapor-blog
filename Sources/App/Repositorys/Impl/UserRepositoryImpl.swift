@@ -7,6 +7,7 @@
 
 import Fluent
 import Vapor
+import Foundation
 
 public struct UserRepositoryImpl: UserRepository {
   var req: Request

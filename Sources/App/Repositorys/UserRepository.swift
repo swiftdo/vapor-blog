@@ -13,7 +13,7 @@ protocol UserRepository: Repository {
   // 用户列表
   func page(ownerId: User.IDValue?) async throws -> Page<User.Public>
   // 用户更新
-  func update(param: InUpdateUser, ownerId: User.IDValue?) async throws
+  func update(param: InUpdateUser, ownerId: User.IDValue?) async throws  
 }
 
 extension RepositoryFactory {

@@ -10,6 +10,7 @@ import Fluent
 
 /// Menu增删改查
 protocol MenuRepository: Repository {
+  func all(permissions: [Permission]) async throws -> [Menu.Public]
   func all(ownerId: User.IDValue?) async throws -> [Menu.Public]
   func add(param: InMenu, ownerId: User.IDValue) async throws -> Menu
   func page(ownerId: User.IDValue?) async throws -> Page<Menu.Public>
