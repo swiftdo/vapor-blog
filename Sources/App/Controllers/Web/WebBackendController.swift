@@ -40,8 +40,8 @@ struct WebBackendController: RouteCollection {
     tokenGroup.post("link", "update", use: updateLink)
     
     // 用户管理
-//    tokenGroup.get("userMgt", use: toUserMgt)
-//    tokenGroup.post("user", "update", use: updateUser)
+    tokenGroup.get("userMgt", use: toUserMgt)
+    tokenGroup.post("user", "update", use: updateUser)
     
     // 角色管理
     tokenGroup.get("roleMgt", use: toRoleMgt)
@@ -71,6 +71,7 @@ extension WebBackendController {
       "dataIds": .init(dataIds),
       "pageMeta": PageUtil.genPageMetadata(pageMeta: pageMeta),
       "menus": [
+        ["href": "/web/backend/userMgt", "label": "用户管理"],
         ["href": "/web/backend/roleMgt", "label": "角色管理"],
         ["href": "/web/backend/permissionMgt", "label": "权限管理"],
         ["href": "/web/backend/menuMgt", "label": "菜单管理"],
@@ -347,4 +348,26 @@ extension WebBackendController {
     return OutJson(success: OutOk())
   }
   
+  // 用户管理
+  private func toUserMgt(_ req: Request) async throws -> View {
+    let user = try req.auth.require(User.self)
+    let items = try await req.repositories.user.page(ownerId: user.requireID())
+    // 获取角色列表
+    let roles = try await req.repositories.role.all(ownerId: user.requireID())
+    let context = try await backendWrapper(req,
+                                           tabName: "菜单管理",
+                                           data: .init(items),
+                                           pageMeta: items.metadata,
+                                           dataIds: items.items.map({$0.id!}),
+                                           extra: ["optionRoles": .init(roles)])
+    return try await req.view.render("backend/userMgt", context)
+  }
+
+  private func updateUser(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
+    try InUpdateUser.validate(content: req)
+    let param = try req.content.decode(InUpdateUser.self)
+    let _ = try await req.repositories.user.update(param: param, ownerId: user.requireID())
+    return OutJson(success: OutOk())
+  }
 }
