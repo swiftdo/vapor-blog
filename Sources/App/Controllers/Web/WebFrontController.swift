@@ -72,5 +72,9 @@ extension WebFrontController {
     let categories = try await req.repositories.category.all(ownerId: user?.id)
     return try await req.view.render("front/categories",frontWrapper(req, data: .init(categories)))
   }
+  
+  // 文章添加评论
+  
+  // 获取文章的获取评论列表
     
 }

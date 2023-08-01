@@ -21,36 +21,40 @@ final class Comment: Model {
     @Field(key: FieldKeys.content)
     var content: String
     
-    @OptionalField(key: FieldKeys.website)
-    var website: String?
+    @Field(key: FieldKeys.topicId)
+    var topicId: UUID
     
-    @Field(key: FieldKeys.email)
-    var email: String
+    @Field(key: FieldKeys.topicType)
+    var topicType: Int // 1: 文章
     
-    @Parent(key: FieldKeys.targetId)
-    var target: Post
+    @Parent(key: FieldKeys.fromUid)
+    var fromUser: User
     
     @Timestamp(key: FieldKeys.createdAt, on: .create)
-        var createdAt: Date?
+    var createdAt: Date?
 
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     var updatedAt: Date?
     
     init() { }
 
-    init(id: UUID? = nil) throws {
+    init(id: UUID? = nil, content: String, userId: UUID, topicId: UUID, topicType: Int, status: Int = 1) throws {
         self.id = id
-        
+        self.content = content
+        self.$fromUser.id = userId
+        self.topicId = topicId
+        self.topicType = topicType
+        self.status = status
     }
 }
 
 extension Comment {
     struct FieldKeys {
         static var status: FieldKey { "status" }
+        static var topicId: FieldKey { "topic_id" }
+        static var topicType: FieldKey { "topic_type" }
         static var content: FieldKey { "content" }
-        static var website: FieldKey { "website" }
-        static var email: FieldKey { "email" }
-        static var targetId: FieldKey { "target_id" }
+        static var fromUid: FieldKey { "from_uid" }
         static var createdAt: FieldKey { "created_at" }
         static var updatedAt: FieldKey { "updated_at" }
     }

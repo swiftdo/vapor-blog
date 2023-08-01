@@ -10,7 +10,7 @@ import Vapor
 import Fluent
 
 final class Invite: Model {
-    static var schema: String = "invites"
+    static var schema: String = "blog_invites"
     
     @ID(key: .id)
     var id: UUID?
