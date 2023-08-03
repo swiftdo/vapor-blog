@@ -32,32 +32,117 @@
 
 <div class="flex mx-20 mb-20">
     <div class="flex-1 flex flex-col">
-        <h1 class="my-10 text-5xl ">#(data.title)</h1>
-        <div class="flex flex-row items-center gap-4 mb-10">
-            <div>#(data.owner.name)</div>
-            <div>#date(data.createdAt, "yyyy-MM-dd")</div>
-            <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(data.category.id)">#(data.category.name)</a>
+        <div class="article">
+            <h1 class="my-10 text-5xl ">#(data.title)</h1>
+            <div class="flex flex-row items-center gap-4 mb-10">
+                <div>#(data.owner.name)</div>
+                <div>#date(data.createdAt, "yyyy-MM-dd")</div>
+                <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(data.category.id)">#(data.category.name)</a>
+            </div>
+            <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
+            <hr class="mt-10">
+            <div class="flex flex-row gap-2 mt-5">
+                #for(tag in data.tags):
+                <a class="btn bg-gray-800 py-2 px-5 rounded-full" href="/list?listFor=tag&tagId=#(tag.id)">##(tag.name)</a>
+                #endfor
+            </div>
         </div>
-        <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
-        <hr class="mt-10">
-        <div class="flex flex-row gap-2 mt-5">
-            #for(tag in data.tags):
-            <a class="btn bg-gray-800 py-2 px-5 rounded-full" href="/list?listFor=tag&tagId=#(tag.id)">##(tag.name)</a>
-            #endfor
-        </div>
-    </div>
-    <div class="ml-4 rounded bg-stone-950 w-72">
-        <div class="flex flex-col sticky bg-gray-700 right-20 top-20">
-            <div>目录</div>
-            <div id="article-nav"></div>
+        <div class="mt-20" x-data="{
+            addedComment: {}
+        }">
+            <div class="text-3xl bold">评论</div>
+            <div class="flex flex-col mt-8">
+                <textarea x-model="addedComment.content"  class="textarea textarea-accent textarea-lg w-ful"  placeholder="发表评论"></textarea>
+                <div class="flex flex-row justify-end">
+                    <button data-id="#(data.id)" @click="addComment" class="btn bg-primary w-32 mt-4">发表评论</button>
+                </div>
+            </div>
         </div>
 
-        <div class="flex flex-col mt-20 bg-gray-900">
-            <div>目录</div>
-            <div class="w-72">图像、pdf文件，甚至交互式网站，在这个无限的空间里展现你的想法。你的Canvas文件使用开源JSON文件格式存储在本地</div>
+        <div class="mt-4">
+            <div class="text-2xl">全部评论</div>
+            <!-- 评论列表内容 -->
+            <div class="mt-10">
+                <div class="flex flex-row justify-between">
+                    <div class="text-xl">你是大傻</div>
+                    <div>2023-08-06 10:00:05</div>
+                </div>
+                <div class="mt-2">这是我写的评论</div>
+                <div class="mt-2">
+                    <div class="btn">回复</div>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <div class="flex flex-row justify-between">
+                    <div class="text-xl">你是大傻</div>
+                    <div>2023-08-06 10:00:05</div>
+                </div>
+                <div class="my-4">这是我写的评论</div>
+                <div class="mt-2">
+                    <div class="btn">回复</div>
+                </div>
+
+                <div class="p-4 bg-neutral-focus rounded mt-4 ml-4">
+                    <div>
+                        <div class="flex flex-row justify-between">
+                            <div class="text-xl">你是大傻2</div>
+                            <div>2023-08-06 10:00:05</div>
+                        </div>
+                        <div class="mt-2">这是我写的回复😄</div>
+                        <div class="mt-2">
+                            <div class="btn">回复</div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex flex-row justify-between">
+                            <div class="text-xl">你是大傻2</div>
+                            <div>2023-08-06 10:00:05</div>
+                        </div>
+                        <div class="mt-2">这是我写的回复😄</div>
+                        <div class="mt-2">
+                            <div class="btn">回复</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ml-4 w-72">
+        <div class="flex flex-col sticky right-20 top-36 p-4 rounded border">
+            <div class="text-3xl">目录</div>
+            <div id="article-nav"></div>
         </div>
     </div>
 </div>
+<script>
+    async function addComment(e) {
+        this.addComment.topicId = e.currentTarget.dataset.id;
+        this.addComment.topicType = 1; // 文章
+
+        try {
+            const response = await fetch('/post/comment', {
+              method: 'POST',
+              body: JSON.stringify({ ids: this.addComment }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            const data = await response.json();
+            if (response.ok && data.code == 0) {
+              showMySuccessToast("请求成功", () => {location.reload();});
+              
+            } else {
+              showMyErrorToast(data.message ?? "请求失败");
+            }
+        } catch (error) {
+            // 处理错误情况
+            showMyErrorToast("发生异常:" + error);
+        }
+    }
+
+</script>
+
 <!-- 初始化编辑器 -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
@@ -149,7 +234,7 @@
 
     var headerNav = "";
     linkHeaders.forEach(h => {
-        headerNav += `<li><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
+        headerNav += `<li class="p-2 hover:bg-sky-700"><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
     });
 
     headerNav = "<ul>" + headerNav + "</ul>"

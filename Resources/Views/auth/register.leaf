@@ -40,13 +40,6 @@
         </div>
         <button class="btn btn-lg mt-5 btn-outline" type="submit">注册</button>
     </form>
-
-    <!-- 弹窗 -->
-    <div x-show="$store.myToast.showError" class="toast toast-middle toast-center">
-        <div :class="$store.myToast.typeClass">
-            <span x-text="$store.myToast.errorMessage"></span>
-        </div>
-    </div>
 </div>
 
 <dialog id="my_modal" class="modal">
@@ -75,7 +68,7 @@
                     });
                     const data = await response.json();
                     if (response.ok && data.code == 0) {
-                        showMyToast("请求成功");
+                        showMySuccessToast("请求成功");
                     } else {
                         showMyErrorToast(data.message ?? "请求失败");
                     }

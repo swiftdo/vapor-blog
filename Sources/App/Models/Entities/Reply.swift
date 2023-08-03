@@ -44,7 +44,7 @@ final class Reply: Model {
     
     init() { }
 
-    init(id: UUID? = nil, commentId: Comment.IDValue, content: String, userId: User.IDValue, toUid: User.IDValue?, targetId: UUID, targetType: Int, status: Int = 1) throws {
+    init(id: UUID? = nil, commentId: Comment.IDValue, content: String, userId: User.IDValue, toUid: User.IDValue?, targetId: UUID, targetType: Int, status: Int = 1) {
         self.id = id
         self.$comment.id = commentId
         self.content = content

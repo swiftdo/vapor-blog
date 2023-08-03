@@ -13,6 +13,13 @@ struct WebFrontController: RouteCollection {
     tokenGroup.get("tags", use: toTags)
     tokenGroup.get("categories", use: toCategories)
     tokenGroup.get("list", use: toIndex)
+    
+    let authTokeGroup = tokenGroup.grouped(User.guardMiddleware())
+    
+    // 评论文章
+    authTokeGroup.post("post", "comment", use: postAddComment)
+    // 对评论进行回复
+    authTokeGroup.post("comment", "reply", use: commentAddReply)
   }
 }
 
@@ -74,7 +81,20 @@ extension WebFrontController {
   }
   
   // 文章添加评论
+  private func postAddComment(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
+    try InComment.validate(content: req)
+    let param = try req.content.decode(InComment.self)
+    let _ = try await req.repositories.comment.add(param: param, fromUserId: user.requireID())
+    return OutJson(success: OutOk())
+  }
   
   // 获取文章的获取评论列表
-    
+  private func commentAddReply(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = try req.auth.require(User.self)
+    try InReply.validate(content: req)
+    let param = try req.content.decode(InReply.self)
+    let _ = try await req.repositories.reply.add(param: param, fromUserId: user.requireID())
+    return OutJson(success: OutOk())
+  }
 }

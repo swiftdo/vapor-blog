@@ -104,8 +104,9 @@
       if (response.ok && data.code == 0) {
         // 从定向
         // 刷新当前页面
-        location.reload();
-        showMyToast("请求成功");
+        showMySuccessToast("请求成功", () => {
+          location.reload();
+        });
       } else {
         showMyErrorToast(data.message ?? "请求失败");
       }
@@ -127,10 +128,10 @@
       });
       const data = await response.json();
       if (response.ok && data.code == 0) {
-        showMyToast("请求成功");
+        showMySuccessToast("请求成功", () => {location.reload();});
         // 从定向
         // 刷新当前页面
-        location.reload();
+        
       } else {
         showMyErrorToast(data.message ?? "请求失败");
       }

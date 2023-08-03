@@ -35,10 +35,11 @@ final class Comment: Model {
 
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     var updatedAt: Date?
-    
+  
+
     init() { }
 
-    init(id: UUID? = nil, content: String, userId: UUID, topicId: UUID, topicType: Int, status: Int = 1) throws {
+    init(id: UUID? = nil, content: String, userId: UUID, topicId: UUID, topicType: Int, status: Int = 1) {
         self.id = id
         self.content = content
         self.$fromUser.id = userId
