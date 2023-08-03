@@ -29,4 +29,11 @@ func repositories(_ app: Application) throws {
   app.repositories.register(MenuRepository.self) { req in
     MenuRepositoryImpl(req)
   }
+  
+  app.repositories.register(CommentRepository.self) { req in
+    CommentRepositoryImpl(req)
+  }
+  app.repositories.register(ReplyRepository.self) { req in
+    ReplyRepositoryImpl(req)
+  }
 }

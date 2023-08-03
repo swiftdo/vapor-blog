@@ -117,13 +117,12 @@
 </div>
 <script>
     async function addComment(e) {
-        this.addComment.topicId = e.currentTarget.dataset.id;
-        this.addComment.topicType = 1; // 文章
-
+        this.addedComment.topicId = e.currentTarget.dataset.id;
+        this.addedComment.topicType = 1; // 文章
         try {
             const response = await fetch('/post/comment', {
               method: 'POST',
-              body: JSON.stringify({ ids: this.addComment }),
+              body: JSON.stringify(this.addedComment),
               headers: {
                 'Content-Type': 'application/json'
               }
