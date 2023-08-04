@@ -35,4 +35,5 @@ extension OutStatus {
   static var roleNotExist = OutStatus(code: 31, message: "角色不存在")
   static var permissionNotExist = OutStatus(code: 32, message: "权限不存在")
   static var userRoleNotExist = OutStatus(code: 33, message: "普通用户角色未设置")
+  static var menuNotConfig = OutStatus(code: 34, message: "菜单未配置")
 }

@@ -82,8 +82,13 @@ extension WebBackendController {
     return context
   }
   
-  private func toIndex(_ req: Request) async throws -> View {
-    return try await toTagMgt(req)
+  private func toIndex(_ req: Request) async throws -> Response {
+    let user = try req.auth.require(User.self)
+    let menus = try await req.services.backend.menus(user: user)
+    guard let menu = menus.first else {
+      throw ApiError(code: .menuNotConfig)
+    }
+    return req.redirect(to: menu.url)
   }
 
   /// tag 管理
