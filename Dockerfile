@@ -101,7 +101,7 @@ RUN swift package resolve --verbose
 COPY . .
 
 # Build everything, with optimizations
-RUN swift build -c release --static-swift-stdlib --verbose
+RUN swift build -c release --verbose
 
 # Switch to the staging area
 WORKDIR /staging
