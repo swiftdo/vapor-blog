@@ -25,10 +25,12 @@ struct CommentRepositoryImpl: CommentRepository {
     let comments = try await Comment.query(on: req.db)
       .filter(\.$topicId == topicId)
       .filter(\.$topicType == topicType)
-      .sort(\.$createdAt)
       .with(\.$fromUser)
-      .join(Reply.self, on: \Comment.$id == \Reply.$comment.$id)
-      .filter(Reply.self, \Reply.$targetType == 1)
+      .with(\.$replys, { reply in
+        reply.with(\.$fromUser)
+        reply.with(\.$toUser)
+      })
+      .sort(\.$createdAt, .descending)
       .all()
     return comments.map({$0.asPublic()})
   }

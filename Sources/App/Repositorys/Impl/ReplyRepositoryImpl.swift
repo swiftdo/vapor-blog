@@ -21,7 +21,7 @@ struct ReplyRepositoryImpl: ReplyRepository {
                       userId: fromUserId,
                       toUid: param.toUserId,
                       targetId: param.targetId,
-                      targetType: param.targetType)
+                      targetType: param.targetType.castInt())
     try await reply.create(on: req.db)
     return reply
   }

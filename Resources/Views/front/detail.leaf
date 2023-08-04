@@ -31,7 +31,27 @@
 #export("content"):
 
 <div class="flex mx-20 mb-20">
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col" x-data='{
+        isAddPopupOpen: false,
+        replyTarget: {},
+        replyTargetType: 1, // 回复类型
+        replyContent: "", // 回复内容
+        replyLabel: "",
+        replyCommentBtnClick(tag){
+            #bjson("tag")
+            this.replyTarget = tag;
+            this.replyTargetType = 1;
+            this.replyLabel = "回复" + tag.fromUser.name + "：";
+            this.isAddPopupOpen = true;
+        },
+        replyReplyBtnClick(tag) {
+            #bjson("tag")
+            this.replyTargetType = 2;
+            this.replyTarget = tag;
+            this.replyLabel = "回复" + tag.fromUser.name + "：";
+            this.isAddPopupOpen = true;
+        }
+    }'>
         <div class="article">
             <h1 class="my-10 text-5xl ">#(data.title)</h1>
             <div class="flex flex-row items-center gap-4 mb-10">
@@ -62,51 +82,56 @@
         <div class="mt-4">
             <div class="text-2xl">全部评论</div>
             <!-- 评论列表内容 -->
+            #for(comment in comments):
             <div class="mt-10">
                 <div class="flex flex-row justify-between">
-                    <div class="text-xl">你是大傻</div>
-                    <div>2023-08-06 10:00:05</div>
+                    <div class="text-xl">#(comment.fromUser.name)</div>
+                    <div>#date(comment.createdAt, "yyyy-MM-dd")</div>
                 </div>
-                <div class="mt-2">这是我写的评论</div>
+                <div class="mt-2">#(comment.content)</div>
                 <div class="mt-2">
-                    <div class="btn">回复</div>
-                </div>
-            </div>
-
-            <div class="mt-10">
-                <div class="flex flex-row justify-between">
-                    <div class="text-xl">你是大傻</div>
-                    <div>2023-08-06 10:00:05</div>
-                </div>
-                <div class="my-4">这是我写的评论</div>
-                <div class="mt-2">
-                    <div class="btn">回复</div>
+                    <div class="btn" @click="replyCommentBtnClick('#jsonb(comment)')">回复</div>
                 </div>
 
-                <div class="p-4 bg-neutral-focus rounded mt-4 ml-4">
-                    <div>
+                #if(count(comment.replys) > 0):
+                <div class="px-4 mt-4 bg-neutral-focus rounded ml-8">
+                    #for(reply in comment.replys):
+                    <div class="py-4">
                         <div class="flex flex-row justify-between">
-                            <div class="text-xl">你是大傻2</div>
-                            <div>2023-08-06 10:00:05</div>
+                            #if(reply.targetType == "2"):
+                            <div class="text-xl">#(reply.fromUser.name) 回复 #(reply.toUser.name)</div>
+                            #else:
+                            <div class="text-xl">#(reply.fromUser.name)</div>
+                            #endif 
+                            <div>#date(reply.createdAt, "yyyy-MM-dd")</div>
                         </div>
-                        <div class="mt-2">这是我写的回复😄</div>
+                        <div class="mt-2">#(reply.content)</div>
+                        #if(reply.targetContent):
+                        <div class="mt-2 bg-base-100 p-4 text-xs rounded">#(reply.targetContent)</div>
+                        #endif
                         <div class="mt-2">
-                            <div class="btn">回复</div>
+                            <div class="btn" @click="replyReplyBtnClick('#jsonb(reply)')">回复</div>
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <div class="flex flex-row justify-between">
-                            <div class="text-xl">你是大傻2</div>
-                            <div>2023-08-06 10:00:05</div>
-                        </div>
-                        <div class="mt-2">这是我写的回复😄</div>
-                        <div class="mt-2">
-                            <div class="btn">回复</div>
-                        </div>
-                    </div>
+                    #endfor
                 </div>
+                #endif
             </div>
+            #endfor
         </div>
+
+        <div x-cloak x-show="isAddPopupOpen" x-transition @click.away="isAddPopupOpen = false" class="fixed inset-1 flex flex-col items-center justify-center">
+            <div class="bg-black p-10 rounded-lg shadow-lg w-11/12 max-w-5xl relative">
+              <div class="flex flex-col gap-5">
+                <button class="btn absolute right-2 top-2" @click="isAddPopupOpen = false">✕</button>
+                <div class="text-3xl">添加回复</div>
+                <div>“<strong x-text="replyTarget.content"></strong>”</div>
+                <label for="tag-content" x-text="replyLabel" class="block font-medium"></label>
+                <input id="tag-content" type="text" x-model="replyContent" class="input" placeholder="回复内容" required>
+                <button class="btn" @click="addReply">提交</button>
+              </div>
+            </div>
+          </div>
     </div>
     <div class="ml-4 w-72">
         <div class="flex flex-col sticky right-20 top-36 p-4 rounded border">
@@ -116,11 +141,47 @@
     </div>
 </div>
 <script>
+    async function addReply() {
+        var replyItem = {
+            content: this.replyContent,
+            targetType: this.replyTargetType,
+            targetId: this.replyTarget.id,
+        }
+        if (this.replyTargetType == 1) {
+            // 回复评论
+            replyItem.commentId = this.replyTarget.id;
+            replyItem.toUserId = this.replyTarget.fromUid;
+        } else{
+            // 回复某人的回复
+            replyItem.commentId = this.replyTarget.commentId;
+            replyItem.toUserId = this.replyTarget.fromUid;
+        }
+        try {
+            const response = await fetch('/comment/reply', {
+              method: 'POST',
+              body: JSON.stringify(replyItem),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+            const data = await response.json();
+            if (response.ok && data.code == 0) {
+              showMySuccessToast("请求成功", () => {location.reload();});
+              
+            } else {
+              showMyErrorToast(data.message ?? "请求失败");
+            }
+        } catch (error) {
+            // 处理错误情况
+            showMyErrorToast("发生异常:" + error);
+        }
+    }
+
     async function addComment(e) {
         this.addedComment.topicId = e.currentTarget.dataset.id;
         this.addedComment.topicType = 1; // 文章
         try {
-            const response = await fetch('/post/comment', {
+            const response = await fetch('/comment', {
               method: 'POST',
               body: JSON.stringify(this.addedComment),
               headers: {
@@ -130,7 +191,6 @@
             const data = await response.json();
             if (response.ok && data.code == 0) {
               showMySuccessToast("请求成功", () => {location.reload();});
-              
             } else {
               showMyErrorToast(data.message ?? "请求失败");
             }

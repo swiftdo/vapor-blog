@@ -17,7 +17,7 @@ struct WebFrontController: RouteCollection {
     let authTokeGroup = tokenGroup.grouped(User.guardMiddleware())
     
     // 评论文章
-    authTokeGroup.post("post", "comment", use: postAddComment)
+    authTokeGroup.post("comment", use: addComment)
     // 对评论进行回复
     authTokeGroup.post("comment", "reply", use: commentAddReply)
   }
@@ -49,9 +49,13 @@ extension WebFrontController {
     let user = req.auth.get(User.self)
     let postId: String = req.query["postId"]!
     let post = try await req.repositories.post.get(id: .init(uuidString: postId)!, ownerId: user?.requireID())
-    
-    return try await req.view.render("front/detail", frontWrapper(req, hideNavCate: true, data: .init(post)))
-    
+    // 获取文章的评论
+    let comments = try await req.repositories.comment.all(topicId: .init(uuidString: postId)!, topicType: 1)
+    return try await req.view.render("front/detail", frontWrapper(req,
+                                                                  hideNavCate: true,
+                                                                  data: .init(post),
+                                                                  extra: ["comments": .init(comments)]
+                                                                 ))
   }
   
   private func toIndex(_ req: Request) async throws -> View {
@@ -80,8 +84,8 @@ extension WebFrontController {
     return try await req.view.render("front/categories",frontWrapper(req, data: .init(categories)))
   }
   
-  // 文章添加评论
-  private func postAddComment(_ req: Request) async throws -> OutJson<OutOk> {
+  // 添加评论
+  private func addComment(_ req: Request) async throws -> OutJson<OutOk> {
     let user = try req.auth.require(User.self)
     try InComment.validate(content: req)
     let param = try req.content.decode(InComment.self)

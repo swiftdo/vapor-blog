@@ -29,6 +29,9 @@ final class Comment: Model {
     
     @Parent(key: FieldKeys.fromUid)
     var fromUser: User
+  
+    @Children(for: \.$comment)
+    var replys: [Reply]
     
     @Timestamp(key: FieldKeys.createdAt, on: .create)
     var createdAt: Date?

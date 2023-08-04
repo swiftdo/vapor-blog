@@ -18,6 +18,7 @@ extension Comment {
     let fromUid: UUID
     let fromUser: User.Public?
     let createdAt: Date?
+    let replys: [Reply.Public]?
   }
   
   func asPublic() -> Public {
@@ -28,7 +29,8 @@ extension Comment {
                   topicType: self.topicType,
                   fromUid: self.$fromUser.id,
                   fromUser: self.$fromUser.value?.asPublic(),
-                  createdAt: self.createdAt
+                  createdAt: self.createdAt,
+                  replys: self.$replys.value?.map({$0.asPublic(list: self.$replys.value ?? [])})
     )
   }
 

@@ -21,9 +21,14 @@ extension Reply {
     let toUser: User.Public?
     let commentId: UUID
     let comment: Comment.Public?
+    let createdAt: Date?
+    let targetContent: String?
   }
   
-  func asPublic() -> Public {
+  func asPublic(list: [Reply] = []) -> Public {
+    let cnt = list.first { rep in
+      rep.id == targetId
+    }
     return Public(id: self.id,
                   status: self.status,
                   content: self.content,
@@ -34,7 +39,9 @@ extension Reply {
                   fromUser: self.$fromUser.value?.asPublic(),
                   toUser: self.$toUser.value??.asPublic(),
                   commentId: self.$comment.id,
-                  comment: self.$comment.value?.asPublic()
+                  comment: self.$comment.value?.asPublic(),
+                  createdAt: self.createdAt,
+                  targetContent: cnt?.content
     )
   }
   

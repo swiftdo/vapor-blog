@@ -13,7 +13,7 @@ struct InReply: In {
   let content: String
   let toUserId: UUID? // @xxx
   let targetId: UUID // 评论id, 或者回复id
-  let targetType: Int  // 1: 评论 2：回复
+  let targetType: SpecInt  // 1: 评论 2：回复
 }
 
 extension InReply: Validatable {
