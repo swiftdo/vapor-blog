@@ -14,7 +14,7 @@
       #if(pageMeta.curPage == pageMeta.minPage):
       <button class="btn btn-disabled"><</button>
       #else:
-      <button class="btn bg-blue-500" @click="preClickOnPage"><</button>
+      <button class="btn bg-base" @click="preClickOnPage"><</button>
       #endif
       #if(pageMeta.showMinMore):
         <button class="btn" @click="pageBtnClick">#(pageMeta.minPage)</button>
@@ -23,7 +23,7 @@
       #endif
       #for(pageNum in pageMeta.showPages):
         #if(pageNum == pageMeta.curPage):
-          <button class="btn btn-success" @click="pageBtnClick">#(pageNum)</button>
+          <button class="btn bg-base-content text-black" @click="pageBtnClick">#(pageNum)</button>
         #else: 
           <button class="btn" @click="pageBtnClick">#(pageNum)</button>
         #endif
@@ -36,16 +36,16 @@
       #if(pageMeta.curPage == pageMeta.maxPage):
       <button class="btn btn-disabled">></button>
       #else:
-      <button class="btn bg-blue-500" @click="nextClickOnPage">></button>
+      <button class="btn bg-base" @click="nextClickOnPage">></button>
       #endif
     </div>
     <div>到第</div>
-    <input x-model="pageCtrl_curPage" type="number" class="input input-bordered input-accent max-w-xs w-fit"/>
+    <input x-model="pageCtrl_curPage" type="number" class="input input-bordered border-2 w-16"/>
     <div>页</div>
-    <button class="btn bg-blue-500" @click="confirmPage">确定</button>
+    <button class="btn bg-base" @click="confirmPage">确定</button>
     <div>共#(pageMeta.total)条</div>
 
-    <select class="select w-fit max-w-xs bg-blue-500" x-model="pageCtrl_per">
+    <select class="select w-fit max-w-xs select-bordered border-2" x-model="pageCtrl_per">
       #for(per in pageMeta.perOptions):
       <option value="#(per.value)">#(per.label)</option>
       #endfor
