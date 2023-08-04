@@ -1,0 +1,26 @@
+name: Swift Vapor CI/CD with Docker
+
+on:
+  push:
+    branches:
+      - main  # 更改为你的默认分支，例如master或main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker Image
+      run: |
+        docker build -t package-docker-image .
+        docker create --name temporary-container package-docker-image
+        docker cp temporary-container:/staging.tar.gz ./PackageApp.zip
+        docker rm temporary-container
+
+    - name: Archive Build Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: vapor-app-artifact
+        path: PackageApp.zip
