@@ -5,6 +5,11 @@ on:
     branches:
       - main  # 更改为你的默认分支，例如master或main
 
+env:
+  SWIFTENV_ROOT: $HOME/.swiftenv
+  PATH: ${{ env.SWIFTENV_ROOT }}/bin:${{ env.SWIFTENV_ROOT }}/shims:${{ env.PATH }}
+
+
 jobs:
   build:
     runs-on: ubuntu-20.04
