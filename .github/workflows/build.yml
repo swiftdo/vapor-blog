@@ -22,7 +22,14 @@ jobs:
         export PATH="$SWIFTENV_ROOT/bin:$PATH"
         eval "$(swiftenv init -)"
         echo "$PATH" >> $GITHUB_PATH
-        echo SWIFTENV_ROOT
+        echo $SWIFTENV_ROOT
+
+    - name: Setup tools
+      run: |
+        export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+        apt-get -q update \
+        apt-get -q dist-upgrade -y\
+        rm -rf /var/lib/apt/lists/*
 
     - name: Install Swift
       run: |
@@ -31,14 +38,14 @@ jobs:
 
     - name: Build Swift Project 
       run: |
-        swift build -c release --show-bin-path
+        swift build -c release --static-swift-stdlib --show-bin-path
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: vapor-app-artifact
         path: |
-          .build/release/App
+          .build
           Public
           Resources
 
