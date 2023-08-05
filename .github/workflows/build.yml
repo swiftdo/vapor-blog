@@ -32,13 +32,16 @@ jobs:
     - name: Build Swift Project 
       run: |
         swift build -c release --static-swift-stdlib
+        mv .build/x86_64-unknown-linux-gnu/release/App ./
+        chmod +x ./App
+
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: vapor-app-artifact
         path: |
-          .build/x86_64-unknown-linux-gnu/release/App
+          App
           Public
           Resources
 
