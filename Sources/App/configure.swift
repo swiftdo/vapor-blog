@@ -29,6 +29,8 @@ public func configure(_ app: Application) async throws {
   let cors = CORSMiddleware(configuration: corsConfiguration)
   // cores 需要放到最前面
   app.middleware.use(cors, at: .beginning)
+  
+  app.logger.info("hostname:: \(Environment.get("DATABASE_HOST")), username: \( Environment.get("DATABASE_USERNAME"))")
 
   app.databases.use(.postgres(configuration: .init(
            hostname: Environment.get("DATABASE_HOST")!,
@@ -36,7 +38,8 @@ public func configure(_ app: Application) async throws {
            username: Environment.get("DATABASE_USERNAME")!,
            password: Environment.get("DATABASE_PASSWORD"),
            database: Environment.get("DATABASE_NAME"),
-           tls: .prefer(try .init(configuration: .clientDefault)))
+           tls: .prefer(try .init(configuration: .clientDefault))
+    )
   ), as: .psql)
 
   // 配置session
