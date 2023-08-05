@@ -9,7 +9,6 @@ env:
   SWIFTENV_ROOT: $HOME/.swiftenv
   PATH: ${{ env.SWIFTENV_ROOT }}/bin:${{ env.SWIFTENV_ROOT }}/shims:${{ env.PATH }}
 
-
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -18,18 +17,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     
+    - name: Set up swiftenv
+      run: git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
+
+    - name: Setup environment
+      run: echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV && echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> $GITHUB_ENV && echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
+
     - name: Install Swift
       run: |
-        git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
-        echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV
-        echo 'export PATH="$SWIFTENV_ROOT/bin:$SWIFTENV_ROOT/shims:$PATH"' >> $GITHUB_ENV
-        echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
-
+        swiftenv install 5.8.1
+        swiftenv global 5.8.1
 
     - name: Build Swift Project 
       run: |
-       swift build -c release
-
+        swift build -c release
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v2
