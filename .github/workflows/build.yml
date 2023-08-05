@@ -1,10 +1,9 @@
-name: Swift Vapor CI/CD with Docker
+name: Swift Vapor CI/CD
 
 on:
   push:
     branches:
       - main  # 更改为你的默认分支，例如master或main
-
 
 jobs:
   build:
@@ -18,7 +17,10 @@ jobs:
       run: git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
 
     - name: Setup environment
-      run: echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV && echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> $GITHUB_ENV && echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
+      run: |
+        echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV
+        echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> $GITHUB_ENV 
+        echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
 
     - name: Install Swift
       run: |
