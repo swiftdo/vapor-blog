@@ -38,7 +38,7 @@ jobs:
       with:
         name: vapor-app-artifact
         path: |
-          .build
+          .build/x86_64-unknown-linux-gnu/release/App
           Public
           Resources
 
