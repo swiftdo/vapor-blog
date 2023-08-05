@@ -7,20 +7,31 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Build Docker Image
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install Swift
       run: |
-        docker build -t package-docker-image .
-        docker create --name temporary-container package-docker-image
-        docker cp temporary-container:/staging.tar.gz ./PackageApp.zip
-        docker rm temporary-container
+        git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
+        echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV
+        echo 'export PATH="$SWIFTENV_ROOT/bin:$SWIFTENV_ROOT/shims:$PATH"' >> $GITHUB_ENV
+        echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
+
+
+    - name: Build Swift Project 
+      run: |
+       swift build -c release
+
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v2
       with:
         name: vapor-app-artifact
-        path: PackageApp.zip
+        path: |
+          .build/release/App
+          Public
+          Resources
+
