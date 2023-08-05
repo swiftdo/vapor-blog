@@ -27,8 +27,8 @@ jobs:
     - name: Setup tools
       run: |
         export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
-        apt-get -q update \
-        apt-get -q dist-upgrade -y\
+        sudo apt-get update \
+        sudo apt-get dist-upgrade -y\
         rm -rf /var/lib/apt/lists/*
 
     - name: Install Swift
