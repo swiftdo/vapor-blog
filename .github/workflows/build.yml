@@ -11,20 +11,21 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     
     - name: Set up swiftenv
       run: git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
 
     - name: Setup environment
       run: |
-        echo 'export SWIFTENV_ROOT="$HOME/.swiftenv"' >> $GITHUB_ENV
-        echo 'export PATH="$SWIFTENV_ROOT/bin:$PATH"' >> $GITHUB_ENV 
-        echo 'eval "$(swiftenv init -)"' >> $GITHUB_ENV
+        export SWIFTENV_ROOT="$HOME/.swiftenv"
+        export PATH="$SWIFTENV_ROOT/bin:$PATH"
+        eval "$(swiftenv init -)"
+        echo "$PATH" >> $GITHUB_PATH
 
     - name: Install Swift
       run: |
-        swiftenv install 5.8.1
+        swiftenv install 5.8.1 --skip-existing
         swiftenv global 5.8.1
 
     - name: Build Swift Project 
