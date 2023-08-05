@@ -22,6 +22,7 @@ jobs:
         export PATH="$SWIFTENV_ROOT/bin:$PATH"
         eval "$(swiftenv init -)"
         echo "$PATH" >> $GITHUB_PATH
+        echo SWIFTENV_ROOT
 
     - name: Install Swift
       run: |
@@ -30,7 +31,7 @@ jobs:
 
     - name: Build Swift Project 
       run: |
-        swift build -c release
+        swift build -c release --show-bin-path
 
     - name: Archive Build Artifacts
       uses: actions/upload-artifact@v2
