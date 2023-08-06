@@ -5,6 +5,10 @@ on:
     branches:
       - main  # 更改为你的默认分支，例如master或main
 
+env:
+  ZIP_FILE_NAME: output_filename.zip
+
+
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -47,7 +51,7 @@ jobs:
 
     - name: 收集产物
       run: |
-        zip -r output_filename.zip App Public Resources
+        zip -r $ZIP_FILE_NAME App Public Resources
 
     - name: 上传产物
       uses: appleboy/scp-action@v0.1.4
@@ -56,7 +60,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "output_filename.zip"
+        source: $ZIP_FILE_NAME
         target: ${{secrets.TARGET_FOLD}}
 
     - name: 部署服务
@@ -69,7 +73,7 @@ jobs:
         script: |
           cd ${{secrets.TARGET_FOLD}}
           ls -all
-          unzip -o output_filename.zip
+          unzip -o $ZIP_FILE_NAME
           chmod +x App
           supervisorctl stop iblog-oldbird-run
           supervisorctl start iblog-oldbird-run
