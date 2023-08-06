@@ -39,19 +39,15 @@ jobs:
         mv .build/x86_64-unknown-linux-gnu/release/App ./
         chmod +x ./App
 
-
-    - name: 保存编译的包
-      uses: actions/upload-artifact@v2
-      with:
-        name: vapor-app-artifact
-        path: |
-          App
-          Public
-          Resources
-
     - name: 收集产物
       run: |
         zip -r $ZIP_FILE_NAME App Public Resources
+
+    - name: 保存产物
+      uses: actions/upload-artifact@v2
+      with:
+        name: vapor-app-artifact
+        path: $ZIP_FILE_NAME
 
     - name: 上传产物
       uses: appleboy/scp-action@v0.1.4
