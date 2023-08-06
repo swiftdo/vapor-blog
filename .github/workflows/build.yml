@@ -53,7 +53,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: $ZIP_FILE_NAME
+        source: output_filename.zip
         target: ${{secrets.TARGET_FOLD}}
 
     - name: 部署服务
