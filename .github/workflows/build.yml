@@ -47,10 +47,7 @@ jobs:
 
     - name: 收集产物
       run: |
-        mkdir -p dirs
-        mv App dirs/
-        mv Public dirs/
-        mv Resources dirs/
+        zip -r output_filename.zip App Public Resources
 
     - name: 上传产物
       uses: appleboy/scp-action@v0.1.4
@@ -59,7 +56,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: "dirs/"
+        source: "output_filename.zip"
         target: "/www/wwwroot/iblog.oldbird.run/"
 
     - name: 部署服务
@@ -72,6 +69,7 @@ jobs:
         script: |
           cd /www/wwwroot/iblog.oldbird.run/
           ls -all
+          unzip -o output_filename.zip
           chmod +x App
           supervisorctl stop iblog-oldbird-run
           supervisorctl start iblog-oldbird-run
