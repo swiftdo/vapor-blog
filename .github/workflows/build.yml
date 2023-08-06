@@ -57,7 +57,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "output_filename.zip"
-        target: ${{TARGET_FOLD}}
+        target: ${{secrets.TARGET_FOLD}}
 
     - name: 部署服务
       uses: appleboy/ssh-action@v1.0.0
@@ -67,7 +67,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ${{TARGET_FOLD}}
+          cd ${{secrets.TARGET_FOLD}}
           ls -all
           unzip -o output_filename.zip
           chmod +x App
