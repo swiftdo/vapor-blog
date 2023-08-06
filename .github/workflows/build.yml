@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - name: Checkout code
+    - name: 拉取代码
       uses: actions/checkout@v3
     
-    - name: Set up swiftenv
+    - name: 安装 SwiftEnv
       run: git clone https://github.com/kylef/swiftenv.git ~/.swiftenv
 
     - name: Setup environment
@@ -24,19 +24,19 @@ jobs:
         echo "$PATH" >> $GITHUB_PATH
         echo $SWIFTENV_ROOT
 
-    - name: Install Swift
+    - name: 安装Swift
       run: |
         swiftenv install 5.8.1 --skip-existing
         swiftenv global 5.8.1
 
-    - name: Build Swift Project 
+    - name: 编译项目
       run: |
         swift build -c release --static-swift-stdlib
         mv .build/x86_64-unknown-linux-gnu/release/App ./
         chmod +x ./App
 
 
-    - name: Archive Build Artifacts
+    - name: 保存编译的包
       uses: actions/upload-artifact@v2
       with:
         name: vapor-app-artifact
@@ -52,7 +52,7 @@ jobs:
         mv Public dirs/
         mv Resources dirs/
 
-    - name: Copy files over ssh
+    - name: 上传产物
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
@@ -62,7 +62,7 @@ jobs:
         source: "dirs/"
         target: "/www/wwwroot/iblog.oldbird.run/"
 
-    - name: 上传到服务器
+    - name: 部署服务
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.HOST }}
