@@ -45,3 +45,37 @@ jobs:
           Public
           Resources
 
+    - name: 收集产物
+      run: |
+        mkdir -p dirs
+        mv App dirs/
+        mv Public dirs/
+        mv Resources dirs/
+
+    - name: Copy files over ssh
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        source: "dirs/"
+        target: "/www/wwwroot/iblog.oldbird.run/"
+
+    - name: 上传到服务器
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /www/wwwroot/iblog.oldbird.run/
+          ls -all
+          chmod +x App
+          supervisorctl stop iblog-oldbird-run
+          supervisorctl start iblog-oldbird-run
+         
+
+
+
