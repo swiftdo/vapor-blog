@@ -57,7 +57,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         source: "output_filename.zip"
-        target: "/www/wwwroot/iblog.oldbird.run/"
+        target: ${{TARGET_FOLD}}
 
     - name: 部署服务
       uses: appleboy/ssh-action@v1.0.0
@@ -67,7 +67,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
         script: |
-          cd /www/wwwroot/iblog.oldbird.run/
+          cd ${{TARGET_FOLD}}
           ls -all
           unzip -o output_filename.zip
           chmod +x App
