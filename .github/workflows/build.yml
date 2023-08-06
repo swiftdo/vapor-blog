@@ -5,13 +5,12 @@ on:
     branches:
       - main  # 更改为你的默认分支，例如master或main
 
-env:
-  ZIP_FILE_NAME: output_filename.zip
-
-
 jobs:
   build:
     runs-on: ubuntu-20.04
+
+    env:
+      ZIP_FILE_NAME: output_filename.zip
 
     steps:
     - name: 拉取代码
@@ -27,6 +26,7 @@ jobs:
         eval "$(swiftenv init -)"
         echo "$PATH" >> $GITHUB_PATH
         echo $SWIFTENV_ROOT
+        echo $ZIP_FILE_NAME
 
     - name: 安装Swift
       run: |
