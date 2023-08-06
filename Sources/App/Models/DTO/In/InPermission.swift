@@ -11,6 +11,12 @@ struct InPermission: In {
   let name: String
   let code: String
   let desc: String?
+  
+  init(name: String, code: String, desc: String? = nil) {
+    self.name = name
+    self.code = code
+    self.desc = desc
+  }
 }
 
 extension InPermission: Validatable {

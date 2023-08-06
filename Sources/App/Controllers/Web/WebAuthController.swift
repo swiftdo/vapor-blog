@@ -39,12 +39,12 @@ extension WebAuthController {
   }
 
   private func register(_ req: Request) async throws -> Response {
-    let _ = try await req.services.auth.register(req)
+    let _ = try await req.services.auth.register()
     return req.redirect(to: "/web/auth/login")
   }
 
   private func getRegisterCode(_ req: Request) async throws -> OutJson<OutOk> {
-    return try await req.services.auth.getRegisterCode(req)
+    return try await req.services.auth.getRegisterCode()
   }
 
   private func login(_ req: Request) async throws -> Response {

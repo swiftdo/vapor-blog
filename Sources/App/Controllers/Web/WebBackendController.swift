@@ -16,7 +16,7 @@ struct WebBackendController: RouteCollection {
     tokenGroup.get(use: toIndex)
     
     // TODO: 超级管理员具有的初始化配置
-    // tokenGroup.get("config", use: configBackend)
+    routes.grouped(WebSessionAuthenticator()).get("config", use: configBackend)
    
     // 标签
     tokenGroup.get("tagMgt", use: toTagMgt)
@@ -373,6 +373,95 @@ extension WebBackendController {
     try InUpdateUser.validate(content: req)
     let param = try req.content.decode(InUpdateUser.self)
     let _ = try await req.repositories.user.update(param: param, ownerId: user.requireID())
+    return OutJson(success: OutOk())
+  }
+  
+  private func configBackend(_ req: Request) async throws -> OutJson<OutOk> {
+    let user = req.auth.get(User.self)
+    let roles = try await req.repositories.role.all(ownerId: user?.id)
+    if !roles.isEmpty {
+      throw ApiError(code: .configAlready)
+    }
+    let admin = try await req.services.auth.registerSystemAdmin()
+    let userRole = try await req.repositories.role.add(param: InRole(name: Constants.userRoleName), ownerId: admin.requireID())
+    let adminRole = try  await req.repositories.role.add(param: InRole(name: Constants.userRoleAdmin), ownerId: admin.requireID())
+    try await admin.$roles.attach([userRole, adminRole], on: req.db)
+    
+    // 权限初始化
+    let inPerm_view_user_mgt = InPermission(name: "用户管理查看", code: "view_user_mgt")
+    let inPerm_edit_user_mgt = InPermission(name: "用户管理修改", code: "edit_user_mgt")
+    let inPerm_add_permission_mgt = InPermission(name: "权限管理添加", code: "add_permission_mgt")
+    let inPerm_delete_permission_mgt = InPermission(name: "权限管理删除", code: "delete_permission_mgt")
+    let inPerm_edit_permission_mgt = InPermission(name: "权限管理编辑", code: "edit_permission_mgt")
+    let inPerm_view_link_mgt = InPermission(name: "友情链接管理查看", code: "view_link_mgt")
+    let inPerm_view_post_mgt = InPermission(name: "文章管理查看", code: "view_post_mgt")
+    let inPerm_view_category_mgt = InPermission(name: "分类管理查看", code: "view_category_mgt")
+    let inPerm_view_tag_mgt = InPermission(name: "标签管理查看", code: "view_tag_mgt")
+    let inPerm_view_menu_mgt = InPermission(name: "菜单管理查看", code: "view_menu_mgt")
+    let inPerm_view_role_mgt = InPermission(name: "角色管理查看", code: "view_role_mgt")
+    let inPerm_view_permission_mgt = InPermission(name: "权限管理查看", code: "view_permission_mgt")
+    
+    // 权限初始化
+    let perm_view_user_mgt = try await req.repositories.permission.add(param: inPerm_view_user_mgt, ownerId: admin.requireID())
+    let perm_edit_user_mgt = try await req.repositories.permission.add(param: inPerm_edit_user_mgt, ownerId: admin.requireID())
+    let perm_add_permission_mgt = try await req.repositories.permission.add(param: inPerm_add_permission_mgt, ownerId: admin.requireID())
+    let perm_delete_permission_mgt = try await req.repositories.permission.add(param: inPerm_delete_permission_mgt, ownerId: admin.requireID())
+    let perm_edit_permission_mgt = try await req.repositories.permission.add(param: inPerm_edit_permission_mgt, ownerId: admin.requireID())
+    let perm_view_link_mgt = try await req.repositories.permission.add(param: inPerm_view_link_mgt, ownerId: admin.requireID())
+    let perm_view_post_mgt = try await req.repositories.permission.add(param: inPerm_view_post_mgt, ownerId: admin.requireID())
+    let perm_view_category_mgt = try await req.repositories.permission.add(param: inPerm_view_category_mgt, ownerId: admin.requireID())
+    let perm_view_tag_mgt = try await req.repositories.permission.add(param: inPerm_view_tag_mgt, ownerId: admin.requireID())
+    let perm_view_menu_mgt = try await req.repositories.permission.add(param: inPerm_view_menu_mgt, ownerId: admin.requireID())
+    let perm_view_role_mgt = try await req.repositories.permission.add(param: inPerm_view_role_mgt, ownerId: admin.requireID())
+    let perm_view_permission_mgt = try await req.repositories.permission.add(param: inPerm_view_permission_mgt, ownerId: admin.requireID())
+    
+    // 菜单初始化
+    let inMenu_userMgt = InMenu(name: "用户管理", weight: 100, url: "/web/backend/userMgt")
+    let inMenu_roleMgt = InMenu(name: "角色管理", weight: 98, url: "/web/backend/roleMgt")
+    let inMenu_permissionMgt = InMenu(name: "权限管理", weight: 97, url: "/web/backend/permissionMgt")
+    let inMenu_menuMgt = InMenu(name: "菜单管理", weight: 96, url: "/web/backend/menuMgt")
+    let inMenu_tagMgt = InMenu(name: "标签管理", weight: 95, url: "/web/backend/tagMgt")
+    let inMenu_categoryMgt = InMenu(name: "分类管理", weight: 94, url: "/web/backend/categoryMgt")
+    let inMenu_postMgt = InMenu(name: "文章管理", weight: 92, url: "/web/backend/postMgt")
+    let inMenu_linkMgt = InMenu(name: "友情链接", weight: 92, url: "/web/backend/linkMgt")
+    
+    let menu_userMgt = try await req.repositories.menu.add(param: inMenu_userMgt, ownerId: admin.requireID())
+    let menu_roleMgt = try await req.repositories.menu.add(param: inMenu_roleMgt, ownerId: admin.requireID())
+    let menu_permissionMgt = try await req.repositories.menu.add(param: inMenu_permissionMgt, ownerId: admin.requireID())
+    let menu_menuMgt = try await req.repositories.menu.add(param: inMenu_menuMgt, ownerId: admin.requireID())
+    let menu_tagMgt = try await req.repositories.menu.add(param: inMenu_tagMgt, ownerId: admin.requireID())
+    let menu_categoryMgt = try await req.repositories.menu.add(param: inMenu_categoryMgt, ownerId: admin.requireID())
+    let menu_postMgt = try await req.repositories.menu.add(param: inMenu_postMgt, ownerId: admin.requireID())
+    let menu_linkMgt = try await req.repositories.menu.add(param: inMenu_linkMgt, ownerId: admin.requireID())
+    
+    try await menu_userMgt.$permissions.attach(perm_view_user_mgt, on: req.db)
+    try await menu_roleMgt.$permissions.attach(perm_view_role_mgt, on: req.db)
+    try await menu_permissionMgt.$permissions.attach(perm_view_permission_mgt, on: req.db)
+    try await menu_menuMgt.$permissions.attach(perm_view_menu_mgt, on: req.db)
+    try await menu_tagMgt.$permissions.attach(perm_view_tag_mgt, on: req.db)
+    try await menu_categoryMgt.$permissions.attach(perm_view_category_mgt, on: req.db)
+    try await menu_postMgt.$permissions.attach(perm_view_post_mgt, on: req.db)
+    try await menu_linkMgt.$permissions.attach(perm_view_link_mgt, on: req.db)
+    
+    // 角色绑定权限
+    try await adminRole.$permissions.attach([
+      perm_view_user_mgt,
+      perm_edit_user_mgt,
+      perm_add_permission_mgt,
+      perm_delete_permission_mgt,
+      perm_edit_permission_mgt,
+      perm_view_link_mgt,
+      perm_view_post_mgt,
+      perm_view_category_mgt,
+      perm_view_tag_mgt,
+      perm_view_menu_mgt,
+      perm_view_role_mgt,
+      perm_view_permission_mgt
+    ], on: req.db)
+    
+    try await userRole.$permissions.attach([
+      perm_view_post_mgt
+    ], on: req.db)
     return OutJson(success: OutOk())
   }
 }

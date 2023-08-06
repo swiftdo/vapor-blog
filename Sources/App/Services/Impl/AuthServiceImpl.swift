@@ -3,17 +3,37 @@ import SMTP
 import Vapor
 
 public struct AuthServiceImpl: AuthService {
+
   var req: Request
 
   public init(_ req: Request) {
     self.req = req
   }
+  
+  func registerSystemAdmin() async throws -> User {
+    
+    /// 生成邀请码
+    let inviteCode = try await req.repositories.invite.generateInviteCode()
+  
+    let user = User(
+      name: Constants.superAdminName,
+      email: Constants.superAdminEmail,
+      isAdmin: true,
+      isEmailVerified: true,
+      inviteCode: inviteCode
+    )
+    try await user.create(on: req.db)
+    let pwd = try await req.password.async.hash(Constants.superAdminPwd)
+    let ua = try UserAuth(
+      userId: user.requireID(), authType: "email", identifier: Constants.superAdminEmail, credential: pwd)
+    try await ua.create(on: req.db)
+    return user
+  }
 
-  func login(_ req: Vapor.Request) async throws -> OutJson<OutToken> {
+  func login() async throws -> OutJson<OutToken> {
     try InLogin.validate(content: req)
     let inLogin = try req.content.decode(InLogin.self)
-    let (isAuth, userAuth) = try await isValidPwd(
-      email: inLogin.email, pwd: inLogin.password, req: req)
+    let (isAuth, userAuth) = try await isValidPwd(email: inLogin.email, pwd: inLogin.password)
     guard isAuth else {
       throw ApiError(code: .invalidEmailOrPassword)
     }
@@ -22,7 +42,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 注册
-  func register(_ req: Request) async throws -> OutJson<OutOk> {
+  func register() async throws -> OutJson<OutOk> {
     try InRegister.validate(content: req)
     let inRegister = try req.content.decode(InRegister.self)
     let userAuth = try await getUserAuth(email: inRegister.email, req: req)
@@ -69,7 +89,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 账号注销
-  func deleteUser(_ req: Request) async throws -> OutJson<OutOk> {
+  func deleteUser() async throws -> OutJson<OutOk> {
     let payload = try req.auth.require(SessionToken.self)
     let user = try await User.find(payload.userId, on: req.db)
     guard let user = user else {
@@ -89,7 +109,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 忘记密码，进行重置
-  func resetpwd(_ req: Request) async throws -> OutJson<OutOk> {
+  func resetpwd() async throws -> OutJson<OutOk> {
     try InResetpwd.validate(content: req)
     let inResetpwd = try req.content.decode(InResetpwd.self)
 
@@ -111,13 +131,12 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 更新密码
-  func updatepwd(_ req: Request) async throws -> OutJson<OutOk> {
+  func updatepwd() async throws -> OutJson<OutOk> {
     let _ = try req.auth.require(SessionToken.self)
     try InUpdatepwd.validate(content: req)
     let inUpdatepwd = try req.content.decode(InUpdatepwd.self)
     // 判断密码是否正确
-    let (isAuth, userAuth) = try await isValidPwd(
-      email: inUpdatepwd.email, pwd: inUpdatepwd.pwd, req: req)
+    let (isAuth, userAuth) = try await isValidPwd(email: inUpdatepwd.email, pwd: inUpdatepwd.pwd)
     guard isAuth else {
       throw ApiError(code: .invalidEmailOrPassword)
     }
@@ -128,7 +147,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 刷新token
-  func refreshAccessToken(_ req: Request) async throws -> OutJson<OutToken> {
+  func refreshAccessToken() async throws -> OutJson<OutToken> {
     let inRefreshToken = try req.content.decode(InRefreshToken.self)
     let jwtPayload = try req.jwt.verify(inRefreshToken.refreshToken, as: RefreshToken.self)
     let user = try await User.find(jwtPayload.userId, on: req.db)
@@ -139,7 +158,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   /// 获取注册验证码
-  func getRegisterCode(_ req: Request) async throws -> OutJson<OutOk> {
+  func getRegisterCode() async throws -> OutJson<OutOk> {
     try InCode.validate(content: req)
     let inCode = try req.content.decode(InCode.self)
     let code = String.randomDigits(ofLength: 6)
@@ -159,7 +178,7 @@ public struct AuthServiceImpl: AuthService {
   }
 
   // 获取忘记密码的验证码
-  func getResetPwdCode(_ req: Request) async throws -> OutJson<OutOk> {
+  func getResetPwdCode() async throws -> OutJson<OutOk> {
     try InCode.validate(content: req)
     let inCode = try req.content.decode(InCode.self)
     let code = String.randomDigits(ofLength: 6)
@@ -197,14 +216,14 @@ public struct AuthServiceImpl: AuthService {
   /// 发送电子邮件
   private func sendEmail(to: String, msg: String, title: String, req: Request) {
     let email = Email(
-      from: EmailAddress(address: "13576051334@163.com", name: "表情包"),
+      from: EmailAddress(address: Environment.get("SMTP_USERNAME")!, name: "iBlog"),
       to: [EmailAddress(address: to)], subject: title, body: msg)
     let client = SMTP(application: req.application, on: req.eventLoop)
     _ = client.send(email)
   }
 
   // 判断密码是否正确
-  func isValidPwd(email: String, pwd: String, req: Request) async throws -> (Bool, UserAuth) {
+  func isValidPwd(email: String, pwd: String) async throws -> (Bool, UserAuth) {
     let ua = try await getUserAuth(email: email, req: req)
     guard let userAuth = ua else {
       throw ApiError(code: .userNotExist)

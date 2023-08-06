@@ -13,6 +13,13 @@ struct InMenu: In {
   let parentId: UUID?
   let weight: SpecInt
   let url: String
+  
+  init(name: String, weight: Int, url: String, parentId: UUID? = nil) {
+    self.name = name
+    self.weight = .int(weight)
+    self.url = url
+    self.parentId = parentId
+  }
 
 }
 

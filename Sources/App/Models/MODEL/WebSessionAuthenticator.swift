@@ -32,7 +32,7 @@ struct WebCredentialsAuthenticator: AsyncCredentialsAuthenticator {
   typealias Credentials = InLogin
   
   func authenticate(credentials: Credentials, for request: Request) async throws {
-    let  (isValid, userAuth) = try await request.services.auth.isValidPwd(email: credentials.email, pwd: credentials.password, req: request)
+    let  (isValid, userAuth) = try await request.services.auth.isValidPwd(email: credentials.email, pwd: credentials.password)
     if isValid {
       let user = try await userAuth.$user.get(on: request.db)
       request.auth.login(user)
