@@ -25,10 +25,10 @@
     </div>
     #endif
     <div class="navbar-end gap-2">
-        <div class="menu menu-horizontal text-xl gap-2">
+        <ul class="menu menu-horizontal text-xl gap-2">
             <li><a href="/tags" :class="currentPath == '/tags' ? 'active' : ''">标签</a></li>
-            <li><a href="/categories" :class="currentPath == '/categories' ? 'active' : ''">分类</a></li>
-        </div>
+            <li><a href="/categories" :class="currentPath == '/categories' ? 'active': ''">分类</a></li>
+        </ul>
 
         #if(user):
         <div class="dropdown dropdown-end">

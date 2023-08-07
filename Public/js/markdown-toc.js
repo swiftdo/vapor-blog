@@ -1,5 +1,5 @@
 (function () {
-  let baseColor = "#111",
+  let baseColor = "white",
     showColor = "#09f",
     hoverColor = "#f60"
 

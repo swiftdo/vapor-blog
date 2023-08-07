@@ -6,12 +6,11 @@
         
         <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
         <title>#(title)</title>
-        
-        <link href="/styles/cdn.jsdelivr.net_npm_daisyui@3.1.0_dist_full.css" rel="stylesheet" type="text/css">
+        <link  href="//cdn.staticfile.org/daisyui/3.5.1/full.min.css" rel="stylesheet">
         <script src="/js/cdn.tailwindcss.com_3.3.2.js"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
-        <script src="/lib/sweetalert2/sweetalert2.all.min.js"></script>
-        <link rel="stylesheet" href="/lib/sweetalert2/sweetalert2.min.css">
+        <script src="//cdn.staticfile.org/sweetalert2/11.7.20/sweetalert2.all.min.js"></script>
+        <link  href="//cdn.staticfile.org/sweetalert2/11.7.20/sweetalert2.min.css" rel="stylesheet">
         
         #import("head")
         <style>
