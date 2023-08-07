@@ -1,9 +1,11 @@
 #extend("basefront"):
 
 #export("head"):
-<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+<!-- <link rel="stylesheet" href="//uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
 <link rel="stylesheet" href="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
-<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css">
+<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css"> 
+-->
+<link rel="stylesheet" href="/styles/markdown.css">
 #endexport
 
 #export("content"):
@@ -31,13 +33,13 @@
         }
     }'>
         <div class="article">
-            <h1 class="my-10 text-5xl ">#(data.title)</h1>
+            <h1 class="my-10 text-5xl">#(data.title)</h1>
             <div class="flex flex-row items-center gap-4 mb-10">
                 <div>#(data.owner.name)</div>
                 <div>#date(data.createdAt, "yyyy-MM-dd")</div>
                 <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(data.category.id)">#(data.category.name)</a>
             </div>
-            <div id="postDetail" data-content="#(data.content)" style="border: none;"></div>
+            <div id="markdown-body" class="markdown-body" data-content="#(data.content)" style="border: none;"></div>
             <hr class="mt-10">
             <div class="flex flex-row gap-2 mt-5">
                 #for(tag in data.tags):
@@ -50,7 +52,7 @@
         }">
             <div class="text-3xl bold">评论</div>
             <div class="flex flex-col mt-8">
-                <textarea x-model="addedComment.content"  class="textarea textarea-accent textarea-lg w-ful"  placeholder="发表评论"></textarea>
+                <textarea x-model="addedComment.content" class="textarea textarea-accent textarea-lg w-ful"  placeholder="发表评论"></textarea>
                 <div class="flex flex-row justify-end">
                     <button data-id="#(data.id)" @click="addComment" class="btn bg-primary w-32 mt-4">发表评论</button>
                 </div>
@@ -114,7 +116,7 @@
     <div class="ml-4 w-72">
         <div class="flex flex-col sticky right-20 top-36 p-4 rounded border">
             <div class="text-3xl">目录</div>
-            <div id="article-nav"></div>
+            <div id="markdown-toc" class="markdown-toc"></div>
         </div>
     </div>
 </div>
@@ -180,20 +182,47 @@
 
 </script>
 
-<script src="//uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
-<script src="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+<script src="//lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/marked/4.0.2/marked.min.js"></script>
+<script src="/js/markdown-toc.js"></script>
 <script>
 
-  var content = document.querySelector('#postDetail').dataset.content;
-  
-  const Editor = toastui.Editor;
+  var content = document.getElementById('markdown-body').dataset.content;
+  // 通过 marked.js 拿到解析后的信息
+  let md = getMarkdownHTML(content);
+  // Markdown 的 HTML
+  document.getElementById('markdown-body').innerHTML = md.html
+  // Markdown 目录的 HTML
+  document.getElementById('markdown-toc').innerHTML = markdownToc.toHTML(md.tocTokens)
 
-  const addEditor = new Editor({
-    el: document.querySelector('#postDetail'),
-    initialValue: content,
-    theme: 'dark'
+  // 各部分的 id 可以自己重设，此文件中为默认值
+  markdownToc.chain.init()
+  window.addEventListener("scroll", function () {
+    markdownToc.chain.scroll()
   })
-  document.getElementById("article-nav").innerHTML = "<h1>hello world</h1>";
+
+  // 对 marked.js 的标题设置，不影响其他元素解析
+  function getMarkdownHTML(mdString) {
+    let renderer = new marked.Renderer()
+    /* 核心 - Start */
+    renderer.tocTokens = [] // 目录信息
+    renderer.heading = function (text, level, raw, slugger) {
+      if (this.options.headerIds) {
+        let anchor = this.options.headerPrefix + slugger.slug(raw)
+        this.tocTokens.push({text, level, anchor})
+        return `<h${level} id="${anchor}" class="markdown-body-anchor" index="${this.tocTokens.length - 1}">${text}</h${level}>`
+      }
+      return `<h${level}>${text}</h${level}>`
+    }
+    /* End */
+    marked.setOptions({
+      renderer: renderer,
+      headerPrefix: 'md' // 可有可无，只是避免重复
+    })
+    return {
+      html: marked.parse(mdString),
+      tocTokens: renderer.tocTokens
+    }
+  }
 </script>
 
 #endexport

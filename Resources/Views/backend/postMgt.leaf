@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
 <link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css">
 <script src="/lib/choices/choices.min.js"></script>
+<script src="//cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
 #endexport
 
 #export("contentRight"):

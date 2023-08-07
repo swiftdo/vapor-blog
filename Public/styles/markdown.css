@@ -1,0 +1,209 @@
+/*
+ * toc
+ */
+ .markdown-toc {
+    border-left: 1px solid #aaa;
+    text-align: left;
+    font-size: .875rem;
+  }
+  .markdown-toc a {
+    color: white;
+    display: block;
+    margin: 0 2px;
+    text-decoration: none;
+  }
+ 
+  .markdown-toc ul li>:first-child {
+    font-weight: bolder;
+    margin-bottom: 8px;
+  }
+  .markdown-toc ul li ul li>:first-child {
+    font-weight: normal;
+  }
+  
+  /*
+   * 图片
+   */
+  .markdown-body img {
+    max-width: 100%;
+  }
+  
+  /**
+   * 标题
+   */
+  .markdown-body h1, h2, h3, h4, h5 {
+    color: white;
+    font-weight: 700;
+    padding: 0;
+    margin: 1rem 0;
+    font-family: Georgia, Palatino, serif;
+  }
+  .markdown-body>:first-child {
+    margin-top: 0;
+  }
+  .markdown-body h1 {
+    font-size: 2.0rem;
+  }
+  .markdown-body h2 {
+    font-size: 1.6rem;
+  }
+  .markdown-body h1, h2 {
+    border-bottom: 1px solid #EFEAEA;
+  }
+  .markdown-body h3 {
+    font-size: 1.3rem;
+  }
+  .markdown-body h4 {
+    font-size: 1.1rem;
+  }
+  .markdown-body h5 {
+    font-size: 1rem;
+  }
+  
+  
+  /*
+   * 字体
+   */
+  .markdown-body p {
+    margin: .25rem 0 .5rem;
+    font-size: 1rem;
+    height: 1.6;
+  }
+  .markdown-body a {
+    color: #09f;
+    margin: 0 2px;
+    padding: 0;
+    vertical-align: baseline;
+    text-decoration: none;
+  }
+  .markdown-body a:hover {
+    color: #f60;
+  }
+  
+  /*
+   * 列表
+   */
+  .markdown-body ul, ol {
+    padding: 0;
+    margin: .5rem 0;
+  }
+  .markdown-body li {
+    line-height: 1.5rem;
+  }
+  .markdown-body ul, ol {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  .markdown-body ol ol, ul ol {
+    list-style-type: lower-roman;
+  }
+  
+  /*
+   * 代码块
+   */
+  .markdown-body pre {
+    font-size: 1rem;
+    margin: 10px 0;
+  }
+  
+  /*
+   * 引用块
+   */
+  .markdown-body blockquote {
+    border-left: .25rem solid #dfe2e5;
+    color: #6a737d;
+    padding: 0 1rem;
+  }
+  .markdown-body blockquote>:first-child {
+    margin-top: .5rem;
+  }
+  
+  .markdown-body blockquote>:last-child {
+    margin-bottom: .5rem;
+  }
+  .markdown-body blockquote cite {
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: #bfbfbf;
+  }
+  .markdown-body blockquote cite:before {
+    content: '\2014 \00A0';
+  }
+  .markdown-body blockquote p {
+    color: #666;
+  }
+  
+  /*
+   * 分隔线
+  */
+  .markdown-body hr {
+    text-align: left;
+    color: #999;
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+  }
+  
+  /*
+   * 表格
+   */
+  .markdown-body dl {
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  .markdown-body dl dt {
+    padding: 10px 0;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: bold;
+  }
+  .markdown-body dl dd {
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+  }
+  .markdown-body dd {
+    margin-left: 0;
+  }
+  .markdown-body table {
+    *border-collapse: collapse; /* IE7 and lower */
+    border-spacing: 0;
+    width: 100%;
+    border: solid #ccc 1px;
+    margin: 10px 0;
+  }
+  .markdown-body table thead {
+    background: #f7f7f7;
+  }
+  .markdown-body table thead tr:hover {
+    background: #f7f7f7
+  }
+  .markdown-body table tr:nth-child(2n) {
+    background: #f6f8fa;
+  }
+  .markdown-body table tr:hover {
+    background: #fbf8e9;
+    -o-transition: all .1s ease-in-out;
+    -webkit-transition: all .1s ease-in-out;
+    -moz-transition: all .1s ease-in-out;
+    -ms-transition: all .1s ease-in-out;
+    transition: all .1s ease-in-out;
+  }
+  .markdown-body table td {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: .5rem .875rem;
+    text-align: center;
+  }
+  .markdown-body table th {
+    border-top: none;
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    padding: .5rem .875rem;
+    border-left: 1px solid #ccc;
+    text-align: center;
+  }
+  .markdown-body table td:first-child, table th:first-child {
+    border-left: none;
+  }
