@@ -5,6 +5,7 @@
     border-left: 1px solid #aaa;
     text-align: left;
     font-size: .875rem;
+    padding: 10px;
   }
   .markdown-toc a {
     color: white;

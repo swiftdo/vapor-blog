@@ -16,7 +16,7 @@
         if (levelStack[levelStack.length - 1] == '</li>') {
           html += levelStack.pop() // html += '</li>'
         }
-        html += `<li><a href="#${tokens[index].anchor}" index="${index}">${tokens[index].text}</a>`
+        html += `<li class="ml-${level * 2}"><a href="#${tokens[index].anchor}" index="${index}">${tokens[index].text}</a>`
 
         levelStack.push(`</li>`)
         index++
