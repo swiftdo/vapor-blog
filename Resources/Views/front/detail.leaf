@@ -1,7 +1,6 @@
 #extend("basefront"):
 
 #export("head"):
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <style>
     .quill-custom-theme .ql-editor {
         font-size: 18px;
@@ -203,6 +202,7 @@
 </script>
 
 <!-- 初始化编辑器 -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
     hljs.configure({   // optionally configure hljs

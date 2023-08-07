@@ -7,6 +7,7 @@
 
 import Vapor
 import Fluent
+import FluentSQL
 
 struct TagRepositoryImpl: TagRepository {
   var req: Request
@@ -52,5 +53,23 @@ struct TagRepositoryImpl: TagRepository {
       .sort(\.$createdAt, .descending)
       .all()
       .map({$0.asPublic()})
+  }
+  
+  func hot(limit: Int) async throws -> [Tag.Public] {
+    if let sql = req.db as? SQLDatabase {
+      // 底层数据库驱动程序是 SQL
+      let query = """
+      select tags.*
+      from \(Tag.schema) tags
+      left join \(PostTag.schema) pivot on tags.id = pivot.\(PostTag.FieldKeys.tagId)
+      group by tags.id
+      having count(pivot.\(PostTag.FieldKeys.tagId))  > 0
+      order by count(pivot.\(PostTag.FieldKeys.tagId)) desc
+      limit \(limit)
+      """
+      return try await sql.raw(.init(query)).all(decoding: Tag.self).map({$0.asPublic()})
+    } else {
+      throw ApiError(code: .postNotExist)
+    }
   }
 }

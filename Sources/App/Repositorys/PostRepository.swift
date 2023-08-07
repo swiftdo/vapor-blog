@@ -15,6 +15,7 @@ protocol PostRepository: Repository {
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
   func update(param: InUpdatePost, ownerId: User.IDValue) async throws
   func get(id: Post.IDValue, ownerId: User.IDValue?) async throws -> Post.Public?
+  func newer(limit: Int) async throws -> [Post.Public]
 }
 
 extension PostRepository {

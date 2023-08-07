@@ -36,5 +36,6 @@ extension OutStatus {
   static var permissionNotExist = OutStatus(code: 32, message: "权限不存在")
   static var userRoleNotExist = OutStatus(code: 33, message: "普通用户角色未设置")
   static var menuNotConfig = OutStatus(code: 34, message: "菜单未配置")
-  static var configAlready = OutStatus(code: 34, message: "已初始化配置")
+  static var configAlready = OutStatus(code: 35, message: "已初始化配置")
+  static var dbNotSupport = OutStatus(code: 36, message: "数据库不支持sql查询")
 }

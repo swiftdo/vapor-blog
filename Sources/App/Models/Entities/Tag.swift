@@ -30,6 +30,10 @@ final class Tag: Model {
 
     @Timestamp(key: FieldKeys.updatedAt, on: .update)
     var updatedAt: Date?
+  
+    // 获取文章
+    @Siblings(through: PostTag.self, from: \.$tag, to: \.$post)
+    public var posts: [Post]
 
     
     init() {}

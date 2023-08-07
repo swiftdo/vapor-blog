@@ -94,4 +94,13 @@ struct PostRepositoryImpl: PostRepository {
       .first()
     return post?.asPublic()
   }
+  
+  func newer(limit: Int) async throws -> [Post.Public] {
+    let posts = try await Post.query(on: req.db)
+      .filter(\.$status == 1)
+      .sort(\.$createdAt, .descending)
+      .limit(limit)
+      .all()
+    return posts.map({$0.asPublic()})
+  }
 }

@@ -15,6 +15,7 @@ protocol TagRepository: Repository {
   func delete(ids: InDeleteIds, ownerId: User.IDValue) async throws
   func page(ownerId: User.IDValue?) async throws -> Page<Tag.Public>
   func update(param: InUpdateTag, ownerId: User.IDValue) async throws
+  func hot(limit: Int) async throws -> [Tag.Public]
 }
 
 extension RepositoryFactory {

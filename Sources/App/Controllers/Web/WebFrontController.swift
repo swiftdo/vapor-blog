@@ -62,12 +62,23 @@ extension WebFrontController {
     let user = req.auth.get(User.self)
     let inIndex = try req.query.decode(InSearchPost.self)
     let posts = try await req.repositories.post.page(ownerId: user?.id, inIndex: inIndex)
+    // * 热门标签，按文章数排序， 20个
+    let hotTags = try await req.repositories.tag.hot(limit: 20)
+    // * 最新发布，按文章时间排序， 10个
+    let newerPosts = try await req.repositories.post.newer(limit: 10)
+    // * 点击最多，按文章阅读数排序，10个
+    
     return try await req.view.render("front/index",
                                      frontWrapper(req,
                                                   cateId: inIndex.categoryId,
                                                   data: .init(posts),
                                                   pageMeta: posts.metadata,
-                                                  extra: ["listFor": .init(inIndex.listFor)]))
+                                                  extra: [
+                                                    "listFor": .init(inIndex.listFor),
+                                                    "hotTags": .init(hotTags),
+                                                    "newerPosts": .init(newerPosts)
+                                                  ])
+    )
   }
   
   // 所有标签
