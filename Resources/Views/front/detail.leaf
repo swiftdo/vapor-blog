@@ -293,7 +293,7 @@
 
     var headerNav = "";
     linkHeaders.forEach(h => {
-        headerNav += `<li class="p-2 hover:bg-sky-700"><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
+        headerNav += `<li class="p-2 hover:text-sky-700"><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
     });
 
     headerNav = "<ul>" + headerNav + "</ul>"

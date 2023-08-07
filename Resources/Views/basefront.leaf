@@ -30,9 +30,6 @@
             <li><a href="/categories" :class="currentPath == '/categories' ? 'active' : ''">分类</a></li>
         </div>
 
-        <div class="form-control">
-            <input type="text" placeholder="搜索" class="input input-bordered w-24 md:w-auto" />
-        </div>
         #if(user):
         <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-circle avatar">

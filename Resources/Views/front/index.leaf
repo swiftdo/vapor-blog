@@ -43,7 +43,7 @@
             <div class="mb-4 text-2xl">最新文章</div>
             <div class="flex flex-col gap-2">
                 #for(post in newerPosts):
-                <a class="hover:bg-sky-700" href="/detail?postId=#(post.id)">#(post.title)</a>
+                <a class="hover:text-sky-700" href="/detail?postId=#(post.id)">#(post.title)</a>
                 #endfor
             </div>
         </div>
