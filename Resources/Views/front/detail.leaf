@@ -1,30 +1,9 @@
 #extend("basefront"):
 
 #export("head"):
-<style>
-    .quill-custom-theme .ql-editor {
-        font-size: 18px;
-        line-height: 1.6;
-        font-family: "思源宋体", "Source Han Serif", "微软雅黑", "Microsoft YaHei", "宋体", SimSun, sans-serif;
-        padding: 0px;
-    }
-
-    /* 设置标题样式 */
-    .ql-editor h1 {
-        font-size: 36px;
-        font-weight: bold;
-    }
-
-    .ql-editor h2 {
-        font-size: 28px;
-        font-weight: bold;
-    }
-
-    .ql-editor h3 {
-        font-size: 20px;
-        font-weight: bold;
-    }
-</style>
+<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/toastui-editor-viewer.min.css">
+<link rel="stylesheet" href="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
+<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css">
 #endexport
 
 #export("content"):
@@ -58,7 +37,7 @@
                 <div>#date(data.createdAt, "yyyy-MM-dd")</div>
                 <a class="btn bg-primary rounded-full" href="/list?listFor=category&categoryId=#(data.category.id)">#(data.category.name)</a>
             </div>
-            <div id="postDetail" class="quill-custom-theme" style="border: none;"></div>
+            <div id="postDetail" data-content="#(data.content)" style="border: none;"></div>
             <hr class="mt-10">
             <div class="flex flex-row gap-2 mt-5">
                 #for(tag in data.tags):
@@ -201,119 +180,21 @@
 
 </script>
 
-<!-- 初始化编辑器 -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="//uicdn.toast.com/editor/latest/toastui-editor-viewer.js"></script>
+<script src="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
 <script>
-    hljs.configure({   // optionally configure hljs
-        languages: ['javascript', 'ruby', 'python', 'swift']
-    });
 
-    var Link = Quill.import('formats/link');
+  var content = document.querySelector('#postDetail').dataset.content;
+  
+  const Editor = toastui.Editor;
 
-    class MyLink extends Link {
-        static create(value) {
-            let node = Link.create(value);
-            value = Link.sanitize(value);
-            node.setAttribute('href', value);
-            if (value.startsWith("#")) {
-                node.removeAttribute('target');
-            } else {
-                node.setAttribute("target", "_blank");
-            }
-            return node;
-        }
-
-        format(name, value) {
-            super.format(name, value);
-
-            if (name !== this.statics.blotName || !value) {
-                return;
-            }
-
-            if (value.startsWith("#")) {
-                this.domNode.removeAttribute("target");
-            } else {
-                this.domNode.setAttribute("target", "_blank");
-            }
-        }
-    }
-    Quill.register(MyLink);
-
-    var linkIds = [];
-    function getRandomId(domNode) {
-        let _id = Math.random().toString(16).slice(2, 9);
-        linkIds.push(_id);
-        return _id;
-    }
-
-    var Header = Quill.import("formats/header")
-    class MyHeader extends Header {
-        constructor(domNode) {
-            let a = super(domNode);
-            domNode.setAttribute('id', getRandomId(domNode));
-            this.cache = {};
-        }
-
-        static create(value) {
-            const node = super.create();
-            return node;
-        }
-
-        static formats(domNode) {
-            return {
-                id: domNode.getAttribute("id")
-            };
-        }
-    }
-    Quill.register("formats/header", MyHeader);
-    MyHeader.blotName = "header"
-
-    var quill = new Quill(document.createElement("div"), {
-        theme: 'snow',
-        readOnly: true,
-        modules: {
-            toolbar: false,
-            syntax: true,
-        }
-    });
-    var content = #unsafeHTML(data.content);
-    quill.setContents(content)
-
-    let index = 0;
-    let linkHeaders = [];
-    quill.getContents().ops.forEach(ops => {
-        index++;
-        if (ops?.attributes?.header) {
-            if (quill.getContents().ops[index - 2].insert !== "\n") {
-                linkHeaders.push(quill.getContents().ops[index - 2].insert.trim());
-            }
-        }
-    });
-
-    var headerNav = "";
-    linkHeaders.forEach(h => {
-        headerNav += `<li class="p-2 hover:text-sky-700"><a href="#${h.replace(/\s/g, '-')}">${h}</a></li>`
-    });
-
-    headerNav = "<ul>" + headerNav + "</ul>"
-
-    console.log(headerNav)
-
-    document.getElementById("article-nav").innerHTML = headerNav;
-    document.getElementById("postDetail").innerHTML = quill.container.innerHTML;
-
-    // 先标记 id,然后将 id 进行替换未标题内容
-    linkIds.forEach(hid => {
-        try {
-            var node = document.getElementById(hid);
-            console.log(node)
-            // 将空格变为-
-            node.id = node.innerHTML.trim().replace(/\s/g, "-");
-        } catch (error) {
-
-        }
-    });
+  const addEditor = new Editor({
+    el: document.querySelector('#postDetail'),
+    initialValue: content,
+    theme: 'dark'
+  })
+  document.getElementById("article-nav").innerHTML = "<h1>hello world</h1>";
 </script>
+
 #endexport
 #endextend

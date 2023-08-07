@@ -1,8 +1,9 @@
 #extend("basebackend"):
 #export("head"):
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-<!-- <link href="/lib/choices/base.min.css" rel="stylesheet"> -->
 <link href="/lib/choices/choices.min.css" rel="stylesheet">
+<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<link rel="stylesheet" href="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
+<link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css">
 <script src="/lib/choices/choices.min.js"></script>
 #endexport
 
@@ -19,7 +20,7 @@
     #bjson("tag")
     this.editedItem = tag;
     this.isEditPopupOpen = true;
-    editEditor.setContents(JSON.parse(tag.content))
+    editEditor.setMarkdown(tag.content)
     editTagChoices.setChoiceByValue(this.editedItem.tagIds);
   }
 }'>   
@@ -140,7 +141,35 @@
 </div>
 
 <!-- 初始化编辑器 -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="//uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight-all.min.js"></script>
+<script>
+
+  const { Editor } = toastui;
+  const { codeSyntaxHighlight } = Editor.plugin;
+
+  const addEditor = new Editor({
+    el: document.querySelector('#addEditor'),
+    height: '500px',
+    initialEditType: 'markdown',
+    previewStyle: 'tab',
+    plugins: [codeSyntaxHighlight],
+    theme: 'dark',
+    placeholder: '输入文章内容'
+  })
+
+  const editEditor = new Editor({
+    el: document.querySelector('#editEditor'),
+    height: '500px',
+    initialEditType: 'markdown',
+    previewStyle: 'tab',
+    plugins: [codeSyntaxHighlight],
+    placeholder: '输入文章内容',
+    theme: 'dark'
+  })
+
+</script>
+
 <script>
 
   const element = document.querySelector('.tags-choice');
@@ -149,38 +178,6 @@
   const elementEdit = document.querySelector('.edit-tags-choice');
   const editTagChoices = new Choices(elementEdit, {removeItemButton: true});
 
-
-  hljs.configure({   // optionally configure hljs
-    languages: ['javascript', 'ruby', 'python', 'swift']
-  });
-
-  var toolbarOptions = {
-    container: [
-      [{ 'header': [1, 2, 3, false] }],
-      ['bold', 'italic', 'underline', 'strike'],
-      ['link', 'image', 'code-block'], // 添加了'code-block'按钮
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['clean'],
-    ],
-  };
-
-  var addEditor = new Quill('#addEditor', {
-    theme: 'snow',
-    placeholder: '文章内容',
-    modules: {
-      syntax: true,
-      toolbar: toolbarOptions,
-    }
-  });
-
-  var editEditor = new Quill('#editEditor', {
-    theme: 'snow',
-    placeholder: '文章内容',
-    modules: {
-      syntax: true,
-      toolbar: toolbarOptions,
-    }
-  });
   // 全选/未全选
   function toggleAllItemsSelection() {
     this.checkSels = this.isAllSelected ? []: this.dataIds;
@@ -193,8 +190,8 @@
 
   // 更新
   async function updateItem() {
-    this.editedItem.content = JSON.stringify(editEditor.getContents());
-    this.editedItem.desc = editEditor.getText();
+    this.editedItem.content = editEditor.getMarkdown();
+    this.editedItem.desc = extractPlainTextFromHTML(editEditor.getHTML());
     this.editedItem.tagIds = editTagChoices.getValue(true)
     try {
       const response = await fetch('/web/backend/post/update', {
@@ -244,8 +241,8 @@
   async function addItem() {
     // 获取到富文本内容
     try {
-        this.addedItem.content = JSON.stringify(addEditor.getContents());
-        this.addedItem.desc = addEditor.getText();
+        this.addedItem.content = addEditor.getMarkdown();
+        this.addedItem.desc = extractPlainTextFromHTML(addEditor.getHTML());
         this.addedItem.tagIds = tagChoices.getValue(true)
         const response = await fetch('/web/backend/post', {
           method: 'POST',
@@ -268,6 +265,25 @@
       }
 
   }
+
+
+  function extractPlainTextFromHTML(htmlString) {
+    // 创建一个临时的 DOM 元素
+    var tempElement = document.createElement('div');
+  
+    // 将 HTML 字符串赋值给临时元素的 innerHTML
+    tempElement.innerHTML = htmlString;
+  
+    // 使用 innerText 属性获取纯文本内容
+    var plainText = tempElement.innerText;
+  
+    // 销毁临时元素
+    tempElement = null;
+  
+    // 返回纯文本内容
+    return plainText;
+  }
+  
 </script>
 
 #endexport
