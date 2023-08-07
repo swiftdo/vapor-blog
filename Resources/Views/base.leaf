@@ -11,14 +11,14 @@
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="//cdn.staticfile.org/sweetalert2/11.7.20/sweetalert2.all.min.js"></script>
         <link  href="//cdn.staticfile.org/sweetalert2/11.7.20/sweetalert2.min.css" rel="stylesheet">
-        
-        #import("head")
         <style>
             html {
                 font-size: 16px;
             }
             [x-cloak] { display: none !important; }
         </style>
+
+        #import("head")
     </head>
 
     <body>

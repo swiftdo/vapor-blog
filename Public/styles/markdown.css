@@ -12,7 +12,7 @@
     margin: 0 2px;
     text-decoration: none;
   }
- 
+  
   .markdown-toc ul li>:first-child {
     font-weight: bolder;
     margin-bottom: 8px;
@@ -34,12 +34,12 @@
   .markdown-body h1, h2, h3, h4, h5 {
     color: white;
     font-weight: 700;
-    padding: 0;
-    margin: 1rem 0;
+    padding: 10px 0;
+    margin: 1em 0;
     font-family: Georgia, Palatino, serif;
   }
   .markdown-body>:first-child {
-    margin-top: 0;
+    margin-top: 0px;
   }
   .markdown-body h1 {
     font-size: 2.0rem;
@@ -104,6 +104,9 @@
   .markdown-body pre {
     font-size: 1rem;
     margin: 10px 0;
+    background-color: #282c34;
+    border-radius: 10px;
+    padding: 10px;
   }
   
   /*

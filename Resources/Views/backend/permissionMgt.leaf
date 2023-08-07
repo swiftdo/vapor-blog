@@ -2,8 +2,8 @@
 
 #export("head"):
 <!-- <link href="/lib/choices/base.min.css" rel="stylesheet"> -->
-<link href="/lib/choices/choices.min.css" rel="stylesheet">
-<script src="/lib/choices/choices.min.js"></script>
+<link href="//cdn.staticfile.org/choices.js/10.2.0/choices.min.css" rel="stylesheet">
+<script src="//cdn.staticfile.org/choices.js/10.2.0/choices.min.js"></script>
 #endexport
 
 #export("contentRight"):

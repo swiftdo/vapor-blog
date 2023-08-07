@@ -1,10 +1,11 @@
 #extend("basebackend"):
 #export("head"):
-<link href="/lib/choices/choices.min.css" rel="stylesheet">
+<link href="//cdn.staticfile.org/choices.js/10.2.0/choices.min.css" rel="stylesheet">
+<script src="//cdn.staticfile.org/choices.js/10.2.0/choices.min.js"></script>
+
 <link rel="stylesheet" href="//uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 <link rel="stylesheet" href="//uicdn.toast.com/editor-plugin-code-syntax-highlight/latest/toastui-editor-plugin-code-syntax-highlight.min.css">
 <link rel="stylesheet" href="//uicdn.toast.com/editor/latest/theme/toastui-editor-dark.min.css">
-<script src="/lib/choices/choices.min.js"></script>
 <script src="//cdn.bootcdn.net/ajax/libs/marked/4.3.0/marked.min.js"></script>
 #endexport
 

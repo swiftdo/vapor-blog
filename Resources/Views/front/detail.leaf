@@ -1,7 +1,8 @@
 #extend("basefront"):
 
 #export("head"):
-<link rel="stylesheet" href="/styles/markdown.css">
+<script src="//cdn.staticfile.org/highlight.js/11.8.0/highlight.min.js"></script>
+<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/11.8.0/styles/dark.min.css">
 #endexport
 
 #export("content"):
@@ -180,6 +181,7 @@
 
 <script src="//cdn.staticfile.org/marked/6.0.0/marked.min.js"></script>
 <script src="/js/markdown-toc.js"></script>
+<link rel="stylesheet" href="/styles/markdown.css">
 <script>
 
   var content = document.getElementById('markdown-body').dataset.content;
@@ -212,7 +214,10 @@
     /* End */
     marked.setOptions({
       renderer: renderer,
-      headerPrefix: 'md' // 可有可无，只是避免重复
+      headerPrefix: 'md', // 可有可无，只是避免重复
+      highlight: function(code) {
+        return hljs.highlightAuto(code).value;
+      },
     })
     return {
       html: marked.parse(mdString),
