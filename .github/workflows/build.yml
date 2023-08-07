@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev  # 更改为你的默认分支，例如master或main
+      - main 
 
 jobs:
   build:
