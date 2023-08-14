@@ -16,9 +16,6 @@ Swift Vapor blog system!
 * 浏览器打开页面：https://localhost:xxxx
 
 ## 相关文档
-
-* 在线预览：[https://iblog.oldbird.run](https://iblog.oldbird.run)
-  * 管理员账号：admin@iblog.com admin123456
 * 页面预览：[页面预览](https://github.com/swiftdo/vapor-blog/wiki)
 * 开发文档：[点击前往](https://github.com/swiftdo/vapor-blog/wiki)
 * 源码：[https://github.com/swiftdo/vapor-blog](https://github.com/swiftdo/vapor-blog)
