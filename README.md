@@ -4,6 +4,9 @@
 
 Swift Vapor blog system!
 
+* 在线预览：[https://iblog.oldbird.run](https://iblog.oldbird.run)
+* 管理员账号：admin@iblog.com admin123456
+
 ## iBlog———Vapor 博客系统实战项目
 
 开发状态：开发中...
