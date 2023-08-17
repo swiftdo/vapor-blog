@@ -13,6 +13,14 @@
                 <a class="hover:text-blue-700" href="#(link.href)" target="_blank">#(link.title)</a>
             #endfor
         </div>
+
+        <a href="https://beian.miit.gov.cn/" data-v-29dae040="">赣ICP备2021010021号-1</a>
+        <div class="flex flex-row gap-2">
+            <img class="object-cover" src="images/bean.png" />
+            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=36011102000528">
+                赣公网安备 36011102000528号
+            </a>
+        </div>
     </div>
 
     <div class="flex flex-col gap-2">
