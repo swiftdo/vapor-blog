@@ -1,4 +1,13 @@
 #extend("base"):
+#export("head"):
+<style>
+    .my-menu-horizontal {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+</style>
+#endexport
 
 #export("navbar"):
 <!-- 导航 -->
