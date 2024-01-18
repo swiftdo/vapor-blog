@@ -57,6 +57,9 @@ public func configure(_ app: Application) async throws {
   )
 
   try migrations(app)
+  // 自动执行migrations，省去在命令行运行`swift run App migrate`，或编辑scheme的步骤
+  try await app.autoMigrate().get()
+  
   try routes(app)
   try services(app)
   try repositories(app)
