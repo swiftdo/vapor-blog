@@ -27,4 +27,7 @@ func migrations(_ app: Application) throws {
   // 通知
   app.migrations.add(CreateMessageInfo())
   app.migrations.add(CreateMessage())
+  
+  // 自动执行migrations，省去在命令行运行`swift run App migrate`，或编辑scheme的步骤
+  try app.autoMigrate().wait()
 }
